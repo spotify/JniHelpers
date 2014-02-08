@@ -1,0 +1,42 @@
+# Build products
+build/*
+**/Debug/*
+**/Release/*
+
+# Temporary files
+*.swp
+*~
+*.o
+*.obj
+*.so
+
+# Stuff from various IDE's
+.idea/*
+*.xcodeproj
+nbproject/*
+*.perspectivev3
+*.pbxuser
+*.user
+*.sdf
+*.opensdf
+*.suo
+*.log
+*.tlog
+*.idb
+*.pdb
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.lastbuildstate
+*.cbp
+*.iml
+
+# CMake
+CMakeCache.txt
+CMakeScripts/*
+**/CMakeScripts/*
+CMakeFiles
+Makefile
+Makefile.in
+*.cmake
+**/*.dir
