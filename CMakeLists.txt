@@ -11,4 +11,4 @@ file(GLOB libJniHelpers_SOURCES src/*.cpp)
 file(GLOB libJniHelpers_HEADERS src/*.h)
 
 link_directories(${JNI_LIBRARIES})
-add_library(${PROJECT_NAME} ${libJniHelpers_SOURCES})
+add_library(${PROJECT_NAME} ${libJniHelpers_SOURCES} ${libJniHelpers_HEADERS})
