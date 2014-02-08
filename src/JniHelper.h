@@ -7,8 +7,6 @@
 #include <map>
 #include <string>
 
-namespace spotify {
-
 class JniHelper {
 public:
   static void initialize(JavaVM *jvm);
@@ -37,7 +35,5 @@ private:
   JavaVM *_jvm;
   std::map<std::string, JniClass*> _classes;
 };
-
-} // namespace spotify
 
 #endif // __JniHelper_h__

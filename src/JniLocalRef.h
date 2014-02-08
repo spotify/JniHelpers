@@ -1,8 +1,6 @@
 #ifndef __JniLocalRef_h__
 #define __JniLocalRef_h__
 
-namespace spotify {
-
 // RAII helper to maintain local references automatically
 template<typename JniType>
 class JniLocalRef {
@@ -36,7 +34,5 @@ class JniLocalRef {
  private:
   JniType _obj;
 };
-
-}
 
 #endif // __JniLocalRef_h__
