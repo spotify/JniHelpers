@@ -1,7 +1,7 @@
 #ifndef __JniHelper_h__
 #define __JniHelper_h__
 
-#include "JniClass.h"
+#include "JniClassWrapper.h"
 #include "JniLocalRef.h"
 #include <jni.h>
 #include <map>
@@ -9,31 +9,38 @@
 
 class JniHelper {
 public:
-  static void initialize(JavaVM *jvm);
-  static JniHelper* get();
+  static __declspec(dllexport) void initialize(JavaVM *jvm);
+  static __declspec(dllexport) JniHelper* get();
+
+protected:
+  // Disallow direct construction; must call initialize() instead
+  explicit JniHelper(JavaVM *jvm);
+
+private:
+  // Disable copy and no-arg constructors
+  JniHelper() {}
+  JniHelper(const JniHelper&) {}
 
 public:
-  virtual ~JniHelper();
+  virtual __declspec(dllexport) ~JniHelper();
 
   JNIEnv* getEnvForCurrentThread();
   JNIEnv* attachCurrentThreadToJVM(const std::string &thread_name);
   void detatchCurrentThreadFromJVM();
 
-  jobject lookupClass(JNIEnv *env, const std::string &class_name);
-  void setClassLoaderForCurrentThread(JNIEnv *env, jobject class_loader);
-  bool initializeClass(JniClass *jniClass);
-  JniClass* getClass(const char* name) const;
+  void setJavaClassLoaderForCurrentThread(JNIEnv *env, jobject class_loader);
+  jobject lookupJavaClass(JNIEnv *env, const std::string &class_name);
 
   void checkException(JNIEnv *env);
   JniLocalRef<jobject> newThrowable(JNIEnv *env, const char *message, ...);
   void throwRuntimeException(JNIEnv *env, const char *message, ...);
 
-protected:
-  JniHelper(JavaVM *jvm);
+  bool __declspec(dllexport) addClassWrapper(JniClassWrapper *jniClass);
+  JniClassWrapper* getClassWrapper(const char* name) const;
 
 private:
   JavaVM *_jvm;
-  std::map<std::string, JniClass*> _classes;
+  std::map<std::string, JniClassWrapper*> _classes;
 };
 
 #endif // __JniHelper_h__

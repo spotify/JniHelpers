@@ -4,17 +4,19 @@
 // RAII helper to maintain local references automatically
 template<typename JniType>
 class JniLocalRef {
+public:
   JniLocalRef() : _obj(NULL) {}
   JniLocalRef(JniType obj) : _obj(NULL) { set(obj); }
   JniLocalRef(const JniLocalRef<JniType> &ref) : _obj(NULL) {
-    set((JniType)JniCurrentEnv()->NewLocalRef(ref.get()));
+    JNIEnv *env = JniHelper::get()->getEnvForCurrentThread();
+    set((JniType)env->NewLocalRef(ref.get()));
   }
 
   ~JniLocalRef() { set(NULL); }
 
   JniType get() const { return _obj; }
   void set(JniType obj) {
-    JNIEnv *env = JniCurrentEnv();
+    JNIEnv *env = JniHelper::get()->getEnvForCurrentThread();
     if (_obj) env->DeleteLocalRef(_obj);
     _obj = obj;
   }
