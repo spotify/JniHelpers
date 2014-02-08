@@ -7,8 +7,9 @@ endif(NOT ANDROID)
 
 include_directories(${JNI_INCLUDE_DIRS})
 
-file(GLOB libJniHelpers_SOURCES src/*.cpp)
-file(GLOB libJniHelpers_HEADERS src/*.h)
+set(libJniHelpers_SOURCE_DIR src/main/cpp)
+file(GLOB libJniHelpers_SOURCES ${libJniHelpers_SOURCE_DIR}/*.cpp)
+file(GLOB libJniHelpers_HEADERS ${libJniHelpers_SOURCE_DIR}/*.h)
 
 link_directories(${JNI_LIBRARIES})
 add_library(${PROJECT_NAME} ${libJniHelpers_SOURCES} ${libJniHelpers_HEADERS})
