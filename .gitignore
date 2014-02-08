@@ -2,6 +2,7 @@
 build/*
 **/Debug/*
 **/Release/*
+.gradle
 
 # Temporary files
 *.swp
