@@ -1,7 +1,7 @@
 #ifndef __JniClassWrapper_h__
 #define __JniClassWrapper_h__
 
-#include "JniHelpers.h"
+#include "JniHelpersCommon.h"
 #include <map>
 #include <string>
 #include <vector>

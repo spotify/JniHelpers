@@ -1,7 +1,8 @@
 #ifndef __JniLocalRef_h__
 #define __JniLocalRef_h__
 
-#include "JniHelpers.h"
+#include "JniHelpersCommon.h"
+#include "JniThreadUtils.h"
 
 namespace spotify {
 namespace jni {

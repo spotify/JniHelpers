@@ -1,7 +1,7 @@
 #ifndef __JniClassUtils_h__
 #define __JniClassUtils_h__
 
-#include "JniHelpers.h"
+#include "JniHelpersCommon.h"
 #include <string>
 
 namespace spotify {
