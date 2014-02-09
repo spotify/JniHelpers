@@ -4,6 +4,7 @@
 #include "JniHelpersCommon.h"
 #include <map>
 #include <string>
+#include <sstream>
 #include <vector>
 
 namespace spotify {
@@ -30,6 +31,9 @@ public:
 
   virtual JniClassWrapper* fromJavaObject(JNIEnv *env, jobject javaObject) const = 0;
   virtual jobject toJavaObject(JniClassWrapper *nativeObject) = 0;
+
+public:
+  EXPORT const char* getCanonicalName() const;
 
 public:
   EXPORT jmethodID getMethod(const char *field_name);

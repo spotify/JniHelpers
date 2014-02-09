@@ -11,6 +11,12 @@ JniClassWrapper::~JniClassWrapper() {
 
 }
 
+const char* JniClassWrapper::getCanonicalName() const  {
+  std::stringstream stringstream;
+  stringstream << getPackageName() << "/" << getSimpleName();
+  return stringstream.str().c_str();
+}
+
 jmethodID JniClassWrapper::getMethod(const char *field_name) {
   return NULL;
 }
