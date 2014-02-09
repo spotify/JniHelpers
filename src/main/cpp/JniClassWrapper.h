@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+namespace spotify {
+namespace jni {
+
 class JniClassWrapper {
 public:
   /**
@@ -49,5 +52,8 @@ protected:
   static std::map<std::string, jmethodID> _methods;
   static std::map<std::string, jfieldID> _fields;
 };
+
+} // namespace jni
+} // namespace spotify
 
 #endif // __JniClassWrapper_h__

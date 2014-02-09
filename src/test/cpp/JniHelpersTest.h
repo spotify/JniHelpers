@@ -1,6 +1,8 @@
-#include "JniHelper.h"
+#include "JniHelpers.h"
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved);
+
+using namespace spotify::jni;
 
 class JniHelperTest : public JniClassWrapper {
 public:

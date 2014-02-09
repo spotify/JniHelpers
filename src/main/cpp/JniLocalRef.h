@@ -1,6 +1,9 @@
 #ifndef __JniLocalRef_h__
 #define __JniLocalRef_h__
 
+namespace spotify {
+namespace jni {
+
 // RAII helper to maintain local references automatically
 template<typename JniType>
 class JniLocalRef {
@@ -20,6 +23,7 @@ public:
     if (_obj) env->DeleteLocalRef(_obj);
     _obj = obj;
   }
+
   JniType leak() {
     JniType obj = _obj;
     _obj = NULL;
@@ -33,8 +37,11 @@ public:
     set((JniType)JniCurrentEnv()->NewLocalRef(ref.get()));
   }
 
- private:
+private:
   JniType _obj;
 };
+
+} // namespace jni
+} // namespace spotify
 
 #endif // __JniLocalRef_h__
