@@ -1,28 +1,27 @@
 #include "JniHelpersTest.h"
 
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void*) {
-  JniHelper::initialize(jvm);
-  JNIEnv *env;
-  jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
-  JniHelper::get()->addClassWrapper(new JniHelperTest(env));
-  return JNI_VERSION_1_6;
+JniHelpersTest::JniHelpersTest(JNIEnv *env) : JniClassWrapper(env) {
+  initialize(env);
 }
 
-JniHelperTest::JniHelperTest(JNIEnv *env) : JniClassWrapper(env) {
+JniHelpersTest::JniHelpersTest(JNIEnv *env, jobject fromObject) : JniClassWrapper(env, fromObject) {
+  setJavaObject(env, fromObject);
 }
 
-void JniHelperTest::initialize(JNIEnv *env) {
-
+void JniHelpersTest::initialize(JNIEnv *env) {
+  std::vector<JNINativeMethod> methods;
+  methods.push_back(makeNativeMethod("createClassWrapper",
+    &JniHelpersTest::createClassWrapper, kTypeVoid,
+    kTypeVoid));
 }
 
-const char* JniHelperTest::getClassName() const {
-  return "com/spotify/jnihelper/JniHelpersTest";
+void JniHelpersTest::setJavaObject(JNIEnv *env, jobject javaObject) {
 }
 
-JniClassWrapper* JniHelperTest::fromJavaObject(JNIEnv *env, jobject javaObject) const {
+jobject JniHelpersTest::toJavaObject(JniClassWrapper *nativeObject) {
   return NULL;
 }
 
-jobject JniHelperTest::toJavaObject(JniClassWrapper *nativeObject) {
-  return NULL;
+void JniHelpersTest::createClassWrapper(JNIEnv *env, jobject object) {
+  JniHelpersTest jniHelpersTest(env, object);
 }

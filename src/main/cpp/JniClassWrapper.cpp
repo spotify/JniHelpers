@@ -3,13 +3,7 @@
 namespace spotify {
 namespace jni {
 
-JniClassWrapper::JniClassWrapper(JNIEnv *env) {
-
-}
-
-JniClassWrapper::~JniClassWrapper() {
-
-}
+const char* JniClassWrapper::kTypeString = "Ljava/lang/String";
 
 const char* JniClassWrapper::getCanonicalName() const  {
   std::stringstream stringstream;
@@ -38,9 +32,14 @@ void JniClassWrapper::cacheField(const char* field_name) {
 
 }
 
-template<typename FunctionPtr>
-JNINativeMethod JniClassWrapper::makeNativeMethod(const char *method_name, FunctionPtr *function, const char *return_type, ...) {
-  return NULL;
+//template<typename FunctionPtr>
+JNINativeMethod JniClassWrapper::makeNativeMethod(const char *method_name, void *function, const char return_type, ...) {
+  return { 0 };
+}
+
+//template<typename FunctionPtr>
+JNINativeMethod JniClassWrapper::makeNativeMethod(const char *method_name, void *function, const char *return_type, ...) {
+  return { 0 };
 }
 
 bool JniClassWrapper::registerNativeMethods(JNIEnv *env, const std::string &class_name, const std::vector<JNINativeMethod> &methods) {

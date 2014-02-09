@@ -6,5 +6,6 @@
 #endif
 
 #include <jni.h>
+#define _jvoid 'V'
 
 #endif // __JniHelpersCommon_h__
