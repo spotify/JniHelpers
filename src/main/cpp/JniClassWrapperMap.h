@@ -17,11 +17,22 @@ public:
   virtual ~JniClassWrapperMap() {}
 
   virtual void add(JniClassWrapper *item) {
-    _classes[item->getSimpleName()] = item;
+    _classes[item->getCanonicalName()] = item;
   }
 
   virtual JniClassWrapper* get(const char* name) {
     return _classes[name];
+  }
+
+  // Only objects of type JniClassWrapper may be instantiated here
+  template<typename TypeName>
+  TypeName* newInstance(JNIEnv *env, jobject fromObject) {
+    TypeName *result = new TypeName();
+    // TODO: Error checking here
+    JniClassWrapper *globalInstance = get(result->getCanonicalName());
+    result->merge(globalInstance);
+    result->setJavaObject(env, fromObject);
+    return result;
   }
 
 protected:

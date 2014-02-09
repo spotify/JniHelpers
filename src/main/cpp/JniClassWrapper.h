@@ -18,13 +18,14 @@ template class EXPORT std::map<std::string, jmethodID>;
 template class EXPORT std::map<std::string, jfieldID>;
 
 class EXPORT JniClassWrapper {
-protected:
+public:
   JniClassWrapper() {}
-  JniClassWrapper(JNIEnv *env) {}
-  JniClassWrapper(JNIEnv *env, jobject fromObject) {}
+  JniClassWrapper(JNIEnv *env) {
+    // TODO: Can't call initialize here because of symbol visibility :(
+    // initialize(env);
+  }
   virtual ~JniClassWrapper() {}
 
-public:
   virtual void initialize(JNIEnv *env) = 0;
   virtual const char* getPackageName() const = 0;
   virtual const char* getSimpleName() const = 0;

@@ -5,8 +5,8 @@ using namespace spotify::jni;
 
 class JniHelpersTest : public JniClassWrapper {
 public:
-  JniHelpersTest(JNIEnv *env);
-  JniHelpersTest(JNIEnv *env, jobject fromObject);
+  JniHelpersTest() : JniClassWrapper() {}
+  JniHelpersTest(JNIEnv *env) : JniClassWrapper(env) { initialize(env); }
   ~JniHelpersTest() {}
 
   void initialize(JNIEnv *env);
@@ -17,11 +17,5 @@ public:
   jobject toJavaObject(JniClassWrapper *nativeObject);
 
 private:
-  JniHelpersTest() : JniClassWrapper() {}
-  static JniHelpersTest* newInstance() {
-    JniHelpersTest *instance = new JniHelpersTest();
-    instance->merge(gClasses.get(instance->getSimpleName()));
-    return instance;
-  }
   static void createClassWrapper(JNIEnv *env, jobject object);
 };

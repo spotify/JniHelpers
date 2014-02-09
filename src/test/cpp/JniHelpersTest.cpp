@@ -1,13 +1,5 @@
 #include "JniHelpersTest.h"
 
-JniHelpersTest::JniHelpersTest(JNIEnv *env) : JniClassWrapper(env) {
-  initialize(env);
-}
-
-JniHelpersTest::JniHelpersTest(JNIEnv *env, jobject fromObject) : JniClassWrapper(env, fromObject) {
-  setJavaObject(env, fromObject);
-}
-
 void JniHelpersTest::initialize(JNIEnv *env) {
   addNativeMethod("createClassWrapper", &JniHelpersTest::createClassWrapper,
     kTypeVoid, kTypeVoid, NULL);
@@ -22,7 +14,6 @@ jobject JniHelpersTest::toJavaObject(JniClassWrapper *nativeObject) {
 }
 
 void JniHelpersTest::createClassWrapper(JNIEnv *env, jobject object) {
-  JniHelpersTest *instance = JniHelpersTest::newInstance();
-  instance->setJavaObject(env, object);
+  JniHelpersTest *instance = gClasses.newInstance<JniHelpersTest>(env, object);
   delete instance;
 }
