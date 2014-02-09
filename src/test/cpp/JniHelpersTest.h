@@ -9,9 +9,10 @@ public:
   JniHelperTest(JNIEnv *env);
   ~JniHelperTest() {}
 
-  virtual void initialize(JNIEnv *env);
-  virtual const char* getClassName() const;
+  void initialize(JNIEnv *env);
+  const char* getPackageName() const { return "com/spotify/jnihelpers"; }
+  const char* getSimpleName() const { return "JniHelpersTest"; }
 
-  virtual JniClassWrapper* fromJavaObject(JNIEnv *env, jobject javaObject) const;
-  virtual jobject toJavaObject(JniClassWrapper *nativeObject);
+  JniClassWrapper* fromJavaObject(JNIEnv *env, jobject javaObject) const;
+  jobject toJavaObject(JniClassWrapper *nativeObject);
 };

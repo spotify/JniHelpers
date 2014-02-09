@@ -25,7 +25,8 @@ private:
 
 public:
   virtual void initialize(JNIEnv *env) = 0;
-  virtual const char* getClassName() const = 0;
+  virtual const char* getPackageName() const = 0;
+  virtual const char* getSimpleName() const = 0;
 
   virtual JniClassWrapper* fromJavaObject(JNIEnv *env, jobject javaObject) const = 0;
   virtual jobject toJavaObject(JniClassWrapper *nativeObject) = 0;
