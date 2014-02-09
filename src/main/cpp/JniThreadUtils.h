@@ -1,7 +1,8 @@
 #ifndef __JniThreadUtils_h__
 #define __JniThreadUtils_h__
 
-#include "JniHelpers.h"
+#include "JniHelpersCommon.h"
+#include <string>
 
 namespace spotify {
 namespace jni {
@@ -17,10 +18,6 @@ public:
   static EXPORT JNIEnv* getEnvForCurrentThread();
   static EXPORT JNIEnv* attachCurrentThreadToJVM(const std::string &thread_name);
   static EXPORT void detatchCurrentThreadFromJVM();
-
-  static EXPORT void checkException(JNIEnv *env);
-  static EXPORT JniLocalRef<jobject> newException(JNIEnv *env, const char *message, ...);
-  static EXPORT void throwRuntimeException(JNIEnv *env, const char *message, ...);
 };
 
 } // namespace jni
