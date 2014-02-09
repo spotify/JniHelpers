@@ -1,5 +1,8 @@
 #include "JniClassWrapper.h"
 
+namespace spotify {
+namespace jni {
+
 JniClassWrapper::JniClassWrapper(JNIEnv *env) {
 
 }
@@ -37,3 +40,6 @@ JNINativeMethod JniClassWrapper::makeNativeMethod(const char *method_name, Funct
 bool JniClassWrapper::registerNativeMethods(JNIEnv *env, const std::string &class_name, const std::vector<JNINativeMethod> &methods) {
   return false;
 }
+
+} // namespace jni
+} // namespace spotify

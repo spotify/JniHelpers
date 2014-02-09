@@ -1,6 +1,8 @@
 #ifndef __JniLocalRef_h__
 #define __JniLocalRef_h__
 
+#include "JniHelpers.h"
+
 namespace spotify {
 namespace jni {
 
@@ -11,7 +13,7 @@ public:
   JniLocalRef() : _obj(NULL) {}
   JniLocalRef(JniType obj) : _obj(NULL) { set(obj); }
   JniLocalRef(const JniLocalRef<JniType> &ref) : _obj(NULL) {
-    JNIEnv *env = JniHelper::get()->getEnvForCurrentThread();
+    JNIEnv *env = JniThreadUtils::getEnvForCurrentThread();
     set((JniType)env->NewLocalRef(ref.get()));
   }
 
@@ -19,7 +21,7 @@ public:
 
   JniType get() const { return _obj; }
   void set(JniType obj) {
-    JNIEnv *env = JniHelper::get()->getEnvForCurrentThread();
+    JNIEnv *env = JniThreadUtils::getEnvForCurrentThread();
     if (_obj) env->DeleteLocalRef(_obj);
     _obj = obj;
   }

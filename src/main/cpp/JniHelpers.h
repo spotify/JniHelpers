@@ -5,6 +5,7 @@
 #define EXPORT __declspec(dllexport)
 #endif
 
+#include <jni.h>
 #include "JniClassUtils.h"
 #include "JniClassWrapper.h"
 #include "JniGlobalRef.h"

@@ -2,6 +2,7 @@
 #define __JniClassUtils_h__
 
 #include "JniHelpers.h"
+#include <string>
 
 namespace spotify {
 namespace jni {

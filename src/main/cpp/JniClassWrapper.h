@@ -1,7 +1,7 @@
 #ifndef __JniClassWrapper_h__
 #define __JniClassWrapper_h__
 
-#include <jni.h>
+#include "JniHelpers.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -15,18 +15,15 @@ public:
   * Create a new JNI class wrapper.
   * @param env JVM environment
   */
-  explicit __declspec(dllexport) JniClassWrapper(JNIEnv *env);
+  EXPORT JniClassWrapper(JNIEnv *env);
+  EXPORT virtual ~JniClassWrapper();
 
 private:
-  // Disallow no-arg constructor
+  // Disallow no-arg and copy constructors
   JniClassWrapper() {}
-  // Disallow copy constructor
   JniClassWrapper(const JniClassWrapper&) {}
 
 public:
-  __declspec(dllexport)
-  virtual ~JniClassWrapper();
-
   virtual void initialize(JNIEnv *env) = 0;
   virtual const char* getClassName() const = 0;
 
@@ -34,19 +31,18 @@ public:
   virtual jobject toJavaObject(JniClassWrapper *nativeObject) = 0;
 
 public:
-  jmethodID __declspec(dllexport) getMethod(const char *field_name);
-  jmethodID __declspec(dllexport) getField(const char* field_name);
-  template<typename TypeName> __declspec(dllexport)
-  TypeName getFieldValue(jobject instance, const char* field_name);
+  EXPORT jmethodID getMethod(const char *field_name);
+  EXPORT jmethodID getField(const char* field_name);
+  template<typename TypeName>
+  EXPORT TypeName getFieldValue(jobject instance, const char* field_name);
 
 protected:
-  void __declspec(dllexport) cacheMethod(const char* method_name, const char* return_type, ...);
-  void __declspec(dllexport) cacheField(const char* field_name);
+  EXPORT void cacheMethod(const char* method_name, const char* return_type, ...);
+  EXPORT void cacheField(const char* field_name);
 
-  template<typename FunctionPtr> __declspec(dllexport)
-  JNINativeMethod makeNativeMethod(const char *method_name, FunctionPtr *function, const char *return_type, ...);
-  bool __declspec(dllexport)
-  registerNativeMethods(JNIEnv *env, const std::string &class_name, const std::vector<JNINativeMethod> &methods);
+  template<typename FunctionPtr>
+  EXPORT JNINativeMethod makeNativeMethod(const char *method_name, FunctionPtr *function, const char *return_type, ...);
+  EXPORT bool registerNativeMethods(JNIEnv *env, const std::string &class_name, const std::vector<JNINativeMethod> &methods);
 
 protected:
   static std::map<std::string, jmethodID> _methods;
