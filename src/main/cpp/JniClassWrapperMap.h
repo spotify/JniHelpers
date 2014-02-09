@@ -9,17 +9,23 @@
 namespace spotify {
 namespace jni {
 
-class JniClassWrapperMap {
+template class EXPORT std::map<const char*, JniClassWrapper*>;
+
+class EXPORT JniClassWrapperMap {
 public:
   JniClassWrapperMap() {}
   virtual ~JniClassWrapperMap() {}
 
-  virtual EXPORT void add(JniClassWrapper *item) {
+  virtual void add(JniClassWrapper *item) {
     _classes[item->getSimpleName()] = item;
   }
 
+  virtual JniClassWrapper* get(const char* name) {
+    return _classes[name];
+  }
+
 protected:
-  std::map<std::string, JniClassWrapper*> _classes;
+  std::map<const char*, JniClassWrapper*> _classes;
 };
 
 } // namespace jni

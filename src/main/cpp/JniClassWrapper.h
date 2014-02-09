@@ -2,6 +2,7 @@
 #define __JniClassWrapper_h__
 
 #include "JniHelpersCommon.h"
+#include "JniGlobalRef.h"
 #include <map>
 #include <string>
 #include <sstream>
@@ -10,8 +11,15 @@
 namespace spotify {
 namespace jni {
 
-class JniClassWrapper {
+#define kTypeVoid "V"
+
+template class EXPORT std::vector<JNINativeMethod>;
+template class EXPORT std::map<std::string, jmethodID>;
+template class EXPORT std::map<std::string, jfieldID>;
+
+class EXPORT JniClassWrapper {
 protected:
+  JniClassWrapper() {}
   JniClassWrapper(JNIEnv *env) {}
   JniClassWrapper(JNIEnv *env, jobject fromObject) {}
   virtual ~JniClassWrapper() {}
@@ -25,31 +33,30 @@ public:
   virtual jobject toJavaObject(JniClassWrapper *nativeObject) = 0;
 
 public:
-  EXPORT const char* getCanonicalName() const;
+  const char* getCanonicalName() const;
+  void merge(JniClassWrapper *globalInstance);
 
 public:
-  EXPORT jmethodID getMethod(const char *field_name);
-  EXPORT jmethodID getField(const char* field_name);
+  jmethodID getMethod(const char *field_name);
+  jmethodID getField(const char* field_name);
+  // TODO: I'm not really sure if this will work
   template<typename TypeName>
-  EXPORT TypeName getFieldValue(jobject instance, const char* field_name);
+  TypeName getFieldValue(jobject instance, const char* field_name);
 
 protected:
-  EXPORT void cacheMethod(const char* method_name, const char* return_type, ...);
-  EXPORT void cacheField(const char* field_name);
+  void cacheMethod(const char* method_name, const char* return_type, ...);
+  void cacheField(const char* field_name);
 
-  //template<typename FunctionPtr>
-  EXPORT JNINativeMethod makeNativeMethod(const char *method_name, void *function, const char return_type, ...);
-  //template<typename FunctionPtr>
-  EXPORT JNINativeMethod makeNativeMethod(const char *method_name, void *function, const char *return_type, ...);
-  EXPORT bool registerNativeMethods(JNIEnv *env, const std::string &class_name, const std::vector<JNINativeMethod> &methods);
+  void addNativeMethod(const char *method_name, void *function, const char *return_type, ...);
+  bool registerNativeMethods(JNIEnv *env);
 
 protected:
-  static const char kTypeVoid = 'V';
-  static const char* kTypeString;
+  //JniGlobalRef<jobject> _clazz;
+  std::map<std::string, jmethodID> _methods;
+  std::map<std::string, jfieldID> _fields;
 
-protected:
-  static std::map<std::string, jmethodID> _methods;
-  static std::map<std::string, jfieldID> _fields;
+private:
+  std::vector<JNINativeMethod> _jni_methods;
 };
 
 } // namespace jni

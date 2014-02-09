@@ -9,10 +9,9 @@ JniHelpersTest::JniHelpersTest(JNIEnv *env, jobject fromObject) : JniClassWrappe
 }
 
 void JniHelpersTest::initialize(JNIEnv *env) {
-  std::vector<JNINativeMethod> methods;
-  methods.push_back(makeNativeMethod("createClassWrapper",
-    &JniHelpersTest::createClassWrapper, kTypeVoid,
-    kTypeVoid));
+  addNativeMethod("createClassWrapper", &JniHelpersTest::createClassWrapper,
+    kTypeVoid, kTypeVoid, NULL);
+  registerNativeMethods(env);
 }
 
 void JniHelpersTest::setJavaObject(JNIEnv *env, jobject javaObject) {
@@ -23,5 +22,7 @@ jobject JniHelpersTest::toJavaObject(JniClassWrapper *nativeObject) {
 }
 
 void JniHelpersTest::createClassWrapper(JNIEnv *env, jobject object) {
-  JniHelpersTest jniHelpersTest(env, object);
+  JniHelpersTest *instance = JniHelpersTest::newInstance();
+  instance->setJavaObject(env, object);
+  delete instance;
 }
