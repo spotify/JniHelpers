@@ -1,5 +1,5 @@
-#ifndef __JniException_h__
-#define __JniException_h__
+#ifndef __JavaExceptionUtils_h__
+#define __JavaExceptionUtils_h__
 
 #include "JniHelpersCommon.h"
 #include "JniLocalRef.h"
@@ -7,12 +7,12 @@
 namespace spotify {
 namespace jni {
 
-  class JniException {
+  class JavaExceptionUtils {
   private:
     // Direct instantiation not allowed
-    JniException() {}
-    JniException(const JniException&) {}
-    virtual ~JniException() {}
+    JavaExceptionUtils() {}
+    JavaExceptionUtils(const JavaExceptionUtils&) {}
+    virtual ~JavaExceptionUtils() {}
 
   public:
     static EXPORT void checkException(JNIEnv *env);
@@ -22,4 +22,4 @@ namespace jni {
 }
 }
 
-#endif // __JniException_h__
+#endif // __JavaExceptionUtils_h__

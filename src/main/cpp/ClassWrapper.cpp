@@ -1,42 +1,42 @@
-#include "JniClassWrapper.h"
+#include "ClassWrapper.h"
 #include <sstream>
 
 namespace spotify {
 namespace jni {
 
-void JniClassWrapper::merge(JniClassWrapper *globalInstance) {
+void ClassWrapper::merge(ClassWrapper *globalInstance) {
   _methods = globalInstance->_methods;
   _fields = globalInstance->_fields;
 }
 
-const char* JniClassWrapper::getCanonicalName() const  {
+const char* ClassWrapper::getCanonicalName() const  {
   std::stringstream stringstream;
   stringstream << getPackageName() << "/" << getSimpleName();
   return stringstream.str().c_str();
 }
 
-jmethodID JniClassWrapper::getMethod(const char *field_name) {
+jmethodID ClassWrapper::getMethod(const char *field_name) {
   return NULL;
 }
 
-jmethodID JniClassWrapper::getField(const char* field_name) {
+jmethodID ClassWrapper::getField(const char* field_name) {
   return NULL;
 }
 
 template<typename TypeName>
-TypeName JniClassWrapper::getFieldValue(jobject instance, const char* field_name) {
+TypeName ClassWrapper::getFieldValue(jobject instance, const char* field_name) {
   return NULL;
 }
 
-void JniClassWrapper::cacheMethod(const char* method_name, const char* return_type, ...) {
+void ClassWrapper::cacheMethod(const char* method_name, const char* return_type, ...) {
 
 }
 
-void JniClassWrapper::cacheField(const char* field_name) {
+void ClassWrapper::cacheField(const char* field_name) {
 
 }
 
-void JniClassWrapper::addNativeMethod(const char *method_name, void *function, const char *return_type, ...) {
+void ClassWrapper::addNativeMethod(const char *method_name, void *function, const char *return_type, ...) {
   JNINativeMethod nativeMethod;
   nativeMethod.name = const_cast<char*>(method_name);
   nativeMethod.fnPtr = function;
@@ -59,7 +59,7 @@ void JniClassWrapper::addNativeMethod(const char *method_name, void *function, c
       continue;
     }
 
-    JniClassWrapper *argumentAsClass = static_cast<JniClassWrapper*>(argument);
+    ClassWrapper *argumentAsClass = static_cast<ClassWrapper*>(argument);
     if (argumentAsClass != NULL) {
       stringstream << "L" << argumentAsClass->getCanonicalName() << ";";
       continue;
@@ -73,7 +73,7 @@ void JniClassWrapper::addNativeMethod(const char *method_name, void *function, c
   _jni_methods.push_back(nativeMethod);
 }
 
-bool JniClassWrapper::registerNativeMethods(JNIEnv *env) {
+bool ClassWrapper::registerNativeMethods(JNIEnv *env) {
   size_t numMethods = _jni_methods.size();
   JNINativeMethod *methods = new JNINativeMethod[numMethods];
   for (int i = 0; i < numMethods; ++i) {

@@ -1,5 +1,5 @@
-#ifndef __JniClassUtils_h__
-#define __JniClassUtils_h__
+#ifndef __JavaClassUtils_h__
+#define __JavaClassUtils_h__
 
 #include "JniHelpersCommon.h"
 #include <string>
@@ -7,12 +7,12 @@
 namespace spotify {
 namespace jni {
 
-class JniClassUtils {
+class JavaClassUtils {
 private:
   // Direct instantiation not allowed for this class
-  JniClassUtils() {}
-  JniClassUtils(const JniClassUtils&) {}
-  virtual ~JniClassUtils() {}
+  JavaClassUtils() {}
+  JavaClassUtils(const JavaClassUtils&) {}
+  virtual ~JavaClassUtils() {}
 
 public:
   static EXPORT void setJavaClassLoaderForCurrentThread(JNIEnv *env, jobject class_loader);
@@ -22,4 +22,4 @@ public:
 } // namespace jni
 } // namespace spotify
 
-#endif // __JniClassUtils_h__
+#endif // __JavaClassUtils_h__

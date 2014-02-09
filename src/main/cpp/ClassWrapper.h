@@ -1,5 +1,5 @@
-#ifndef __JniClassWrapper_h__
-#define __JniClassWrapper_h__
+#ifndef __ClassWrapper_h__
+#define __ClassWrapper_h__
 
 #include "JniHelpersCommon.h"
 #include "JniGlobalRef.h"
@@ -17,25 +17,25 @@ template class EXPORT std::vector<JNINativeMethod>;
 template class EXPORT std::map<std::string, jmethodID>;
 template class EXPORT std::map<std::string, jfieldID>;
 
-class EXPORT JniClassWrapper {
+class EXPORT ClassWrapper {
 public:
-  JniClassWrapper() {}
-  JniClassWrapper(JNIEnv *env) {
+  ClassWrapper() {}
+  ClassWrapper(JNIEnv *env) {
     // TODO: Can't call initialize here because of symbol visibility :(
     // initialize(env);
   }
-  virtual ~JniClassWrapper() {}
+  virtual ~ClassWrapper() {}
 
   virtual void initialize(JNIEnv *env) = 0;
   virtual const char* getPackageName() const = 0;
   virtual const char* getSimpleName() const = 0;
 
   virtual void setJavaObject(JNIEnv *env, jobject javaObject) = 0;
-  virtual jobject toJavaObject(JniClassWrapper *nativeObject) = 0;
+  virtual jobject toJavaObject(ClassWrapper *nativeObject) = 0;
 
 public:
   const char* getCanonicalName() const;
-  void merge(JniClassWrapper *globalInstance);
+  void merge(ClassWrapper *globalInstance);
 
 public:
   jmethodID getMethod(const char *field_name);
@@ -63,4 +63,4 @@ private:
 } // namespace jni
 } // namespace spotify
 
-#endif // __JniClassWrapper_h__
+#endif // __ClassWrapper_h__

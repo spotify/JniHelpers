@@ -3,10 +3,10 @@
 
 using namespace spotify::jni;
 
-class JniHelpersTest : public JniClassWrapper {
+class JniHelpersTest : public ClassWrapper {
 public:
-  JniHelpersTest() : JniClassWrapper() {}
-  JniHelpersTest(JNIEnv *env) : JniClassWrapper(env) { initialize(env); }
+  JniHelpersTest() : ClassWrapper() {}
+  JniHelpersTest(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
   ~JniHelpersTest() {}
 
   void initialize(JNIEnv *env);
@@ -14,7 +14,7 @@ public:
   const char* getSimpleName() const { return "JniHelpersTest"; }
 
   void setJavaObject(JNIEnv *env, jobject javaObject);
-  jobject toJavaObject(JniClassWrapper *nativeObject);
+  jobject toJavaObject(ClassWrapper *nativeObject);
 
 private:
   static void createClassWrapper(JNIEnv *env, jobject object);

@@ -9,7 +9,7 @@ void JniHelpersTest::initialize(JNIEnv *env) {
 void JniHelpersTest::setJavaObject(JNIEnv *env, jobject javaObject) {
 }
 
-jobject JniHelpersTest::toJavaObject(JniClassWrapper *nativeObject) {
+jobject JniHelpersTest::toJavaObject(ClassWrapper *nativeObject) {
   return NULL;
 }
 

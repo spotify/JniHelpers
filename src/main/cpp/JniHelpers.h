@@ -3,11 +3,12 @@
 
 #include "JniHelpersCommon.h"
 
-#include "JniClassUtils.h"
-#include "JniClassWrapper.h"
-#include "JniClassWrapperMap.h"
+#include "ClassWrapper.h"
+#include "ClassRegistry.h"
+#include "JavaClassUtils.h"
+#include "JavaExceptionUtils.h"
+#include "JavaThreadUtils.h"
 #include "JniGlobalRef.h"
 #include "JniLocalRef.h"
-#include "JniThreadUtils.h"
 
 #endif // __JniHelpers_h__
