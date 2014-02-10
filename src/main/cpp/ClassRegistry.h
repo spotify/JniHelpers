@@ -9,7 +9,10 @@
 namespace spotify {
 namespace jni {
 
+#if WIN32
+// TODO: Should only be exported for DLL builds
 template class EXPORT std::map<const char*, ClassWrapper*>;
+#endif
 
 class EXPORT ClassRegistry {
 public:

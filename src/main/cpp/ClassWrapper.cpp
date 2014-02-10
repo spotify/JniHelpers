@@ -1,5 +1,7 @@
 #include "ClassWrapper.h"
 #include <sstream>
+#include <string.h>
+#include <stdarg.h>
 
 namespace spotify {
 namespace jni {

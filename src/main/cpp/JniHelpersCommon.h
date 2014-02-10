@@ -3,6 +3,8 @@
 
 #if WIN32
 #define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
 #endif
 
 #include <jni.h>

@@ -13,9 +13,12 @@ namespace jni {
 
 #define kTypeVoid "V"
 
+#if WIN32
+// TODO: Should only be defined for dynamic lib builds
 template class EXPORT std::vector<JNINativeMethod>;
 template class EXPORT std::map<std::string, jmethodID>;
 template class EXPORT std::map<std::string, jfieldID>;
+#endif
 
 class EXPORT ClassWrapper {
 public:

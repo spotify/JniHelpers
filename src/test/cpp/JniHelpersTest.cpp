@@ -1,7 +1,7 @@
 #include "JniHelpersTest.h"
 
 void JniHelpersTest::initialize(JNIEnv *env) {
-  addNativeMethod("createClassWrapper", &JniHelpersTest::createClassWrapper,
+  addNativeMethod("createClassWrapper", (void*)&JniHelpersTest::createClassWrapper,
     kTypeVoid, kTypeVoid, NULL);
   registerNativeMethods(env);
 }

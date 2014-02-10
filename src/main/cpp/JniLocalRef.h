@@ -37,7 +37,8 @@ public:
 
   void operator=(JniType obj) { set(obj); }
   void operator=(const JniLocalRef<JniType> &ref) {
-    set((JniType)JniCurrentEnv()->NewLocalRef(ref.get()));
+    JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
+    set((JniType)env->NewLocalRef(ref.get()));
   }
 
 private:
