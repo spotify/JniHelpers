@@ -1,41 +1,61 @@
 #include "ClassWrapper.h"
-#include <sstream>
+#include "JavaClassUtils.h"
+#include "JavaExceptionUtils.h"
 #include <string.h>
-#include <stdarg.h>
 
 namespace spotify {
 namespace jni {
 
-void ClassWrapper::merge(ClassWrapper *globalInstance) {
+const char* ClassWrapper::getCanonicalName() const {
+  return JavaClassUtils::makeCanonicalClassName(getPackageName(), getSimpleName());
+}
+
+void ClassWrapper::merge(const ClassWrapper *globalInstance) {
+  _clazz = globalInstance->_clazz;
   _methods = globalInstance->_methods;
   _fields = globalInstance->_fields;
 }
 
-const char* ClassWrapper::getCanonicalName() const  {
-  std::stringstream stringstream;
-  stringstream << getPackageName() << "/" << getSimpleName();
-  return stringstream.str().c_str();
+jmethodID ClassWrapper::getMethod(const char *method_name) {
+  const std::string key(method_name);
+  return _methods[key];
 }
 
-jmethodID ClassWrapper::getMethod(const char *field_name) {
-  return NULL;
-}
-
-jmethodID ClassWrapper::getField(const char* field_name) {
-  return NULL;
+jfieldID ClassWrapper::getField(const char* field_name) {
+  const std::string key(field_name);
+  return _fields[key];
 }
 
 template<typename TypeName>
-TypeName ClassWrapper::getFieldValue(jobject instance, const char* field_name) {
+TypeName ClassWrapper::getFieldValue(JNIEnv *env, jobject instance, const char* field_name) {
   return NULL;
 }
 
-void ClassWrapper::cacheMethod(const char* method_name, const char* return_type, ...) {
-
+void ClassWrapper::setClass(JNIEnv *env) {
+  _clazz = env->FindClass(getCanonicalName());
+  JavaExceptionUtils::checkException(env);
 }
 
-void ClassWrapper::cacheField(const char* field_name) {
+void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char* return_type, ...) {
+  va_list arguments;
+  va_start(arguments, return_type);
+  const char *signature = JavaClassUtils::makeSignature(return_type, arguments);
+  va_end(arguments);
+  // TODO: Sanity check _class
+  jmethodID method = env->GetMethodID(_clazz.get(), method_name, signature);
+  JavaExceptionUtils::checkException(env);
+  if (method != NULL) {
+    _methods[method_name] = method;
+  }
+}
 
+void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *field_type) {
+  // TODO: Sanity check _class
+  jfieldID field = env->GetFieldID(_clazz.get(), field_name, field_type);
+  JavaExceptionUtils::checkException(env);
+  if (field != NULL) {
+    _fields[field_name] = field;
+  }
 }
 
 void ClassWrapper::addNativeMethod(const char *method_name, void *function, const char *return_type, ...) {
@@ -45,47 +65,23 @@ void ClassWrapper::addNativeMethod(const char *method_name, void *function, cons
 
   va_list arguments;
   va_start(arguments, return_type);
-  std::stringstream stringstream;
-  stringstream << "(";
-  void *argument;
-  while ((argument = va_arg(arguments, void*)) != NULL) {
-    char *argumentAsString = static_cast<char*>(argument);
-    if (argumentAsString != NULL) {
-      if (strlen(argumentAsString) > 1) {
-        // Class names must be proceeded with an "L" and have a semicolon afterwards
-        stringstream << "L" << argument << ";";
-      } else {
-        // Primitive types can simply be appended
-        stringstream << argument;
-      }
-      continue;
-    }
-
-    ClassWrapper *argumentAsClass = static_cast<ClassWrapper*>(argument);
-    if (argumentAsClass != NULL) {
-      stringstream << "L" << argumentAsClass->getCanonicalName() << ";";
-      continue;
-    }
-
-    // TODO: Invalid object passed to function, error
-  }
+  nativeMethod.signature = const_cast<char*>(JavaClassUtils::makeSignature(return_type, arguments));
   va_end(arguments);
-  nativeMethod.signature = const_cast<char*>(stringstream.str().c_str());
 
   _jni_methods.push_back(nativeMethod);
 }
 
 bool ClassWrapper::registerNativeMethods(JNIEnv *env) {
-  size_t numMethods = _jni_methods.size();
-  JNINativeMethod *methods = new JNINativeMethod[numMethods];
-  for (int i = 0; i < numMethods; ++i) {
-    methods[i] = _jni_methods[i];
+  if (_jni_methods.empty()) {
+    return false;
   }
-  // TODO: Class loading is expensive, this should be cached
-  jclass clazz = env->FindClass(getCanonicalName());
-  env->RegisterNatives(clazz, methods, (jint)numMethods);
-  delete[] methods;
-  return true; // TODO: Real error checking
+
+  if (_clazz.get() == NULL) {
+    JavaExceptionUtils::throwRuntimeException(env, "Could not find cached class for %s", getCanonicalName());
+    return false;
+  }
+
+  return (env->RegisterNatives(_clazz.get(), &_jni_methods[0], _jni_methods.size()) < 0);
 }
 
 } // namespace jni

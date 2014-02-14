@@ -6,6 +6,6 @@
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved);
 
 using namespace spotify::jni;
-static ClassRegistry gClasses;
+extern ClassRegistry gClasses;
 
 #endif // __JniHelpersTestInit_h__

@@ -4,6 +4,4 @@ public class JniHelpers {
     static {
         System.loadLibrary("JniHelpers");
     }
-
-
 }

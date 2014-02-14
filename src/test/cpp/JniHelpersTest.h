@@ -10,12 +10,12 @@ public:
   ~JniHelpersTest() {}
 
   void initialize(JNIEnv *env);
-  const char* getPackageName() const { return "com/spotify/jnihelpers"; }
-  const char* getSimpleName() const { return "JniHelpersTest"; }
+  const char* getPackageName() const;
+  const char* getSimpleName() const;
 
   void setJavaObject(JNIEnv *env, jobject javaObject);
   jobject toJavaObject(ClassWrapper *nativeObject);
 
 private:
-  static void createClassWrapper(JNIEnv *env, jobject object);
+  static void createNewInstance(JNIEnv *env, jobject object);
 };

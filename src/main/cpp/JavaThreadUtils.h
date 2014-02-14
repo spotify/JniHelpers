@@ -15,8 +15,9 @@ private:
   virtual ~JavaThreadUtils() {}
 
 public:
+  static EXPORT void initialize(JavaVM* jvm);
   static EXPORT JNIEnv* getEnvForCurrentThread();
-  static EXPORT JNIEnv* attachCurrentThreadToJVM(const std::string &thread_name);
+  static EXPORT JNIEnv* attachCurrentThreadToJVM(const char* thread_name);
   static EXPORT void detatchCurrentThreadFromJVM();
 };
 

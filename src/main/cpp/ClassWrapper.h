@@ -7,11 +7,10 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <stdarg.h>
 
 namespace spotify {
 namespace jni {
-
-#define kTypeVoid "V"
 
 #if WIN32
 // TODO: Should only be defined for dynamic lib builds
@@ -38,24 +37,25 @@ public:
 
 public:
   const char* getCanonicalName() const;
-  void merge(ClassWrapper *globalInstance);
+  void merge(const ClassWrapper *globalInstance);
 
 public:
-  jmethodID getMethod(const char *field_name);
-  jmethodID getField(const char* field_name);
+  jmethodID getMethod(const char *method_name);
+  jfieldID getField(const char* field_name);
   // TODO: I'm not really sure if this will work
   template<typename TypeName>
-  TypeName getFieldValue(jobject instance, const char* field_name);
+  TypeName getFieldValue(JNIEnv *env, jobject instance, const char* field_name);
 
 protected:
-  void cacheMethod(const char* method_name, const char* return_type, ...);
-  void cacheField(const char* field_name);
+  void setClass(JNIEnv *env);
+  void cacheMethod(JNIEnv *env, const char *method_name, const char *return_type, ...);
+  void cacheField(JNIEnv *env, const char *field_name, const char *field_type);
 
   void addNativeMethod(const char *method_name, void *function, const char *return_type, ...);
   bool registerNativeMethods(JNIEnv *env);
 
 protected:
-  //JniGlobalRef<jobject> _clazz;
+  JniGlobalRef<jclass> _clazz;
   std::map<std::string, jmethodID> _methods;
   std::map<std::string, jfieldID> _fields;
 

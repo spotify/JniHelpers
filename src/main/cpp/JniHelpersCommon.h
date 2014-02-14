@@ -8,6 +8,21 @@
 #endif
 
 #include <jni.h>
-#define _jvoid 'V'
+
+#define kTypeInt "I"
+#define kTypeLong "J"
+#define kTypeFloat "F"
+#define kTypeDouble "D"
+#define kTypeBool "Z"
+#define kTypeByte "B"
+#define kTypeVoid "V"
+
+// Common Java classes
+#define kTypeJavaClass(x) "Ljava/lang/" #x ";"
+#define kTypeJavaException "L/java/lang/Exception"
+#define kTypeJavaString "Ljava/lang/String"
+
+// Array builder macro
+#define kTypeArray(x) "[" x
 
 #endif // __JniHelpersCommon_h__

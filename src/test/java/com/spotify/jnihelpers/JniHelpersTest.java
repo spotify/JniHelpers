@@ -8,5 +8,6 @@ public class JniHelpersTest {
         System.loadLibrary("JniHelpersTest");
     }
 
-    @Test public native void createClassWrapper();
+    @Test
+    public native void createNewInstance() throws Exception;
 }

@@ -16,7 +16,13 @@ private:
 
 public:
   static EXPORT void setJavaClassLoaderForCurrentThread(JNIEnv *env, jobject class_loader);
-  static EXPORT jobject lookupJavaClass(JNIEnv *env, const std::string &class_name);
+  static EXPORT jclass findJavaClass(JNIEnv *env, const char *class_name);
+  // TODO: Possibly wrong
+  static EXPORT jclass findAndLoadJavaClass(JNIEnv *env, const char *class_name);
+
+  static EXPORT const char* makeCanonicalClassName(const char *package_name, const char *class_name);
+  static EXPORT const char* makeSignature(const char *return_type, ...);
+  static EXPORT const char* makeSignature(const char *return_type, va_list arguments);
 };
 
 } // namespace jni
