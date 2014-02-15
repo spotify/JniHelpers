@@ -5,4 +5,4 @@ file(GLOB libJniHelpers_SOURCES *.cpp)
 file(GLOB libJniHelpers_HEADERS *.h)
 
 link_directories(${JNI_LIBRARIES})
-add_library(JniHelpers SHARED ${libJniHelpers_SOURCES} ${libJniHelpers_HEADERS})
+add_library(JniHelpers ${libJniHelpers_SOURCES} ${libJniHelpers_HEADERS})
