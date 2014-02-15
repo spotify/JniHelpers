@@ -1,6 +1,7 @@
 #ifndef __JniGlobalRef_h__
 #define __JniGlobalRef_h__
 
+#include "JniHelpersCommon.h"
 #include "JavaThreadUtils.h"
 #include "JniLocalRef.h"
 
@@ -9,7 +10,7 @@ namespace jni {
 
 // RAII helper to maintain global references automatically.
 template<typename JniType>
-class JniGlobalRef {
+class EXPORT JniGlobalRef {
  public:
   JniGlobalRef() : _obj(NULL) {}
   JniGlobalRef(const JniGlobalRef<JniType> &ref) : _obj(NULL) { set(ref.get()); }

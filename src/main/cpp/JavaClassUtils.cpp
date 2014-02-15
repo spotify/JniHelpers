@@ -55,6 +55,7 @@ const char* JavaClassUtils::makeSignature(const char *return_type, ...) {
   va_start(arguments, return_type);
   const char *result = makeSignature(return_type, arguments);
   va_end(arguments);
+  return result;
 }
 
 const char* JavaClassUtils::makeSignature(const char *return_type, va_list arguments) {

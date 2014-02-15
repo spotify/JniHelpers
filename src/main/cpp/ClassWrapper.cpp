@@ -81,7 +81,7 @@ bool ClassWrapper::registerNativeMethods(JNIEnv *env) {
     return false;
   }
 
-  return (env->RegisterNatives(_clazz.get(), &_jni_methods[0], _jni_methods.size()) < 0);
+  return (env->RegisterNatives(_clazz.get(), &_jni_methods[0], (jint)_jni_methods.size()) < 0);
 }
 
 } // namespace jni
