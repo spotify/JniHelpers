@@ -1,10 +1,9 @@
-package com.spotify.jnihelpers;
+package com.spotify.jni;
 
 import org.junit.Test;
 
 public class JniHelpersTest {
     static {
-        System.loadLibrary("JniHelpers");
         System.loadLibrary("JniHelpersTest");
     }
 

@@ -1,4 +1,4 @@
-package com.spotify.jnihelpers;
+package com.spotify.jni;
 
 public class TestObject {
     String s;

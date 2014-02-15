@@ -1,6 +1,6 @@
 #include "JniHelpersTest.h"
 
-static const char *kPackageName = "com/spotify/jnihelpers";
+static const char *kPackageName = "com/spotify/jni";
 static const char *kClassName = "JniHelpersTest";
 
 void JniHelpersTest::initialize(JNIEnv *env) {
