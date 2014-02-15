@@ -13,7 +13,7 @@ namespace jni {
 
 #if WIN32
 // TODO: Should only be exported for DLL builds
-template class EXPORT std::map<const char*, ClassWrapper*>;
+template class EXPORT std::map<std::string, const ClassWrapper*>;
 #endif
 
 class EXPORT ClassRegistry {
