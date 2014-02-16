@@ -24,8 +24,8 @@
 
 // Common Java classes
 #define kTypeJavaClass(x) "Ljava/lang/" #x ";"
-#define kTypeJavaException "L/java/lang/Exception"
-#define kTypeJavaString "Ljava/lang/String"
+#define kTypeJavaException "Ljava/lang/Exception;"
+#define kTypeJavaString "Ljava/lang/String;"
 
 // Array builder macro
 #define kTypeArray(x) "[" x
