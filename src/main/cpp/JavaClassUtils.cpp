@@ -57,28 +57,34 @@ void JavaClassUtils::makeSignature(std::string &receiver, const char *return_typ
   stringstream << "(";
   char *argument;
   while ((argument = va_arg(arguments, char*)) != NULL) {
-    if (strlen(argument) > 1) {
-      // Class names must be proceeded with an "L" and have a semicolon afterwards
-      stringstream << "L" << argument << ";";
-    } else {
-      // Primitive types can simply be appended
-      stringstream << argument;
-    }
+    appendTypeToSignature(stringstream, argument);
   }
   stringstream << ")";
 
-  // TODO: Shameful copy/paste job here...
   if (return_type == NULL) {
     stringstream << kTypeVoid;
-  } else if (strlen(return_type) > 1) {
-    // Class names must be proceeded with an "L" and have a semicolon afterwards
-    stringstream << "L" << return_type << ";";
   } else {
-    // Primitive types can simply be appended
-    stringstream << return_type;
+    appendTypeToSignature(stringstream, return_type);
   }
 
   receiver = stringstream.str();
+}
+
+void JavaClassUtils::appendTypeToSignature(std::stringstream &stringstream, const char *argument) {
+  if (strlen(argument) == 1) {
+    // Primitive type; can be directly appended
+    stringstream << argument;
+  } else {
+    // Class names must be proceeded with an "L" and have a semicolon at the end,
+    // however the canonical signatures provided in classes like ClassWrapper are
+    // not expected to provide these. So check to see if this is a proper class
+    // signature, and make one if not.
+    if (argument[0] == 'L' && argument[strlen(argument) - 1] == ';') {
+      stringstream << argument;
+    } else {
+      stringstream << "L" << argument << ";";
+    }
+  }
 }
 
 } // namespace jni

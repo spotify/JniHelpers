@@ -24,6 +24,9 @@ public:
 
   static EXPORT void makeSignature(std::string &receiver, const char *return_type, ...);
   static EXPORT void makeSignature(std::string &receiver, const char *return_type, va_list arguments);
+
+protected:
+  static EXPORT void appendTypeToSignature(std::stringstream &stringstream, const char *argument);
 };
 
 } // namespace jni
