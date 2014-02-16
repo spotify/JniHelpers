@@ -33,9 +33,8 @@ public:
       if (env != NULL) {
         JavaExceptionUtils::throwRuntimeException(env, "Can't item with empty canonical name to map");
       }
-      return;
     } else {
-    _classes[item->getCanonicalName()] = item;
+      _classes[item->getCanonicalName()] = item;
     }
   }
 
