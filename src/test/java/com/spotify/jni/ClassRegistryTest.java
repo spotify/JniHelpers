@@ -1,7 +1,5 @@
 package com.spotify.jni;
 
-import com.spotify.jni.util.Success;
-import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -12,7 +10,7 @@ public class ClassRegistryTest {
         System.loadLibrary("JniHelpersTest");
     }
 
-    @Test(expected = Success.class)
+    @Test
     native public void addClass() throws Exception;
 
     @Test(expected = RuntimeException.class)
@@ -24,6 +22,6 @@ public class ClassRegistryTest {
     @Test(expected = RuntimeException.class)
     native public void addItemWithoutJavaClass() throws Exception;
 
-    @Test(expected = Success.class)
+    @Test
     native public void addItemMultipleTimes() throws Exception;
 }
