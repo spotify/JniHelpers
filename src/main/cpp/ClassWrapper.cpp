@@ -17,6 +17,20 @@ void ClassWrapper::merge(const ClassWrapper *globalInstance) {
   _fields = globalInstance->_fields;
 }
 
+void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
+  setFieldsFrom(env, javaThis);
+}
+
+jobject ClassWrapper::toJavaObject(JNIEnv *env) {
+  jobject result = env->NewObject(_clazz, _constructor);
+  setFieldsTo(env, result);
+  return result;
+}
+
+JniGlobalRef<jclass> ClassWrapper::getClass() const {
+  return _clazz;
+}
+
 jmethodID ClassWrapper::getMethod(const char *method_name) {
   const std::string key(method_name);
   return _methods[key];
@@ -27,14 +41,12 @@ jfieldID ClassWrapper::getField(const char* field_name) {
   return _fields[key];
 }
 
-template<typename TypeName>
-TypeName ClassWrapper::getFieldValue(JNIEnv *env, jobject instance, const char* field_name) {
-  return NULL;
-}
-
 void ClassWrapper::setClass(JNIEnv *env) {
   _clazz = env->FindClass(getCanonicalName());
   JavaExceptionUtils::checkException(env);
+  std::string signature;
+  JavaClassUtils::makeSignature(signature, kTypeVoid);
+  _constructor = env->GetMethodID(_clazz, "<init>", signature.c_str());
 }
 
 void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char* return_type, ...) {
@@ -43,7 +55,12 @@ void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char*
   std::string signature;
   JavaClassUtils::makeSignature(signature, return_type, arguments);
   va_end(arguments);
-  // TODO: Sanity check _class
+  if (_clazz.get() == NULL) {
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+      "Attempt to call cacheMethod without having set class info");
+    return;
+  }
+
   jmethodID method = env->GetMethodID(_clazz.get(), method_name, signature.c_str());
   JavaExceptionUtils::checkException(env);
   if (method != NULL) {
@@ -57,6 +74,61 @@ void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *f
   JavaExceptionUtils::checkException(env);
   if (field != NULL) {
     _fields[field_name] = field;
+  }
+}
+
+void ClassWrapper::mapField(const char *field_name, const char *field_type, void *field_ptr) {
+  FieldMapping *mapping = new FieldMapping;
+  mapping->type = field_type;
+  mapping->address = field_ptr;
+  _field_mappings[field_name] = mapping;
+}
+
+void ClassWrapper::setFieldsFrom(JNIEnv *env, jobject javaThis) {
+  std::map<std::string, jfieldID>::iterator iter;
+  for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
+    std::string key = iter->first;
+    jfieldID field = iter->second;
+    FieldMapping *mapping = _field_mappings[key]; // TODO: Should use getter here, if not null will be inserted
+    if (field != NULL && mapping != NULL) {
+      if (TYPE_EQUALS(mapping->type, kTypeInt)) {
+        int *address = static_cast<int*>(mapping->address);
+        *address = env->GetIntField(javaThis, field);
+      } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
+        float *address = static_cast<float*>(mapping->address);
+        *address = env->GetFloatField(javaThis, field);
+      } else if (TYPE_EQUALS(mapping->type, kTypeJavaString)) {
+        jstring string = (jstring)env->GetObjectField(javaThis, field);
+        JavaString *address = static_cast<JavaString*>(mapping->address);
+        address->setValue(env, string);
+      } else {
+        // TODO throw
+      }
+    }
+  }
+}
+
+void ClassWrapper::setFieldsTo(JNIEnv *env, jobject javaThis) {
+  std::map<std::string, jfieldID>::iterator iter;
+  for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
+    std::string key = iter->first;
+    jfieldID field = iter->second;
+    FieldMapping *mapping = _field_mappings[key]; // TODO: Should use getter here, if not null will be inserted
+    if (field != NULL && mapping != NULL) {
+      if (TYPE_EQUALS(mapping->type, kTypeInt)) {
+        int *address = static_cast<int*>(mapping->address);
+        env->SetIntField(javaThis, field, *address);
+      } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
+        float *address = static_cast<float*>(mapping->address);
+        env->SetFloatField(javaThis, field, *address);
+      } else if (TYPE_EQUALS(mapping->type, kTypeJavaString)) {
+        JavaString *address = static_cast<JavaString*>(mapping->address);
+        JniLocalRef<jstring> string = address->getJavaString(env);
+        env->SetObjectField(javaThis, field, string.get());
+      } else {
+        // TODO throw
+      }
+    }
   }
 }
 
