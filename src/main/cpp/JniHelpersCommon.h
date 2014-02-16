@@ -21,13 +21,22 @@
 #define kTypeBool "Z"
 #define kTypeByte "B"
 #define kTypeVoid "V"
+#define kTypeClass(x) "L" #x ";"
 
 // Common Java classes
 #define kTypeJavaClass(x) "Ljava/lang/" #x ";"
-#define kTypeJavaException "Ljava/lang/Exception;"
+// TODO: Rename to just kTypeString
 #define kTypeJavaString "Ljava/lang/String;"
+
+// Exceptions
+#define kTypeException kTypeJavaClass(Exception)
+#define kTypeRuntimeException kTypeJavaClass(RuntimeException)
+#define kTypeIllegalArgumentException kTypeJavaClass(IllegalArgumentException)
+#define kTypeIllegalStateException kTypeJavaClass(IllegalStateException)
 
 // Array builder macro
 #define kTypeArray(x) "[" x
+
+#define TYPE_EQUALS(_TYPE1, _TYPE2) (strcmp(_TYPE1, _TYPE2) == 0)
 
 #endif // __JniHelpersCommon_h__

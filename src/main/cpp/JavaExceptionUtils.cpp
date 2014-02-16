@@ -76,14 +76,14 @@ void JavaExceptionUtils::throwExceptionOfType(JNIEnv *env, const char *exception
 void JavaExceptionUtils::throwException(JNIEnv *env, const char *message, ...) {
   va_list arguments;
   va_start(arguments, message);
-  throwExceptionOfType(env, kTypeJavaException, message, arguments);
+  throwExceptionOfType(env, kTypeException, message, arguments);
   va_end(arguments);
 }
 
 void JavaExceptionUtils::throwRuntimeException(JNIEnv *env, const char *message, ...) {
   va_list arguments;
   va_start(arguments, message);
-  throwExceptionOfType(env, kTypeJavaClass(RuntimeException), message, arguments);
+  throwExceptionOfType(env, kTypeRuntimeException, message, arguments);
   va_end(arguments);
 }
 
