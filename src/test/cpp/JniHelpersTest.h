@@ -1,21 +1,17 @@
+#ifndef __JniHelpersTest_h__
+#define __JniHelpersTest_h__
+
 #include "JniHelpers.h"
-#include "JniHelpersTestInit.h"
 
 using namespace spotify::jni;
 
-class JniHelpersTest : public ClassWrapper {
-public:
-  JniHelpersTest() : ClassWrapper() {}
-  JniHelpersTest(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
-  ~JniHelpersTest() {}
+#define kPackageName "com/spotify/jni"
+//extern const char *kPackageName;
+extern const char *kSuccessClassName;
+extern const char *kSuccessMessage;
 
-  void initialize(JNIEnv *env);
-  const char* getPackageName() const;
-  const char* getSimpleName() const;
+extern ClassRegistry gClasses;
 
-  void setJavaObject(JNIEnv *env, jobject javaObject);
-  jobject toJavaObject(ClassWrapper *nativeObject);
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved);
 
-private:
-  static void createNewInstance(JNIEnv *env, jobject object);
-};
+#endif // __JniHelpersTest_h__

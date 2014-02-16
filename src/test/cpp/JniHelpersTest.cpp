@@ -1,45 +1,25 @@
 #include "JniHelpersTest.h"
+#include "ClassRegistryTest.h"
+#include "ClassWrapperTest.h"
+#include "JavaClassUtilsTest.h"
+#include "JavaExceptionUtilsTest.h"
+#include "JavaStringTest.h"
+#include "JavaThreadUtilsTest.h"
 
-static const char *kPackageName = "com/spotify/jni";
-static const char *kClassName = "JniHelpersTest";
+//const char *kPackageName = "com/spotify/jni";
+const char *kSuccessClassName = "com/spotify/jni/util/Success";
+const char *kSuccessMessage = "Success";
 
-void JniHelpersTest::initialize(JNIEnv *env) {
-  setClass(env);
-  addNativeMethod("createNewInstance", (void*)&JniHelpersTest::createNewInstance,
-    kTypeVoid, NULL);
-  registerNativeMethods(env);
-}
+ClassRegistry gClasses;
 
-const char* JniHelpersTest::getPackageName() const {
-  return kPackageName;
-}
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void*) {
+  JNIEnv *env = NULL;
 
-const char* JniHelpersTest::getSimpleName() const {
-  return kClassName;
-}
+  // TODO: Error checking here
+  jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
 
-void JniHelpersTest::setJavaObject(JNIEnv *env, jobject javaObject) {
-}
+  jniHelpersInitialize(jvm, env);
+  gClasses.add(new ClassRegistryTest(env));
 
-jobject JniHelpersTest::toJavaObject(ClassWrapper *nativeObject) {
-  return NULL;
-}
-
-void JniHelpersTest::createNewInstance(JNIEnv *env, jobject object) {
-  if (false) {
-    JavaExceptionUtils::throwRuntimeException(env, "Foo");
-    return;
-  }
-
-  JniHelpersTest *instance = gClasses.newInstance<JniHelpersTest>(env, object);
-  if (instance == NULL) {
-    JavaExceptionUtils::throwRuntimeException(env, "Could not create new instance of class");
-    return;
-  }
-  if (instance->_clazz == NULL) {
-    JavaExceptionUtils::throwRuntimeException(env, "Cached class was null");
-    return;
-  }
-
-  delete instance;
+  return JNI_VERSION_1_6;
 }
