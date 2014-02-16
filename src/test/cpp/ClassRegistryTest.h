@@ -13,11 +13,8 @@ public:
   ~ClassRegistryTest() {}
 
   void initialize(JNIEnv *env);
-  const char* getPackageName() const {
-    return kPackageName;
-  }
-  const char* getSimpleName() const {
-    return "ClassRegistryTest";
+  const char* getCanonicalName() const {
+    return MAKE_CANONICAL_NAME(PACKAGE, ClassRegistryTest);
   }
 
   void setJavaObject(JNIEnv *env, jobject javaObject) {}

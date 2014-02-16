@@ -7,6 +7,8 @@
 namespace spotify {
 namespace jni {
 
+#define MAKE_CANONICAL_NAME(_PACKAGE, _CLASS) _PACKAGE "/" #_CLASS
+
 class JavaClassUtils {
 private:
   // Direct instantiation not allowed for this class
@@ -20,9 +22,8 @@ public:
   // TODO: Possibly wrong
   static EXPORT jclass findAndLoadJavaClass(JNIEnv *env, const char *class_name);
 
-  static EXPORT const char* makeCanonicalClassName(const char *package_name, const char *class_name);
-  static EXPORT const char* makeSignature(const char *return_type, ...);
-  static EXPORT const char* makeSignature(const char *return_type, va_list arguments);
+  static EXPORT void makeSignature(std::string &receiver, const char *return_type, ...);
+  static EXPORT void makeSignature(std::string &receiver, const char *return_type, va_list arguments);
 };
 
 } // namespace jni

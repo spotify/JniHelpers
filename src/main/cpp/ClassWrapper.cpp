@@ -6,8 +6,9 @@
 namespace spotify {
 namespace jni {
 
-const char* ClassWrapper::getCanonicalName() const {
-  return JavaClassUtils::makeCanonicalClassName(getPackageName(), getSimpleName());
+const char* ClassWrapper::getSimpleName() const {
+  const char* lastSlash = strrchr(getCanonicalName(), '/');
+  return lastSlash != NULL ? lastSlash + 1 : getCanonicalName();
 }
 
 void ClassWrapper::merge(const ClassWrapper *globalInstance) {
@@ -39,10 +40,11 @@ void ClassWrapper::setClass(JNIEnv *env) {
 void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char* return_type, ...) {
   va_list arguments;
   va_start(arguments, return_type);
-  const char *signature = JavaClassUtils::makeSignature(return_type, arguments);
+  std::string signature;
+  JavaClassUtils::makeSignature(signature, return_type, arguments);
   va_end(arguments);
   // TODO: Sanity check _class
-  jmethodID method = env->GetMethodID(_clazz.get(), method_name, signature);
+  jmethodID method = env->GetMethodID(_clazz.get(), method_name, signature.c_str());
   JavaExceptionUtils::checkException(env);
   if (method != NULL) {
     _methods[method_name] = method;
@@ -65,7 +67,9 @@ void ClassWrapper::addNativeMethod(const char *method_name, void *function, cons
 
   va_list arguments;
   va_start(arguments, return_type);
-  nativeMethod.signature = const_cast<char*>(JavaClassUtils::makeSignature(return_type, arguments));
+  std::string signature;
+  JavaClassUtils::makeSignature(signature, return_type, arguments);
+  nativeMethod.signature = const_cast<char*>(strdup(signature.c_str()));
   va_end(arguments);
 
   _jni_methods.push_back(nativeMethod);

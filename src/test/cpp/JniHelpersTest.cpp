@@ -6,10 +6,6 @@
 #include "JavaStringTest.h"
 #include "JavaThreadUtilsTest.h"
 
-//const char *kPackageName = "com/spotify/jni";
-const char *kSuccessClassName = "com/spotify/jni/util/Success";
-const char *kSuccessMessage = "Success";
-
 ClassRegistry gClasses;
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void*) {

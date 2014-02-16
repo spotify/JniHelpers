@@ -29,17 +29,15 @@ public:
   virtual ~ClassWrapper() {}
 
   virtual void initialize(JNIEnv *env) = 0;
-  virtual const char* getPackageName() const = 0;
-  virtual const char* getSimpleName() const = 0;
+  virtual const char* getCanonicalName() const = 0;
 
   virtual void setJavaObject(JNIEnv *env, jobject javaObject) = 0;
   virtual jobject toJavaObject(ClassWrapper *nativeObject) = 0;
 
 public:
-  const char* getCanonicalName() const;
+  const char* getSimpleName() const;
   void merge(const ClassWrapper *globalInstance);
 
-public:
   jmethodID getMethod(const char *method_name);
   jfieldID getField(const char* field_name);
   // TODO: I'm not really sure if this will work

@@ -31,8 +31,9 @@ jclass JavaClassUtils::findAndLoadJavaClass(JNIEnv *env, const char *class_name)
   jclass cls = env->FindClass(kTypeJavaClass("ClassLoader"));
   JavaExceptionUtils::checkException(env);
 
-  const char *signature = makeSignature(kTypeJavaClass("Class"), kTypeJavaString, NULL);
-  jmethodID methodLoadClass = env->GetMethodID(cls, "loadClass", signature);
+  std::string signature;
+  makeSignature(signature, kTypeJavaClass("Class"), kTypeJavaString, NULL);
+  jmethodID methodLoadClass = env->GetMethodID(cls, "loadClass", signature.c_str());
   JavaExceptionUtils::checkException(env);
 
   jstring className = env->NewStringUTF(class_name);
@@ -44,21 +45,14 @@ jclass JavaClassUtils::findAndLoadJavaClass(JNIEnv *env, const char *class_name)
   return result;
 }
 
-const char* JavaClassUtils::makeCanonicalClassName(const char *package_name, const char *class_name) {
-  std::stringstream stringstream;
-  stringstream << package_name << "/" << class_name;
-  return stringstream.str().c_str();
-}
-
-const char* JavaClassUtils::makeSignature(const char *return_type, ...) {
+void JavaClassUtils::makeSignature(std::string &receiver, const char *return_type, ...) {
   va_list arguments;
   va_start(arguments, return_type);
-  const char *result = makeSignature(return_type, arguments);
+  makeSignature(receiver, return_type, arguments);
   va_end(arguments);
-  return result;
 }
 
-const char* JavaClassUtils::makeSignature(const char *return_type, va_list arguments) {
+void JavaClassUtils::makeSignature(std::string &receiver, const char *return_type, va_list arguments) {
   std::stringstream stringstream;
   stringstream << "(";
   char *argument;
@@ -84,7 +78,7 @@ const char* JavaClassUtils::makeSignature(const char *return_type, va_list argum
     stringstream << return_type;
   }
 
-  return stringstream.str().c_str();
+  receiver = stringstream.str();
 }
 
 } // namespace jni
