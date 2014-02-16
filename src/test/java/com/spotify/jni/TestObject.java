@@ -1,10 +1,16 @@
-package com.spotify.jni.util;
+package com.spotify.jni;
 
 public class TestObject {
     String s;
     int i;
     float f;
     byte[] b;
+
+    public TestObject(String s, int i, float f) {
+        this.s = s;
+        this.i = i;
+        this.f = f;
+    }
 
     public String getS() {
         return s;
