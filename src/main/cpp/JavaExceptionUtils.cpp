@@ -51,7 +51,6 @@ JniLocalRef<jobject> JavaExceptionUtils::newThrowable(JNIEnv *env, const char *m
   return result;
 }
 
-
 void JavaExceptionUtils::throwExceptionOfType(JNIEnv *env, const char *exception_class_name, const char *message, va_list arguments) {
   jclass clazz = JavaClassUtils::findJavaClass(env, exception_class_name);
   checkException(env);

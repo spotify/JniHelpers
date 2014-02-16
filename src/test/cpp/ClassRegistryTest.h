@@ -23,6 +23,7 @@ public:
   }
 
 private:
+  static void createRegistry(JNIEnv *env, jobject javaThis);
   static void addClass(JNIEnv *env, jobject javaThis);
   static void addNullItem(JNIEnv *env, jobject javaThis);
   static void addItemWithEmptyName(JNIEnv *env, jobject javaThis);
