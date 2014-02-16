@@ -3,6 +3,7 @@ package com.spotify.jni.util;
 public class TestObject {
     String s;
     int i;
+    float f;
     byte[] b;
 
     public String getS() {
@@ -19,6 +20,14 @@ public class TestObject {
 
     public void setI(int i) {
         this.i = i;
+    }
+
+    public float getF() {
+        return f;
+    }
+
+    public void setF(float f) {
+        this.f = f;
     }
 
     public byte[] getB() {
