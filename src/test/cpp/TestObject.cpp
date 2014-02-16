@@ -26,11 +26,9 @@ void TestObject::initialize(JNIEnv *env) {
   // TODO: Getters/setters for byte array
 }
 
-void TestObject::setJavaObject(JNIEnv *env, jobject javaObject) {
-  // TODO
-}
-
-jobject TestObject::toJavaObject(ClassWrapper *nativeObject) {
-  // TODO
-  return NULL;
+void TestObject::merge(const ClassWrapper *globalInstance) {
+  ClassWrapper::merge(globalInstance);
+  mapField("i", kTypeInt, &i);
+  mapField("f", kTypeFloat, &f);
+  mapField("s", kTypeJavaString, &s);
 }

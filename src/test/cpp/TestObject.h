@@ -17,10 +17,9 @@ public:
   }
 
   void initialize(JNIEnv *env);
-  void setJavaObject(JNIEnv *env, jobject javaObject);
-  jobject toJavaObject(ClassWrapper *nativeObject);
+  void merge(const ClassWrapper *globalInstance);
 
-private:
+public:
   JavaString s;
   int i;
   float f;

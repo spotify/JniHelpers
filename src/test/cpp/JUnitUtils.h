@@ -26,10 +26,18 @@ using namespace spotify::jni;
 #define _JUNIT_ASSERT_NOT_NULL(_RESULT, _FILE, _LINE) { \
   if (_RESULT == NULL) { \
     JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \
-      "object was null (at %s:%d)", _FILE, _LINE); \
+      "expected <object> but was <null> (at %s:%d)", _FILE, _LINE); \
   } \
 }
 #define JUNIT_ASSERT_NOT_NULL(_R) _JUNIT_ASSERT_NOT_NULL(_R, __FILE__, __LINE__)
+
+#define _JUNIT_ASSERT_NULL(_RESULT, _FILE, _LINE) { \
+  if (_RESULT != NULL) { \
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \
+      "expected <null> but was <object> (at %s:%d)", _FILE, _LINE); \
+  } \
+}
+#define JUNIT_ASSERT_NULL(_R) _JUNIT_ASSERT_NULL(_R, __FILE__, __LINE__)
 
 #define _JUNIT_ASSERT_EQUALS_INT(_EXPECTED, _RESULT, _FILE, _LINE) { \
   if (_EXPECTED != _RESULT) { \
@@ -39,10 +47,18 @@ using namespace spotify::jni;
 }
 #define JUNIT_ASSERT_EQUALS_INT(_E, _R) _JUNIT_ASSERT_EQUALS_INT(_E, _R, __FILE__, __LINE__)
 
+#define _JUNIT_ASSERT_EQUALS_CSTRING(_EXPECTED, _RESULT, _FILE, _LINE) { \
+  if (strcmp(_EXPECTED, _RESULT) != 0) { \
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \
+      "expected <%s> but was: <%s> (at %s:%d)", _EXPECTED, _RESULT, _FILE, _LINE); \
+  } \
+}
+#define JUNIT_ASSERT_EQUALS_CSTRING(_E, _R) _JUNIT_ASSERT_EQUALS_CSTRING(_E, _R, __FILE__, __LINE__)
+
 #define _JUNIT_ASSERT_EQUALS_STRING(_EXPECTED, _RESULT, _FILE, _LINE) { \
   if (_EXPECTED != _RESULT) { \
     JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \
-      "expected <%s> but was: <%s> (at %s:%d)", _EXPECTED, _RESULT, _FILE, _LINE); \
+      "expected <%s> but was: <%s> (at %s:%d)", _EXPECTED.c_str(), _RESULT.c_str(), _FILE, _LINE); \
   } \
 }
 #define JUNIT_ASSERT_EQUALS_STRING(_E, _R) _JUNIT_ASSERT_EQUALS_STRING(_E, _R, __FILE__, __LINE__)

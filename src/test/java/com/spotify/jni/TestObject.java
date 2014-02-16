@@ -6,6 +6,9 @@ public class TestObject {
     float f;
     byte[] b;
 
+    public TestObject() {
+    }
+
     public TestObject(String s, int i, float f) {
         this.s = s;
         this.i = i;
