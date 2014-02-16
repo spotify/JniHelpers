@@ -1,6 +1,7 @@
 #include "JavaExceptionUtils.h"
 #include "JavaClassUtils.h"
 #include "JavaString.h"
+#include <sstream>
 #include <stdarg.h>
 
 namespace spotify {
@@ -54,15 +55,15 @@ void JavaExceptionUtils::throwExceptionOfType(JNIEnv *env, const char *exception
   jclass clazz = JavaClassUtils::findJavaClass(env, exception_class_name);
   checkException(env);
   if (clazz == NULL) {
-    env->ExceptionDescribe();
+    std::stringstream fatalErrorMessage;
+    fatalErrorMessage << "Could not throw exception of type '" << exception_class_name << "'";
+    env->FatalError(fatalErrorMessage.str().c_str());
     return;
   }
 
   char exceptionMessage[kExceptionMaxLength];
   vsnprintf(exceptionMessage, kExceptionMaxLength, message, arguments);
   env->ThrowNew(clazz, exceptionMessage);
-  env->ExceptionDescribe();
-  checkException(env);
 }
 
 void JavaExceptionUtils::throwExceptionOfType(JNIEnv *env, const char *exception_class_name, const char *message, ...) {
