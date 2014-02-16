@@ -21,12 +21,9 @@
 #define kTypeBool "Z"
 #define kTypeByte "B"
 #define kTypeVoid "V"
+#define kTypeString "Ljava/lang/String;"
 #define kTypeClass(x) "L" #x ";"
-
-// Common Java classes
 #define kTypeJavaClass(x) "Ljava/lang/" #x ";"
-// TODO: Rename to just kTypeString
-#define kTypeJavaString "Ljava/lang/String;"
 
 // Exceptions
 #define kTypeException kTypeJavaClass(Exception)

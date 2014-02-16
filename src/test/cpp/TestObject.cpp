@@ -12,13 +12,13 @@ s(), i(0), f(0.0f) {
 void TestObject::initialize(JNIEnv *env) {
   setClass(env);
 
-  cacheField(env, "s", kTypeJavaString);
+  cacheField(env, "s", kTypeString);
   cacheField(env, "i", kTypeInt);
   cacheField(env, "f", kTypeFloat);
   // cacheField(env, "b", kTypeArray(kTypeByte));
 
-  cacheMethod(env, "getS", kTypeJavaString, NULL);
-  cacheMethod(env, "setS", kTypeVoid, kTypeJavaString, NULL);
+  cacheMethod(env, "getS", kTypeString, NULL);
+  cacheMethod(env, "setS", kTypeVoid, kTypeString, NULL);
   cacheMethod(env, "getI", kTypeInt, NULL);
   cacheMethod(env, "setI", kTypeVoid, kTypeInt, NULL);
   cacheMethod(env, "getF", kTypeFloat, NULL);
@@ -30,5 +30,5 @@ void TestObject::merge(const ClassWrapper *globalInstance) {
   ClassWrapper::merge(globalInstance);
   mapField("i", kTypeInt, &i);
   mapField("f", kTypeFloat, &f);
-  mapField("s", kTypeJavaString, &s);
+  mapField("s", kTypeString, &s);
 }

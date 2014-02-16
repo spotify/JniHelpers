@@ -32,7 +32,7 @@ jclass JavaClassUtils::findAndLoadJavaClass(JNIEnv *env, const char *class_name)
   JavaExceptionUtils::checkException(env);
 
   std::string signature;
-  makeSignature(signature, kTypeJavaClass("Class"), kTypeJavaString, NULL);
+  makeSignature(signature, kTypeJavaClass("Class"), kTypeString, NULL);
   jmethodID methodLoadClass = env->GetMethodID(cls, "loadClass", signature.c_str());
   JavaExceptionUtils::checkException(env);
 

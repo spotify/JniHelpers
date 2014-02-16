@@ -27,7 +27,7 @@ JniLocalRef<jobject> JavaExceptionUtils::newThrowable(JNIEnv *env, const char *m
   }
 
   std::string signature;
-  JavaClassUtils::makeSignature(signature, kTypeVoid, kTypeJavaString, NULL);
+  JavaClassUtils::makeSignature(signature, kTypeVoid, kTypeString, NULL);
   jmethodID throwableCtor = env->GetMethodID(throwableClazz, "<init>", signature.c_str());
   if (throwableCtor == NULL) {
     JavaExceptionUtils::throwRuntimeException(env, "Could not find Throwable constructor");
