@@ -8,7 +8,7 @@
 namespace spotify {
 namespace jni {
 
-class JavaString {
+class EXPORT JavaString {
 public:
   JavaString();
   JavaString(const std::string &string);
