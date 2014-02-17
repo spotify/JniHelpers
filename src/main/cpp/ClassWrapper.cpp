@@ -21,6 +21,14 @@ void ClassWrapper::merge(const ClassWrapper *globalInstance) {
   _fields = globalInstance->_fields;
 }
 
+bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
+  return false;
+}
+
+void ClassWrapper::reset(JNIEnv *env, jobject javaThis) {
+
+}
+
 void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
   std::map<std::string, jfieldID>::iterator iter;
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
