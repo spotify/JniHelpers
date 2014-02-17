@@ -16,6 +16,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void*) {
 
   jniHelpersInitialize(jvm, env);
   gClasses.add(env, new ClassRegistryTest(env));
+  gClasses.add(env, new ClassWrapperTest(env));
 
   return JNI_VERSION_1_6;
 }
