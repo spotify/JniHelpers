@@ -6,7 +6,7 @@
 
 using namespace spotify::jni;
 
-class TestObject : public ClassWrapper {
+class EXPORT TestObject : public ClassWrapper {
 public:
   TestObject();
   TestObject(JNIEnv *env);

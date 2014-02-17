@@ -35,26 +35,5 @@ const ClassWrapper* ClassRegistry::get(const char* name) {
   return iter != _classes.end() ? _classes[name] : NULL;
 }
 
-template<typename TypeName>
-TypeName* ClassRegistry::newInstance(JNIEnv *env, jobject fromObject) {
-  TypeName *result = new TypeName();
-  const char *name = result->getCanonicalName();
-  if (name == NULL || strlen(name) == 0) {
-    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
-      "Could not find canonical name for class");
-    return NULL;
-  }
-  const TypeName *classInfo = dynamic_cast<const TypeName*>(get(name));
-  if (classInfo == NULL) {
-    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
-      "No class information registered for '%s'", name);
-    return NULL;
-  }
-  result->merge(classInfo);
-  result->setJavaObject(env, fromObject);
-  return result;
-}
-
-
 } // namespace jni
 } // namespace spotify

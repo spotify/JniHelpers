@@ -13,6 +13,11 @@
 namespace spotify {
 namespace jni {
 
+typedef struct {
+  const char* type;
+  void* address;
+} FieldMapping;
+
 #if WIN32
 // TODO: Should only be defined for dynamic lib builds
 template class EXPORT std::vector<JNINativeMethod>;
@@ -169,11 +174,6 @@ public:
   jfieldID getField(const char* field_name);
 
 protected:
-  typedef struct {
-    const char* type;
-    void* address;
-  } FieldMapping;
-
   /**
    * @brief Find and save JNI class information for this object
    *

@@ -71,9 +71,28 @@ public:
    * @param fromObject Java object to copy data from
    * @return New instance, or NULL if none could not be created.
    */
-  
+  // Sorry about the mess in this header file, however some compilers
+  // *cough*MSVC*cough* require templates to be in the header file or else they won't
+  // work.
   template<typename TypeName>
-  TypeName* newInstance(JNIEnv *env, jobject fromObject);
+  TypeName* newInstance(JNIEnv *env, jobject fromObject) {
+    TypeName *result = new TypeName();
+    const char *name = result->getCanonicalName();
+    if (name == NULL || strlen(name) == 0) {
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
+        "Could not find canonical name for class");
+      return NULL;
+    }
+    const TypeName *classInfo = dynamic_cast<const TypeName*>(get(name));
+    if (classInfo == NULL) {
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+        "No class information registered for '%s'", name);
+      return NULL;
+    }
+    result->merge(classInfo);
+    result->setJavaObject(env, fromObject);
+    return result;
+  }
 
   /**
    * @brief Return number of items in the map
