@@ -5,22 +5,22 @@
 void ClassRegistryTest::initialize(JNIEnv *env) {
   setClass(env);
 
-  addNativeMethod("createRegistry", &ClassRegistryTest::createRegistry, kTypeVoid, NULL);
+  addNativeMethod("createRegistry", (void*)&ClassRegistryTest::createRegistry, kTypeVoid, NULL);
 
-  addNativeMethod("addClass", &ClassRegistryTest::addClass, kTypeVoid, NULL);
-  addNativeMethod("addNullClass", &ClassRegistryTest::addNullClass, kTypeVoid, NULL);
-  addNativeMethod("addClassWithEmptyName", &ClassRegistryTest::addClassWithEmptyName, kTypeVoid, NULL);
-  addNativeMethod("addClassWithNullName", &ClassRegistryTest::addClassWithNullName, kTypeVoid, NULL);
-  addNativeMethod("addClassWithoutInfo", &ClassRegistryTest::addClassWithoutInfo, kTypeVoid, NULL);
-  addNativeMethod("addClassMultipleTimes", &ClassRegistryTest::addClassMultipleTimes, kTypeVoid, NULL);
+  addNativeMethod("addClass", (void*)&ClassRegistryTest::addClass, kTypeVoid, NULL);
+  addNativeMethod("addNullClass", (void*)&ClassRegistryTest::addNullClass, kTypeVoid, NULL);
+  addNativeMethod("addClassWithEmptyName", (void*)&ClassRegistryTest::addClassWithEmptyName, kTypeVoid, NULL);
+  addNativeMethod("addClassWithNullName", (void*)&ClassRegistryTest::addClassWithNullName, kTypeVoid, NULL);
+  addNativeMethod("addClassWithoutInfo", (void*)&ClassRegistryTest::addClassWithoutInfo, kTypeVoid, NULL);
+  addNativeMethod("addClassMultipleTimes", (void*)&ClassRegistryTest::addClassMultipleTimes, kTypeVoid, NULL);
 
-  addNativeMethod("get", &ClassRegistryTest::get, kTypeVoid, NULL);
-  addNativeMethod("getNullClass", &ClassRegistryTest::getNullClass, kTypeVoid, NULL);
-  addNativeMethod("getInvalidClass", &ClassRegistryTest::getInvalidClass, kTypeVoid, NULL);
+  addNativeMethod("get", (void*)&ClassRegistryTest::get, kTypeVoid, NULL);
+  addNativeMethod("getNullClass", (void*)&ClassRegistryTest::getNullClass, kTypeVoid, NULL);
+  addNativeMethod("getInvalidClass", (void*)&ClassRegistryTest::getInvalidClass, kTypeVoid, NULL);
 
   TestObject testObject;
-  addNativeMethod("nativeNewInstance", &ClassRegistryTest::nativeNewInstance, kTypeVoid, testObject.getCanonicalName(), NULL);
-  addNativeMethod("nativeNewInstanceWithNull", &ClassRegistryTest::nativeNewInstanceWithNull, kTypeVoid, testObject.getCanonicalName(), NULL);
+  addNativeMethod("nativeNewInstance", (void*)&ClassRegistryTest::nativeNewInstance, kTypeVoid, testObject.getCanonicalName(), NULL);
+  addNativeMethod("nativeNewInstanceWithNull", (void*)&ClassRegistryTest::nativeNewInstanceWithNull, kTypeVoid, testObject.getCanonicalName(), NULL);
 
   registerNativeMethods(env);
 }
