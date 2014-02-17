@@ -32,11 +32,6 @@ public:
     return MAKE_CANONICAL_NAME(PACKAGE, ClassRegistryTest);
   }
 
-  void setJavaObject(JNIEnv *env, jobject javaObject) {}
-  jobject toJavaObject(ClassWrapper *nativeObject) {
-    return NULL;
-  }
-
 private:
   static void createRegistry(JNIEnv *env, jobject javaThis);
 
