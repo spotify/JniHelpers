@@ -6,6 +6,10 @@
 namespace spotify {
 namespace jni {
 
+ClassWrapper::~ClassWrapper() {
+  // TODO: Delete mappings
+}
+
 const char* ClassWrapper::getSimpleName() const {
   const char* lastSlash = strrchr(getCanonicalName(), '/');
   return lastSlash != NULL ? lastSlash + 1 : getCanonicalName();
@@ -18,12 +22,54 @@ void ClassWrapper::merge(const ClassWrapper *globalInstance) {
 }
 
 void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
-  setFieldsFrom(env, javaThis);
+  std::map<std::string, jfieldID>::iterator iter;
+  for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
+    std::string key = iter->first;
+    jfieldID field = iter->second;
+    FieldMapping *mapping = _field_mappings[key]; // TODO: Should use getter here, if not null will be inserted
+    if (field != NULL && mapping != NULL) {
+      if (TYPE_EQUALS(mapping->type, kTypeInt)) {
+        int *address = static_cast<int*>(mapping->address);
+        *address = env->GetIntField(javaThis, field);
+      } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
+        float *address = static_cast<float*>(mapping->address);
+        *address = env->GetFloatField(javaThis, field);
+      } else if (TYPE_EQUALS(mapping->type, kTypeString)) {
+        jstring string = (jstring)env->GetObjectField(javaThis, field);
+        JavaString *address = static_cast<JavaString*>(mapping->address);
+        address->setValue(env, string);
+      } else {
+        // TODO throw
+      }
+    }
+  }
 }
 
 jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   jobject result = env->NewObject(_clazz, _constructor);
-  setFieldsTo(env, result);
+
+  std::map<std::string, jfieldID>::iterator iter;
+  for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
+    std::string key = iter->first;
+    jfieldID field = iter->second;
+    FieldMapping *mapping = _field_mappings[key]; // TODO: Should use getter here, if not null will be inserted
+    if (field != NULL && mapping != NULL) {
+      if (TYPE_EQUALS(mapping->type, kTypeInt)) {
+        int *address = static_cast<int*>(mapping->address);
+        env->SetIntField(result, field, *address);
+      } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
+        float *address = static_cast<float*>(mapping->address);
+        env->SetFloatField(result, field, *address);
+      } else if (TYPE_EQUALS(mapping->type, kTypeString)) {
+        JavaString *address = static_cast<JavaString*>(mapping->address);
+        JniLocalRef<jstring> string = address->getJavaString(env);
+        env->SetObjectField(result, field, string.get());
+      } else {
+        // TODO throw
+      }
+    }
+  }
+
   return result;
 }
 
@@ -82,54 +128,6 @@ void ClassWrapper::mapField(const char *field_name, const char *field_type, void
   mapping->type = field_type;
   mapping->address = field_ptr;
   _field_mappings[field_name] = mapping;
-}
-
-void ClassWrapper::setFieldsFrom(JNIEnv *env, jobject javaThis) {
-  std::map<std::string, jfieldID>::iterator iter;
-  for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
-    std::string key = iter->first;
-    jfieldID field = iter->second;
-    FieldMapping *mapping = _field_mappings[key]; // TODO: Should use getter here, if not null will be inserted
-    if (field != NULL && mapping != NULL) {
-      if (TYPE_EQUALS(mapping->type, kTypeInt)) {
-        int *address = static_cast<int*>(mapping->address);
-        *address = env->GetIntField(javaThis, field);
-      } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
-        float *address = static_cast<float*>(mapping->address);
-        *address = env->GetFloatField(javaThis, field);
-      } else if (TYPE_EQUALS(mapping->type, kTypeString)) {
-        jstring string = (jstring)env->GetObjectField(javaThis, field);
-        JavaString *address = static_cast<JavaString*>(mapping->address);
-        address->setValue(env, string);
-      } else {
-        // TODO throw
-      }
-    }
-  }
-}
-
-void ClassWrapper::setFieldsTo(JNIEnv *env, jobject javaThis) {
-  std::map<std::string, jfieldID>::iterator iter;
-  for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
-    std::string key = iter->first;
-    jfieldID field = iter->second;
-    FieldMapping *mapping = _field_mappings[key]; // TODO: Should use getter here, if not null will be inserted
-    if (field != NULL && mapping != NULL) {
-      if (TYPE_EQUALS(mapping->type, kTypeInt)) {
-        int *address = static_cast<int*>(mapping->address);
-        env->SetIntField(javaThis, field, *address);
-      } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
-        float *address = static_cast<float*>(mapping->address);
-        env->SetFloatField(javaThis, field, *address);
-      } else if (TYPE_EQUALS(mapping->type, kTypeString)) {
-        JavaString *address = static_cast<JavaString*>(mapping->address);
-        JniLocalRef<jstring> string = address->getJavaString(env);
-        env->SetObjectField(javaThis, field, string.get());
-      } else {
-        // TODO throw
-      }
-    }
-  }
 }
 
 void ClassWrapper::addNativeMethod(const char *method_name, void *function, const char *return_type, ...) {
