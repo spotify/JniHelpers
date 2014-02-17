@@ -7,6 +7,7 @@ public class TestObject {
     byte[] b;
 
     public TestObject() {
+        // TODO: Need to deal with classes that don't have a no-arg ctor
     }
 
     public TestObject(String s, int i, float f) {
