@@ -19,7 +19,7 @@ typedef struct {
 } FieldMapping;
 
 #if WIN32
-// TODO: Should only be defined for dynamic lib builds
+// TODO: This is a MSVC thing, should refactor to use PIMPL instead (ugh)
 template class EXPORT std::vector<JNINativeMethod>;
 template class EXPORT std::map<std::string, jmethodID>;
 template class EXPORT std::map<std::string, jfieldID>;
@@ -178,8 +178,9 @@ protected:
    * @brief Find and save JNI class information for this object
    *
    * This method uses getCanonicalName() to find the class and saves it to the
-   * cached class info. This method should be called during initialize() or things
-   * may break later.
+   * cached class info. This method should be called during initialize() or
+   * you may get some unexpected behavior when trying to use instances of this
+   * class.
    *
    * @param env JNIEnv
    */
@@ -212,7 +213,37 @@ protected:
   // TODO: Would be nice to be able to pass in a setter function, not sure how to manage that
   void mapField(const char *field_name, const char *field_type, void *field_ptr);
 
+  /**
+   * @brief Add a native function callback to this class
+   *
+   * This method should be called in initialize() to register native methods to
+   * be called from Java. After adding the methods, you must call the
+   * registerNativeMethods() function at the end of initialize(), but only once!
+   *
+   * Note since JNI is fundamentally a C API, the function pointer must be static,
+   * therefore the intended usage is to call ClassRegistry::newInstance from
+   * within the static method in order to obtain a real object.
+   *
+   * @param method_name Method name
+   * @param function Function to be called when the method is invoked from Java.
+   * @param return_type Return type (see types declared in JniTypes.h)
+   * @param ... Method argument list, which *must* end with NULL. If the method
+   *            takes no arguments, pass only NULL here instead of kTypeVoid.
+   */
   void addNativeMethod(const char *method_name, void *function, const char *return_type, ...);
+
+  /**
+   * @brief Register all native methods on the class
+   *
+   * This method should be called *once* at the end of initialize(). It will tell
+   * the JVM to register mappings between `native` Java methods and those which
+   * you have created in calls to addNativeMethod().
+   *
+   * @param env JNIEnv
+   * @return True if successful, false otherwise. If you register methods which
+   *         do not exist in Java or have invalid signatures, then an exception
+   *         may be thrown to Java.
+   */
   bool registerNativeMethods(JNIEnv *env);
 
 protected:

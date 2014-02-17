@@ -9,8 +9,8 @@ namespace spotify {
 namespace jni {
 
 #if WIN32
-// TODO: Should only be defined for dynamic lib builds
-  template class EXPORT std::basic_string<char, std::char_traits<char>, std::allocator<char>>;
+// TODO: This is a MSVC thing, should refactor to use PIMPL instead (ugh)
+template class EXPORT std::basic_string<char, std::char_traits<char>, std::allocator<char>>;
 #endif
 
 class EXPORT JavaString {

@@ -12,7 +12,7 @@ namespace spotify {
 namespace jni {
 
 #if WIN32
-// TODO: Should only be exported for DLL builds
+// TODO: This is a MSVC thing, should refactor to use PIMPL instead (ugh)
 template class EXPORT std::map<std::string, const ClassWrapper*>;
 #endif
 
