@@ -17,30 +17,31 @@ void JavaClassUtils::setJavaClassLoaderForCurrentThread(JNIEnv *env, jobject cla
   sJavaClassLoader = env->NewGlobalRef(class_loader);
 }
 
-jclass JavaClassUtils::findJavaClass(JNIEnv *env, const char *class_name) {
-  jclass result = env->FindClass(class_name);
-  JavaExceptionUtils::checkException(env);
-  return result;
-}
+jclass JavaClassUtils::findClass(JNIEnv *env, const char *class_name, bool useClassLoader) {
+  jclass result = NULL;
+  if (useClassLoader) {
+    if (sJavaClassLoader == NULL) {
+      return NULL;
+    }
 
-jclass JavaClassUtils::findAndLoadJavaClass(JNIEnv *env, const char *class_name) {
-  if (sJavaClassLoader == NULL) {
-    return NULL;
+    jclass classLoader = env->FindClass(kTypeJavaClass("ClassLoader"));
+    JavaExceptionUtils::checkException(env);
+
+    std::string signature;
+    makeSignature(signature, kTypeJavaClass("Class"), kTypeString, NULL);
+    jmethodID methodLoadClass = env->GetMethodID(classLoader, "loadClass", signature.c_str());
+    JavaExceptionUtils::checkException(env);
+
+    jstring className = env->NewStringUTF(class_name);
+    JavaExceptionUtils::checkException(env);
+
+    jclass result = (jclass)env->CallObjectMethod(sJavaClassLoader, methodLoadClass, className);
+    JavaExceptionUtils::checkException(env);
+
+  } else {
+    result = env->FindClass(class_name);
+    JavaExceptionUtils::checkException(env);
   }
-
-  jclass cls = env->FindClass(kTypeJavaClass("ClassLoader"));
-  JavaExceptionUtils::checkException(env);
-
-  std::string signature;
-  makeSignature(signature, kTypeJavaClass("Class"), kTypeString, NULL);
-  jmethodID methodLoadClass = env->GetMethodID(cls, "loadClass", signature.c_str());
-  JavaExceptionUtils::checkException(env);
-
-  jstring className = env->NewStringUTF(class_name);
-  JavaExceptionUtils::checkException(env);
-
-  jclass result = (jclass)env->CallObjectMethod(sJavaClassLoader, methodLoadClass, className);
-  JavaExceptionUtils::checkException(env);
 
   return result;
 }

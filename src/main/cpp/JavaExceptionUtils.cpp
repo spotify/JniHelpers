@@ -20,7 +20,7 @@ void JavaExceptionUtils::checkException(JNIEnv *env) {
 
 JniLocalRef<jobject> JavaExceptionUtils::newThrowable(JNIEnv *env, const char *message, ...) {
   // Find the Throwable class and its associated String constructor
-  jclass throwableClazz = JavaClassUtils::findJavaClass(env, kTypeJavaClass("Throwable"));
+  jclass throwableClazz = JavaClassUtils::findClass(env, kTypeJavaClass("Throwable"), false);
   if (throwableClazz == NULL) {
     JavaExceptionUtils::throwRuntimeException(env, "Could not find class Throwable");
     return NULL;
@@ -52,7 +52,7 @@ JniLocalRef<jobject> JavaExceptionUtils::newThrowable(JNIEnv *env, const char *m
 }
 
 void JavaExceptionUtils::throwExceptionOfType(JNIEnv *env, const char *exception_class_name, const char *message, va_list arguments) {
-  jclass clazz = JavaClassUtils::findJavaClass(env, exception_class_name);
+  jclass clazz = JavaClassUtils::findClass(env, exception_class_name, false);
   checkException(env);
   if (clazz == NULL) {
     std::stringstream fatalErrorMessage;

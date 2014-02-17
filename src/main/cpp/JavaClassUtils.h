@@ -18,9 +18,8 @@ private:
 
 public:
   static EXPORT void setJavaClassLoaderForCurrentThread(JNIEnv *env, jobject class_loader);
-  static EXPORT jclass findJavaClass(JNIEnv *env, const char *class_name);
-  // TODO: Possibly wrong
-  static EXPORT jclass findAndLoadJavaClass(JNIEnv *env, const char *class_name);
+  // TODO: Not sure if this is the best interface here...
+  static EXPORT jclass findClass(JNIEnv *env, const char *class_name, bool useClassLoader);
 
   static EXPORT void makeSignature(std::string &receiver, const char *return_type, ...);
   static EXPORT void makeSignature(std::string &receiver, const char *return_type, va_list arguments);
