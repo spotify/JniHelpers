@@ -56,9 +56,11 @@ void JavaClassUtils::makeSignature(std::string &receiver, const char *return_typ
 void JavaClassUtils::makeSignature(std::string &receiver, const char *return_type, va_list arguments) {
   std::stringstream stringstream;
   stringstream << "(";
-  char *argument;
-  while ((argument = va_arg(arguments, char*)) != NULL) {
-    appendTypeToSignature(stringstream, argument);
+  if (arguments != NULL) {
+    char *argument;
+    while ((argument = va_arg(arguments, char*)) != NULL) {
+      appendTypeToSignature(stringstream, argument);
+    }
   }
   stringstream << ")";
 

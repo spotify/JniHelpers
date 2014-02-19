@@ -99,7 +99,7 @@ void ClassWrapper::setClass(JNIEnv *env) {
   _clazz = env->FindClass(getCanonicalName());
   JavaExceptionUtils::checkException(env);
   std::string signature;
-  JavaClassUtils::makeSignature(signature, kTypeVoid);
+  JavaClassUtils::makeSignature(signature, kTypeVoid, NULL);
   _constructor = env->GetMethodID(_clazz, "<init>", signature.c_str());
 }
 
