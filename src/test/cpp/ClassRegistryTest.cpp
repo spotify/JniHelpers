@@ -2,6 +2,14 @@
 #include "JUnitUtils.h"
 #include "TestObject.h"
 
+/*
+ * NOTE: In this test class, ClassWrapper objects are created on the fly with the
+ * constructor which takes JNIEnv*. Normally you should *not* do this; that ctor
+ * is only meant to be called during initialization. However, the initialization
+ * step isn't really present in these tests, so objects are created in this manner
+ * simply to populate them with the correct class information.
+ */
+
 void ClassRegistryTest::initialize(JNIEnv *env) {
   setClass(env);
 
