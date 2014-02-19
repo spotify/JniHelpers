@@ -68,7 +68,9 @@ public:
    * the new instance will be populated with data from the Java object.
    *
    * @param env JNIEnv
-   * @param fromObject Java object to copy data from
+   * @param fromObject Java object to copy data from. If NULL, then a new object
+   *                   will be created with the default constructor and class info
+   *                   from merge().
    * @return New instance, or NULL if none could not be created.
    */
   // Sorry about the mess in this header file, however some compilers
@@ -83,14 +85,19 @@ public:
         "Could not find canonical name for class");
       return NULL;
     }
+
     const TypeName *classInfo = dynamic_cast<const TypeName*>(get(name));
     if (classInfo == NULL) {
       JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
         "No class information registered for '%s'", name);
       return NULL;
     }
+
     result->merge(classInfo);
-    result->setJavaObject(env, fromObject);
+    if (fromObject != NULL) {
+      result->setJavaObject(env, fromObject);
+    }
+
     return result;
   }
 

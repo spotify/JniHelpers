@@ -1,10 +1,6 @@
 package com.spotify.jni;
 
-import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class ClassRegistryTest {
     static {
@@ -52,8 +48,7 @@ public class ClassRegistryTest {
     }
 
     native public void nativeNewInstanceWithNull(TestObject instance);
-    @Ignore
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void newInstanceWithNull() throws Exception {
         nativeNewInstanceWithNull(null);
     }

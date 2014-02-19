@@ -115,4 +115,11 @@ void ClassRegistryTest::nativeNewInstance(JNIEnv *env, jobject javaThis, jobject
 }
 
 void ClassRegistryTest::nativeNewInstanceWithNull(JNIEnv *env, jobject javaThis, jobject javaTestObject) {
+  ClassRegistry registry;
+  TestObject obj(env);
+  registry.add(env, &obj);
+  TestObject *result = registry.newInstance<TestObject>(env, NULL);
+  JUNIT_ASSERT_NOT_NULL(result);
+  // Should have populated class info
+  JUNIT_ASSERT_NOT_NULL(result->getClass().get());
 }
