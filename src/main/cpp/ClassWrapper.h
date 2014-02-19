@@ -33,6 +33,9 @@ template class EXPORT std::map<std::string, jfieldID>;
 template class EXPORT std::map<std::string, FieldMapping*>; 
 #endif
 
+typedef std::map<std::string, jfieldID> FieldMap;
+typedef std::map<std::string, jmethodID> MethodMap;
+
 /**
  * @brief Interface for a Java/C++ bridge class
  *
@@ -49,7 +52,7 @@ public:
    * This method is invoked by ClassRegistry::newInstance, so it should have a minimal
    * implementation.
    */
-  ClassWrapper() : _clazz(NULL) {}
+  ClassWrapper() : _clazz(NULL), _constructor(NULL) {}
 
   /**
    * @brief Create a new ClassWrapper with class information
@@ -65,7 +68,7 @@ public:
    *
    * @param env JNIEnv
    */
-  ClassWrapper(JNIEnv *env) {
+  ClassWrapper(JNIEnv *env) : _clazz(NULL), _constructor(NULL) {
     // TODO: Can't call initialize here because of symbol visibility :(
     // initialize(env);
   }
@@ -172,6 +175,8 @@ public:
    *         method will return false rather than throwing.
    */
   bool persist(JNIEnv *env, jobject javaThis);
+  bool isPersisted() const;
+  ClassWrapper* getPersistedInstance(JNIEnv *env, jobject javaThis) const;
 
   /**
    * @brief Free an object set with persist()
@@ -226,14 +231,14 @@ public:
    * @param method_name Method name (without signature)
    * @return JNI method ID, or NULL if no such method was cached
    */
-  jmethodID getMethod(const char *method_name);
+  jmethodID getMethod(const char *method_name) const;
 
   /**
    * @brief Retreive a field from the cache
    * @param field_name Field name
    * @return JNI field ID, or NULL if no such field was cached
    */
-  jfieldID getField(const char* field_name);
+  jfieldID getField(const char* field_name) const;
 
 protected:
   /**
@@ -275,6 +280,8 @@ protected:
   // TODO: Would be nice to be able to pass in a setter function, not sure how to manage that
   void mapField(const char *field_name, const char *field_type, void *field_ptr);
 
+  FieldMapping* getFieldMapping(const std::string &key) const;
+
   /**
    * @brief Add a native function callback to this class
    *
@@ -311,8 +318,8 @@ protected:
 protected:
   JniGlobalRef<jclass> _clazz;
   jmethodID _constructor;
-  std::map<std::string, jmethodID> _methods;
-  std::map<std::string, jfieldID> _fields;
+  MethodMap _methods;
+  FieldMap _fields;
   std::map<std::string, FieldMapping*> _field_mappings;
 
 private:

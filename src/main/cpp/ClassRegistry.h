@@ -94,8 +94,13 @@ public:
     }
 
     result->merge(classInfo);
-    if (fromObject != NULL) {
-      result->setJavaObject(env, fromObject);
+    if (result->isPersisted()) {
+      ClassWrapper *instance = result->getPersistedInstance(env, fromObject);
+      result = dynamic_cast<TypeName*>(instance);
+    } else {
+      if (fromObject != NULL) {
+        result->setJavaObject(env, fromObject);
+      }
     }
 
     return result;

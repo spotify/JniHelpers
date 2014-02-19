@@ -19,18 +19,38 @@ void ClassWrapper::merge(const ClassWrapper *globalInstance) {
   _clazz = globalInstance->_clazz;
   _methods = globalInstance->_methods;
   _fields = globalInstance->_fields;
+  _constructor = globalInstance->_constructor;
 }
 
 bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
+  if (isPersisted()) {
+    jlong resultPtr = reinterpret_cast<jlong>(this);
+    env->SetLongField(javaThis, getField(PERSIST_FIELD_NAME), resultPtr);
+    return true;
+  }
   return false;
 }
+
+bool ClassWrapper::isPersisted() const {
+  return getField(PERSIST_FIELD_NAME) != NULL;
+}
+
+ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) const {
+  if (isPersisted()) {
+    jlong resultPtr = env->GetLongField(javaThis, getField(PERSIST_FIELD_NAME));
+    return reinterpret_cast<ClassWrapper*>(resultPtr);
+  } else {
+    return NULL;
+  }
+}
+
 
 void ClassWrapper::reset(JNIEnv *env, jobject javaThis) {
 
 }
 
 void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
-  std::map<std::string, jfieldID>::iterator iter;
+  FieldMap::iterator iter;
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
     jfieldID field = iter->second;
@@ -54,13 +74,28 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
 }
 
 jobject ClassWrapper::toJavaObject(JNIEnv *env) {
-  jobject result = env->NewObject(_clazz, _constructor);
+  if (_constructor == NULL) {
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+      "Cannot call toJavaObject without a constructor");
+    return NULL;
+  } else if (_clazz.get() == NULL) {
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+      "Cannot call toJavaObject without registering class info");
+    return NULL;
+  }
 
-  std::map<std::string, jfieldID>::iterator iter;
+  // Create a new Java argument with the default constructor
+  // TODO: It would be nice to remove the requirement for a no-arg ctor
+  // However, I'm not really sure how to do that without cluttering the interface.
+  // Maybe provide an extra argument to setClass()? However, then we would lack
+  // the corresponding arguments we'd want to pass in here.
+  jobject result = env->NewObject(_clazz.get(), _constructor);
+
+  FieldMap::iterator iter;
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
     jfieldID field = iter->second;
-    FieldMapping *mapping = _field_mappings[key]; // TODO: Should use getter here, if not null will be inserted
+    FieldMapping *mapping = getFieldMapping(key);
     if (field != NULL && mapping != NULL) {
       if (TYPE_EQUALS(mapping->type, kTypeInt)) {
         int *address = static_cast<int*>(mapping->address);
@@ -78,6 +113,8 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
     }
   }
 
+  // Persist the current object address to the Java instance
+  persist(env, result);
   return result;
 }
 
@@ -85,22 +122,24 @@ JniGlobalRef<jclass> ClassWrapper::getClass() const {
   return _clazz;
 }
 
-jmethodID ClassWrapper::getMethod(const char *method_name) {
+jmethodID ClassWrapper::getMethod(const char *method_name) const {
   const std::string key(method_name);
-  return _methods[key];
+  MethodMap::const_iterator mapFindIter = _methods.find(key);
+  return mapFindIter != _methods.end() ? mapFindIter->second : NULL;
 }
 
-jfieldID ClassWrapper::getField(const char* field_name) {
+jfieldID ClassWrapper::getField(const char* field_name) const {
   const std::string key(field_name);
-  return _fields[key];
+  FieldMap::const_iterator mapFindIter = _fields.find(key);
+  return mapFindIter != _fields.end() ? mapFindIter->second : NULL;
 }
 
 void ClassWrapper::setClass(JNIEnv *env) {
-  _clazz = env->FindClass(getCanonicalName());
+  _clazz.set(env->FindClass(getCanonicalName()));
   JavaExceptionUtils::checkException(env);
   std::string signature;
   JavaClassUtils::makeSignature(signature, kTypeVoid, NULL);
-  _constructor = env->GetMethodID(_clazz, "<init>", signature.c_str());
+  _constructor = env->GetMethodID(_clazz.get(), "<init>", signature.c_str());
 }
 
 void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char* return_type, ...) {
@@ -136,6 +175,11 @@ void ClassWrapper::mapField(const char *field_name, const char *field_type, void
   mapping->type = field_type;
   mapping->address = field_ptr;
   _field_mappings[field_name] = mapping;
+}
+
+FieldMapping* ClassWrapper::getFieldMapping(const std::string &key) const {
+  std::map<std::string, FieldMapping*>::const_iterator findMapIter = _field_mappings.find(key);
+  return findMapIter != _field_mappings.end() ? findMapIter->second : NULL;
 }
 
 void ClassWrapper::addNativeMethod(const char *method_name, void *function, const char *return_type, ...) {

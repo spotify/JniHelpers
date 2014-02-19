@@ -33,20 +33,25 @@ public class ClassWrapperTest {
         PersistedObject object = createPersistedObject();
         assertNotEquals(0, object.nPtr);
         // These properties should be set by the first native method in this case
-        assertEquals(42, object.getI());
+        assertEquals(42, object.i);
 
-        // Now create a new empty object, but copy the nPtr field to it
+        // Now create a new empty object, but copy the nPtr field to it. Note that
+        // the i field is *not* copied; that value is stored natively and should
+        // be retrieved in the call to getPersistedInstance.
         PersistedObject emptyInstance = new PersistedObject();
         emptyInstance.nPtr = object.nPtr;
 
         // The native test should be able to fetch the previous instance via nPtr,
-        // and return to us the same instance data.
+        // and return to us the same instance data in a new object.
         PersistedObject result = getPersistedInstance(emptyInstance);
-        assertEquals(object.getI(), result.getI());
+        assertEquals(object.nPtr, result.nPtr);
+        assertEquals(object.i, result.i);
 
         // Always clean up after yourself, kids!
         resetPersistedObject(object);
     }
+
+    // TODO: native public void nativePersistNullObject() throws Exception;
 
     native public boolean nativePersistInvalidClass(TestObject testObject);
     @Test
@@ -63,13 +68,13 @@ public class ClassWrapperTest {
     public void resetPersistedObject() throws Exception {
         PersistedObject object = createPersistedObject();
         assertNotEquals(0, object.nPtr);
-        assertEquals(42, object.getI());
+        assertEquals(42, object.i);
 
         nativeResetPersistedObject(object);
 
         PersistedObject result = getPersistedInstance(object);
         assertEquals(0, result.nPtr);
-        assertEquals(0, result.getI());
+        assertEquals(0, result.i);
     }
 
     native public boolean nativeResetInvalidClass(TestObject testObject);

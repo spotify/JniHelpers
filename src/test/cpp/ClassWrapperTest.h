@@ -22,8 +22,8 @@ private:
   static void testGetCanonicalName(JNIEnv *env, jobject javaThis);
   static void testGetSimpleName(JNIEnv *env, jobject javaThis);
   static void testMerge(JNIEnv *env, jobject javaThis);
-  static jobject createPersistedObject(JNIEnv *env, jobject javaThis);
-  static jobject getPersistedInstance(JNIEnv *env, jobject javaThis, jobject object);
+  static JniLocalRef<jobject> createPersistedObject(JNIEnv *env, jobject javaThis);
+  static JniLocalRef<jobject> getPersistedInstance(JNIEnv *env, jobject javaThis, jobject object);
   static void resetPersistedObject(JNIEnv *env, jobject javaThis, jobject object);
   static jboolean nativePersistInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject);
   static void persistNullObject(JNIEnv *env, jobject javaThis);

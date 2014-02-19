@@ -8,6 +8,9 @@ public class PersistedObject {
     long nPtr;
     int i;
 
+    public PersistedObject() {
+    }
+
     public int getI() {
         return i;
     }
