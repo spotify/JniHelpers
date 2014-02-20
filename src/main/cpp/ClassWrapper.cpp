@@ -93,7 +93,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Cannot call toJavaObject without a constructor");
     return NULL;
-  } else if (_clazz.get() == NULL) {
+  } else if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Cannot call toJavaObject without registering class info");
     return NULL;
@@ -158,16 +158,17 @@ void ClassWrapper::setClass(JNIEnv *env) {
 }
 
 void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char* return_type, ...) {
+  if (!isInitialized()) {
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+      "Attempt to call cacheMethod without having set class info");
+    return;
+  }
+
   va_list arguments;
   va_start(arguments, return_type);
   std::string signature;
   JavaClassUtils::makeSignature(signature, return_type, arguments);
   va_end(arguments);
-  if (_clazz.get() == NULL) {
-    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
-      "Attempt to call cacheMethod without having set class info");
-    return;
-  }
 
   jmethodID method = env->GetMethodID(_clazz.get(), method_name, signature.c_str());
   JavaExceptionUtils::checkException(env);
@@ -177,7 +178,12 @@ void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char*
 }
 
 void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *field_type) {
-  // TODO: Sanity check _class
+  if (!isInitialized()) {
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+      "Attempt to call cacheField without having set class info");
+    return;
+  }
+
   jfieldID field = env->GetFieldID(_clazz.get(), field_name, field_type);
   JavaExceptionUtils::checkException(env);
   if (field != NULL) {
@@ -217,7 +223,7 @@ bool ClassWrapper::registerNativeMethods(JNIEnv *env) {
     return false;
   }
 
-  if (_clazz.get() == NULL) {
+  if (!isInitialized()) {
     JavaExceptionUtils::throwRuntimeException(env, "Could not find cached class for %s", getCanonicalName());
     return false;
   }
