@@ -36,7 +36,19 @@ bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
 }
 
 bool ClassWrapper::isPersisted() const {
-  return getField(PERSIST_FIELD_NAME) != NULL;
+  // TODO: Need test for this
+  if (!isInitialized()) {
+    JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
+      kTypeIllegalStateException,
+      "Cannot call isPersisted without class info (forgot to merge?)");
+    return false;
+  }
+
+  // We expect the persisted field to be cached, otherwise searching for persisted
+  // fields in non-persisted classes will throw java.lang.NoSuchField exception. :(
+  const std::string key(PERSIST_FIELD_NAME);
+  FieldMap::const_iterator mapFindIter = _fields.find(key);
+  return mapFindIter != _fields.end();
 }
 
 ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) const {
@@ -47,7 +59,6 @@ ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) 
     return NULL;
   }
 }
-
 
 void ClassWrapper::reset(JNIEnv *env, jobject javaThis) {
 
