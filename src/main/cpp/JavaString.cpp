@@ -24,6 +24,14 @@ JniLocalRef<jstring> JavaString::getJavaString(JNIEnv *env) const {
   return env->NewStringUTF(_value.c_str());
 }
 
+void JavaString::setValue(const char *value) {
+  _value = value;
+}
+
+void JavaString::setValue(const std::string &value) {
+  _value = value;
+}
+
 void JavaString::setValue(JNIEnv *env, jstring javaString) {
   if (javaString == NULL) {
     return;

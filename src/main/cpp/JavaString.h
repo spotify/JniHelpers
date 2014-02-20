@@ -22,6 +22,9 @@ public:
 
   const std::string& getValue() const;
   JniLocalRef<jstring> getJavaString(JNIEnv *env) const;
+
+  void setValue(const char *value);
+  void setValue(const std::string &value);
   void setValue(JNIEnv *env, jstring javaString);
 
 public:
