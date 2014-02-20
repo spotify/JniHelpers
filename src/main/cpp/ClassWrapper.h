@@ -88,6 +88,7 @@ public:
    * @param env JNIEnv
    */
   virtual void initialize(JNIEnv *env) = 0;
+  bool isInitialized() const;
 
   /**
    * @brief Get the canonical name for the associated Java class

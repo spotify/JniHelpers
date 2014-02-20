@@ -10,6 +10,10 @@ ClassWrapper::~ClassWrapper() {
   // TODO: Delete mappings
 }
 
+bool ClassWrapper::isInitialized() const {
+  return _clazz.get() != NULL;
+}
+
 const char* ClassWrapper::getSimpleName() const {
   const char* lastSlash = strrchr(getCanonicalName(), '/');
   return lastSlash != NULL ? lastSlash + 1 : getCanonicalName();
