@@ -113,6 +113,18 @@ public class ClassWrapperTest {
     @Test
     native public void getCachedMethod() throws Exception;
 
+    @Test(expected = IllegalArgumentException.class)
+    native public void getInvalidCachedMethod() throws Exception;
+
+    @Test(expected = IllegalStateException.class)
+    native public void getCachedMethodOnUninitialized() throws Exception;
+
     @Test
     native public void getCachedField() throws Exception;
+
+    @Test(expected = IllegalArgumentException.class)
+    native public void getInvalidCachedField() throws Exception;
+
+    @Test(expected = IllegalStateException.class)
+    native public void getCachedFieldOnUninitialized() throws Exception;
 }
