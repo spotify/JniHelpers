@@ -138,15 +138,43 @@ JniGlobalRef<jclass> ClassWrapper::getClass() const {
 }
 
 jmethodID ClassWrapper::getMethod(const char *method_name) const {
+  if (!isInitialized()) {
+    JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
+      kTypeIllegalStateException,
+      "Cannot call getMethod without class info (forgot to merge?)");
+    return NULL;
+  }
+
   const std::string key(method_name);
   MethodMap::const_iterator mapFindIter = _methods.find(key);
-  return mapFindIter != _methods.end() ? mapFindIter->second : NULL;
+  if (mapFindIter == _methods.end()) {
+    JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
+      kTypeIllegalArgumentException,
+      "Method '%s' is not cached in class '%s'", method_name, getCanonicalName());
+    return NULL;
+  }
+
+  return mapFindIter->second;
 }
 
 jfieldID ClassWrapper::getField(const char* field_name) const {
+  if (!isInitialized()) {
+    JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
+      kTypeIllegalStateException,
+      "Cannot call getField without class info (forgot to merge?)");
+    return NULL;
+  }
+
   const std::string key(field_name);
   FieldMap::const_iterator mapFindIter = _fields.find(key);
-  return mapFindIter != _fields.end() ? mapFindIter->second : NULL;
+  if (mapFindIter == _fields.end()) {
+    JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
+      kTypeIllegalArgumentException,
+      "Field '%s' is not cached in class '%s'", field_name, getCanonicalName());
+    return NULL;
+  }
+
+  return mapFindIter->second;
 }
 
 void ClassWrapper::setClass(JNIEnv *env) {
