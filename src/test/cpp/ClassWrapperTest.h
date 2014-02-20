@@ -33,7 +33,11 @@ private:
   static void nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobject object);
   static jobject nativeToJavaObject(JNIEnv *env, jobject javaThis);
   static void getCachedMethod(JNIEnv *env, jobject javaThis);
+  static void getInvalidCachedMethod(JNIEnv *env, jobject javaThis);
+  static void getCachedMethodOnUninitialized(JNIEnv *env, jobject javaThis);
   static void getCachedField(JNIEnv *env, jobject javaThis);
+  static void getInvalidCachedField(JNIEnv *env, jobject javaThis);
+  static void getCachedFieldOnUninitialized(JNIEnv *env, jobject javaThis);
 };
 
 #endif // __ClassWrapperTest_h__

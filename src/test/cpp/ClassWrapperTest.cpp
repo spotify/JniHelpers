@@ -25,7 +25,11 @@ void ClassWrapperTest::initialize(JNIEnv *env) {
   addNativeMethod("nativeSetJavaObject", (void*)&ClassWrapperTest::nativeSetJavaObject, kTypeVoid, testObjectName, NULL);
   addNativeMethod("nativeToJavaObject", (void*)&ClassWrapperTest::nativeToJavaObject, testObjectName, NULL);
   addNativeMethod("getCachedMethod", (void*)&ClassWrapperTest::getCachedMethod, kTypeVoid, NULL);
+  addNativeMethod("getInvalidCachedMethod", (void*)&ClassWrapperTest::getInvalidCachedMethod, kTypeVoid, NULL);
+  addNativeMethod("getCachedMethodOnUninitialized", (void*)&ClassWrapperTest::getCachedMethodOnUninitialized, kTypeVoid, NULL);
   addNativeMethod("getCachedField", (void*)&ClassWrapperTest::getCachedField, kTypeVoid, NULL);
+  addNativeMethod("getInvalidCachedField", (void*)&ClassWrapperTest::getInvalidCachedField, kTypeVoid, NULL);
+  addNativeMethod("getCachedFieldOnUninitialized", (void*)&ClassWrapperTest::getCachedFieldOnUninitialized, kTypeVoid, NULL);
 
   registerNativeMethods(env);
 }
@@ -79,7 +83,7 @@ void ClassWrapperTest::testMerge(JNIEnv *env, jobject javaThis) {
 JniLocalRef<jobject> ClassWrapperTest::createPersistedObject(JNIEnv *env, jobject javaThis) {
   PersistedObject persistedObjectInfo(env);
   PersistedObject *persistedObject = new PersistedObject();
-  // Simulate merge to set up field mappings. This test case doesn't really reflect real-world
+  // Call merge to set up field mappings. This test case doesn't really reflect real-world
   // usage, since the ideal case would be to get an instance with ClassResolver::newInstance.
   persistedObject->merge(&persistedObjectInfo);
   persistedObject->i = 42;
@@ -121,14 +125,54 @@ void ClassWrapperTest::resetNullObject(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobject object) {
+  TestObject testObject(env);
+  testObject.setJavaObject(env, object);
+  std::string expectedHello("hello");
+  JUNIT_ASSERT_EQUALS_STRING(expectedHello, testObject.s.getValue());
+  JUNIT_ASSERT_EQUALS_INT(1, testObject.i);
+  JUNIT_ASSERT_EQUALS_FLOAT(3.14f, testObject.f, DEFAULT_FLOAT_TOLERANCE);
 }
 
 jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
-  return NULL;
+  TestObject testObject(env);
+  testObject.s.setValue("hello");
+  testObject.i = 1;
+  testObject.f = 3.14f;
+  return testObject.toJavaObject(env);
 }
 
 void ClassWrapperTest::getCachedMethod(JNIEnv *env, jobject javaThis) {
+  TestObject testObject(env);
+  jmethodID method = testObject.getMethod("getS");
+  JUNIT_ASSERT_NOT_NULL(method);
+}
+
+void ClassWrapperTest::getInvalidCachedMethod(JNIEnv *env, jobject javaThis) {
+  TestObject testObject(env);
+  jmethodID method = testObject.getMethod("invalid");
+  JUNIT_ASSERT_NULL(method);
+}
+
+void ClassWrapperTest::getCachedMethodOnUninitialized(JNIEnv *env, jobject javaThis) {
+  TestObject testObject;
+  jmethodID method = testObject.getMethod("getS");
+  JUNIT_ASSERT_NULL(method);
 }
 
 void ClassWrapperTest::getCachedField(JNIEnv *env, jobject javaThis) {
+  TestObject testObject(env);
+  jfieldID field = testObject.getField("s");
+  JUNIT_ASSERT_NOT_NULL(field);
+}
+
+void ClassWrapperTest::getInvalidCachedField(JNIEnv *env, jobject javaThis) {
+  TestObject testObject(env);
+  jfieldID field = testObject.getField("invalid");
+  JUNIT_ASSERT_NULL(field);
+}
+
+void ClassWrapperTest::getCachedFieldOnUninitialized(JNIEnv *env, jobject javaThis) {
+  TestObject testObject;
+  jfieldID field = testObject.getField("s");
+  JUNIT_ASSERT_NULL(field);
 }
