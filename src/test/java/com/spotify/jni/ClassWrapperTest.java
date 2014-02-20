@@ -1,5 +1,6 @@
 package com.spotify.jni;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -28,6 +29,7 @@ public class ClassWrapperTest {
     native public PersistedObject createPersistedObject();
     native public PersistedObject getPersistedInstance(PersistedObject object);
     native public void resetPersistedObject(PersistedObject object);
+    @Ignore
     @Test
     public void persist() throws Exception {
         PersistedObject object = createPersistedObject();
@@ -51,19 +53,20 @@ public class ClassWrapperTest {
         resetPersistedObject(object);
     }
 
-    // TODO: native public void nativePersistNullObject() throws Exception;
-
     native public boolean nativePersistInvalidClass(TestObject testObject);
+    @Ignore
     @Test
     public void persistInvalidClass() throws Exception {
         TestObject testObject = new TestObject();
         assertFalse(nativePersistInvalidClass(testObject));
     }
 
+    @Ignore
     @Test(expected = IllegalArgumentException.class)
     native public void persistNullObject() throws Exception;
 
     native public void nativeResetPersistedObject(PersistedObject object);
+    @Ignore
     @Test
     public void resetPersistedObject() throws Exception {
         PersistedObject object = createPersistedObject();
@@ -78,6 +81,7 @@ public class ClassWrapperTest {
     }
 
     native public boolean nativeResetInvalidClass(TestObject testObject);
+    @Ignore
     @Test
     public void resetInvalidClass() throws Exception {
         TestObject testObject = new TestObject();
@@ -86,6 +90,7 @@ public class ClassWrapperTest {
         nativeResetInvalidClass(testObject);
     }
 
+    @Ignore
     @Test(expected = IllegalArgumentException.class)
     native public void resetNullObject() throws Exception;
 
