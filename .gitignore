@@ -41,3 +41,4 @@ Makefile
 Makefile.in
 *.cmake
 **/*.dir
+classes
