@@ -1,11 +1,6 @@
 package com.spotify.jni;
 
-import com.spotify.jni.annotations.UsedByNativeCode;
-
-public class PersistedObject {
-    @UsedByNativeCode
-    @SuppressWarnings("UnusedDeclaration")
-    long nPtr;
+public class PersistedObject extends NativeObject {
     int i;
 
     public PersistedObject() {
