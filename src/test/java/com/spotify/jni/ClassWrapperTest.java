@@ -28,7 +28,7 @@ public class ClassWrapperTest {
 
     native public PersistedObject createPersistedObject();
     native public PersistedObject getPersistedInstance(PersistedObject object);
-    native public void resetPersistedObject(PersistedObject object);
+    native public void destroyPersistedObject(PersistedObject object);
     @Ignore
     @Test
     public void persist() throws Exception {
@@ -50,7 +50,7 @@ public class ClassWrapperTest {
         assertEquals(object.i, result.i);
 
         // Always clean up after yourself, kids!
-        resetPersistedObject(object);
+        destroyPersistedObject(object);
     }
 
     native public boolean nativePersistInvalidClass(TestObject testObject);
@@ -65,34 +65,34 @@ public class ClassWrapperTest {
     @Test(expected = IllegalArgumentException.class)
     native public void persistNullObject() throws Exception;
 
-    native public void nativeResetPersistedObject(PersistedObject object);
+    native public void nativeDestroyPersistedObject(PersistedObject object);
     @Ignore
     @Test
-    public void resetPersistedObject() throws Exception {
+    public void destroyPersistedObject() throws Exception {
         PersistedObject object = createPersistedObject();
         assertNotEquals(0, object.nPtr);
         assertEquals(42, object.i);
 
-        nativeResetPersistedObject(object);
+        nativeDestroyPersistedObject(object);
 
         PersistedObject result = getPersistedInstance(object);
         assertEquals(0, result.nPtr);
         assertEquals(0, result.i);
     }
 
-    native public boolean nativeResetInvalidClass(TestObject testObject);
+    native public boolean nativeDestroyInvalidClass(TestObject testObject);
     @Ignore
     @Test
-    public void resetInvalidClass() throws Exception {
+    public void destroyInvalidClass() throws Exception {
         TestObject testObject = new TestObject();
-        // Nothing should happen, since reset() returns void. However the native
+        // Nothing should happen, since destroy() returns void. However the native
         // code also shouldn't crash.
-        nativeResetInvalidClass(testObject);
+        nativeDestroyInvalidClass(testObject);
     }
 
     @Ignore
     @Test(expected = IllegalArgumentException.class)
-    native public void resetNullObject() throws Exception;
+    native public void destroyNullObject() throws Exception;
 
     native public void nativeSetJavaObject(TestObject object);
     @Test

@@ -24,12 +24,12 @@ private:
   static void testMerge(JNIEnv *env, jobject javaThis);
   static JniLocalRef<jobject> createPersistedObject(JNIEnv *env, jobject javaThis);
   static JniLocalRef<jobject> getPersistedInstance(JNIEnv *env, jobject javaThis, jobject object);
-  static void resetPersistedObject(JNIEnv *env, jobject javaThis, jobject object);
+  static void destroyPersistedObject(JNIEnv *env, jobject javaThis, jobject object);
   static jboolean nativePersistInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject);
   static void persistNullObject(JNIEnv *env, jobject javaThis);
-  static void nativeResetPersistedObject(JNIEnv *env, jobject javaThis, jobject object);
-  static jboolean nativeResetInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject);
-  static void resetNullObject(JNIEnv *env, jobject javaThis);
+  static void nativeDestroyPersistedObject(JNIEnv *env, jobject javaThis, jobject object);
+  static jboolean nativeDestroyInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject);
+  static void destroyNullObject(JNIEnv *env, jobject javaThis);
   static void nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobject object);
   static jobject nativeToJavaObject(JNIEnv *env, jobject javaThis);
   static void getCachedMethod(JNIEnv *env, jobject javaThis);

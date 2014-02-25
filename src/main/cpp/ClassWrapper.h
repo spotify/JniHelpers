@@ -156,14 +156,14 @@ public:
    *
    * Note that this implies that you may only have one persisted native object in
    * memory at any given time. Also, you are responsible for disposing of it; the
-   * preferred convention for this is to define a native method to call reset().
+   * preferred convention for this is to define a native method to call destroy().
    * This is perhaps a bit tedious, however that's one of the risks of mixing Java
    * and C++ lifecycles. Therefore, you should only use this if you absolutely
    * cannot copy object data to Java via the toJavaObject() method.
    *
    * Rather than make assumptions on how your application manages memory, calling
    * this method multiple times with different objects will leak them rather than
-   * free them. To free the objects, you should call reset() instead. You've been
+   * free them. To free the objects, you should call destroy() instead. You've been
    * warned!
    *
    * The restrictions of the hard-coded field name and limitation of one persisted
@@ -190,9 +190,9 @@ public:
    * instance. In such cases, it does nothing.
    *
    * @param env JNIEnv
-   * @param javaThis Java object to reset the field on (may not be NULL)
+   * @param javaThis Java object to free the field on (may not be NULL)
    */
-  void reset(JNIEnv *env, jobject javaThis);
+  void destroy(JNIEnv *env, jobject javaThis);
 
   /**
    * @brief Set data from a Java instance to this class

@@ -60,7 +60,7 @@ ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) 
   }
 }
 
-void ClassWrapper::reset(JNIEnv *env, jobject javaThis) {
+void ClassWrapper::destroy(JNIEnv *env, jobject javaThis) {
 
 }
 
