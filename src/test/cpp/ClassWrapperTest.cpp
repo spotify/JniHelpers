@@ -19,7 +19,6 @@ void ClassWrapperTest::initialize(JNIEnv *env) {
   addNativeMethod("destroyPersistedObject", (void*)&ClassWrapperTest::destroyPersistedObject, kTypeVoid, persistedObjectName, NULL);
   addNativeMethod("nativePersistInvalidClass", (void*)&ClassWrapperTest::nativePersistInvalidClass, kTypeBool, testObjectName, NULL);
   addNativeMethod("persistNullObject", (void*)&ClassWrapperTest::persistNullObject, kTypeVoid, NULL);
-  addNativeMethod("nativeDestroyPersistedObject", (void*)&ClassWrapperTest::nativeDestroyPersistedObject, kTypeVoid, persistedObjectName, NULL);
   addNativeMethod("nativeDestroyInvalidClass", (void*)&ClassWrapperTest::nativeDestroyInvalidClass, kTypeBool, testObjectName, NULL);
   addNativeMethod("destroyNullObject", (void*)&ClassWrapperTest::destroyNullObject, kTypeVoid, NULL);
   addNativeMethod("nativeSetJavaObject", (void*)&ClassWrapperTest::nativeSetJavaObject, kTypeVoid, testObjectName, NULL);
@@ -80,20 +79,15 @@ void ClassWrapperTest::testMerge(JNIEnv *env, jobject javaThis) {
   JUNIT_ASSERT_NOT_NULL(mergeObject.getMethod("getI"));
 }
 
-JniLocalRef<jobject> ClassWrapperTest::createPersistedObject(JNIEnv *env, jobject javaThis) {
-  PersistedObject persistedObjectInfo(env);
-  PersistedObject *persistedObject = new PersistedObject();
-  // Call merge to set up field mappings. This test case doesn't really reflect real-world
-  // usage, since the ideal case would be to get an instance with ClassResolver::newInstance.
-  persistedObject->merge(&persistedObjectInfo);
+jobject ClassWrapperTest::createPersistedObject(JNIEnv *env, jobject javaThis) {
+  PersistedObject *persistedObject = new PersistedObject(env);
   persistedObject->i = 42;
   // Persist should be called for us here. Note that the original object is leaked; it will
   // be cleaned up in destroyPersistedObject().
-  jobject result = persistedObject->toJavaObject(env);
-  return result;
+  return persistedObject->toJavaObject(env);
 }
 
-JniLocalRef<jobject> ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject javaThis, jobject object) {
+jobject ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject javaThis, jobject object) {
   PersistedObject persistedObjectInfo(env);
   ClassRegistry registry;
   registry.add(env, &persistedObjectInfo);
@@ -105,6 +99,11 @@ JniLocalRef<jobject> ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject
 }
 
 void ClassWrapperTest::destroyPersistedObject(JNIEnv *env, jobject javaThis, jobject object) {
+  PersistedObject persistedObjectInfo(env);
+  ClassRegistry registry;
+  registry.add(env, &persistedObjectInfo);
+  PersistedObject *persistedObject = registry.newInstance<PersistedObject>(env, object);
+  persistedObject->destroy(env, object);
 }
 
 jboolean ClassWrapperTest::nativePersistInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject) {
@@ -112,9 +111,6 @@ jboolean ClassWrapperTest::nativePersistInvalidClass(JNIEnv *env, jobject javaTh
 }
 
 void ClassWrapperTest::persistNullObject(JNIEnv *env, jobject javaThis) {
-}
-
-void ClassWrapperTest::nativeDestroyPersistedObject(JNIEnv *env, jobject javaThis, jobject object) {
 }
 
 jboolean ClassWrapperTest::nativeDestroyInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject) {

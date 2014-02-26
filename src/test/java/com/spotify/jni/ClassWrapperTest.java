@@ -29,7 +29,6 @@ public class ClassWrapperTest {
     native public PersistedObject createPersistedObject();
     native public PersistedObject getPersistedInstance(PersistedObject object);
     native public void destroyPersistedObject(PersistedObject object);
-    @Ignore
     @Test
     public void persist() throws Exception {
         PersistedObject object = createPersistedObject();
@@ -65,19 +64,17 @@ public class ClassWrapperTest {
     @Test(expected = IllegalArgumentException.class)
     native public void persistNullObject() throws Exception;
 
-    native public void nativeDestroyPersistedObject(PersistedObject object);
-    @Ignore
     @Test
     public void destroyPersistedObject() throws Exception {
         PersistedObject object = createPersistedObject();
         assertNotEquals(0, object.nPtr);
         assertEquals(42, object.i);
 
-        nativeDestroyPersistedObject(object);
+        destroyPersistedObject(object);
 
-        PersistedObject result = getPersistedInstance(object);
-        assertEquals(0, result.nPtr);
-        assertEquals(0, result.i);
+        assertEquals(0, object.nPtr);
+        // Destroy should only alter the nPtr field, this should remain untouched
+        assertEquals(42, object.i);
     }
 
     native public boolean nativeDestroyInvalidClass(TestObject testObject);
