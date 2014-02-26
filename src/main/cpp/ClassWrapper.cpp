@@ -1,6 +1,7 @@
 #include "ClassWrapper.h"
 #include "JavaClassUtils.h"
 #include "JavaExceptionUtils.h"
+#include "JniWeakGlobalRef.h"
 #include <string.h>
 
 namespace spotify {
@@ -122,8 +123,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   // However, I'm not really sure how to do that without cluttering the interface.
   // Maybe provide an extra argument to setClass()? However, then we would lack
   // the corresponding arguments we'd want to pass in here.
-  jobject result = env->NewObject(_clazz.get(), _constructor);
-
+  JniWeakGlobalRef<jobject> result = env->NewObject(_clazz.get(), _constructor);
   FieldMap::iterator iter;
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
@@ -148,7 +148,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
 
   // Persist the current object address to the Java instance
   persist(env, result);
-  return result;
+  return result.leak();
 }
 
 JniGlobalRef<jclass> ClassWrapper::getClass() const {
