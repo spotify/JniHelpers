@@ -61,7 +61,15 @@ ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) 
 }
 
 void ClassWrapper::destroy(JNIEnv *env, jobject javaThis) {
-
+  if (isPersisted()) {
+    jfieldID persistField = getField(PERSIST_FIELD_NAME);
+    jlong resultPtr = env->GetLongField(javaThis, persistField);
+    ClassWrapper *instance = reinterpret_cast<ClassWrapper*>(resultPtr);
+    if (instance != NULL) {
+      delete instance;
+      env->SetLongField(javaThis, persistField, 0);
+    }
+  }
 }
 
 void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
