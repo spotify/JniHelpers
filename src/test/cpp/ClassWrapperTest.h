@@ -13,6 +13,7 @@ public:
   ~ClassWrapperTest() {}
 
   void initialize(JNIEnv *env);
+  void mapFields() {}
   const char* getCanonicalName() const {
     return MAKE_CANONICAL_NAME(PACKAGE, ClassWrapperTest);
   }

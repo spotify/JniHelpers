@@ -13,7 +13,6 @@ void PersistedObject::initialize(JNIEnv *env) {
   cacheField(env, PERSIST_FIELD_NAME, kTypeLong);
 }
 
-void PersistedObject::merge(const ClassWrapper *globalInstance) {
-  ClassWrapper::merge(globalInstance);
+void PersistedObject::mapFields() {
   mapField("i", kTypeInt, &i);
 }

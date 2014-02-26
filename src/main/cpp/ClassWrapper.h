@@ -90,6 +90,8 @@ public:
   virtual void initialize(JNIEnv *env) = 0;
   bool isInitialized() const;
 
+  virtual void mapFields() = 0;
+
   /**
    * @brief Get the canonical name for the associated Java class
    *

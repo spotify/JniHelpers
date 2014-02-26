@@ -31,8 +31,7 @@ void TestObject::initialize(JNIEnv *env) {
   // TODO: Getters/setters for byte array
 }
 
-void TestObject::merge(const ClassWrapper *globalInstance) {
-  ClassWrapper::merge(globalInstance);
+void TestObject::mapFields() {
   mapField("i", kTypeInt, &i);
   mapField("f", kTypeFloat, &f);
   mapField("s", kTypeString, &s);

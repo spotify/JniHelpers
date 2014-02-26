@@ -16,7 +16,7 @@ public:
   }
 
   void initialize(JNIEnv *env);
-  void merge(const ClassWrapper *globalInstance);
+  void mapFields();
 
 public:
   int i;

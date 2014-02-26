@@ -11,6 +11,7 @@ public:
   ~ClassWithName() {}
 
   void initialize(JNIEnv *env) {}
+  void mapFields() {}
   const char* getCanonicalName() const { return _name; }
   void setJavaObject(JNIEnv *env, jobject javaObject) {}
   jobject toJavaObject(ClassWrapper *nativeObject) { return NULL; }
@@ -28,6 +29,7 @@ public:
   ~ClassRegistryTest() {}
 
   void initialize(JNIEnv *env);
+  void mapFields() {}
   const char* getCanonicalName() const {
     return MAKE_CANONICAL_NAME(PACKAGE, ClassRegistryTest);
   }
