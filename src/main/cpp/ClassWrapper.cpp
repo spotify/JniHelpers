@@ -73,6 +73,11 @@ void ClassWrapper::destroy(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
+  // Set up field mappings, if this has not already been done
+  if (_field_mappings.empty()) {
+    mapFields();
+  }
+
   FieldMap::iterator iter;
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
@@ -105,6 +110,11 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Cannot call toJavaObject without registering class info");
     return NULL;
+  }
+
+  // Set up field mappings, if this has not already been done
+  if (_field_mappings.empty()) {
+    mapFields();
   }
 
   // Create a new Java argument with the default constructor
