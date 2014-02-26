@@ -93,11 +93,18 @@ public:
       return NULL;
     }
 
-    result->merge(classInfo);
-    if (result->isPersisted()) {
+    if (classInfo->isPersisted()) {
+      // Merge must be called so that cached fields information (namely for
+      // the persisted long field pointer) can be found.
+      result->merge(classInfo);
       ClassWrapper *instance = result->getPersistedInstance(env, fromObject);
+      // Don't leak the result; we will instead return the object pointed to
+      // by the persisted field pointer.
+      delete result;
       result = dynamic_cast<TypeName*>(instance);
     } else {
+      result->merge(classInfo);
+      result->mapFields();
       if (fromObject != NULL) {
         result->setJavaObject(env, fromObject);
       }
