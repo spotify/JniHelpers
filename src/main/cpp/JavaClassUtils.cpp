@@ -49,11 +49,11 @@ jclass JavaClassUtils::findClass(JNIEnv *env, const char *class_name, bool useCl
 void JavaClassUtils::makeSignature(std::string &receiver, const char *return_type, ...) {
   va_list arguments;
   va_start(arguments, return_type);
-  makeSignature(receiver, return_type, arguments);
+  makeSignatureWithList(receiver, return_type, arguments);
   va_end(arguments);
 }
 
-void JavaClassUtils::makeSignature(std::string &receiver, const char *return_type, va_list arguments) {
+void JavaClassUtils::makeSignatureWithList(std::string &receiver, const char *return_type, va_list arguments) {
   std::stringstream stringstream;
   stringstream << "(";
   char *argument;

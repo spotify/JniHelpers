@@ -31,7 +31,7 @@ public:
     *            last argument to this method, unexpected behavior will occur!
     */
   static EXPORT void makeSignature(std::string &receiver, const char *return_type, ...);
-  static EXPORT void makeSignature(std::string &receiver, const char *return_type, va_list arguments);
+  static EXPORT void makeSignatureWithList(std::string &receiver, const char *return_type, va_list arguments);
 
 protected:
   static EXPORT void appendTypeToSignature(std::stringstream &stringstream, const char *argument);

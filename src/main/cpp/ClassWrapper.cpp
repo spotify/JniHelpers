@@ -195,7 +195,7 @@ void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char*
   va_list arguments;
   va_start(arguments, return_type);
   std::string signature;
-  JavaClassUtils::makeSignature(signature, return_type, arguments);
+  JavaClassUtils::makeSignatureWithList(signature, return_type, arguments);
   va_end(arguments);
 
   jmethodID method = env->GetMethodID(_clazz.get(), method_name, signature.c_str());
@@ -239,7 +239,7 @@ void ClassWrapper::addNativeMethod(const char *method_name, void *function, cons
   va_list arguments;
   va_start(arguments, return_type);
   std::string signature;
-  JavaClassUtils::makeSignature(signature, return_type, arguments);
+  JavaClassUtils::makeSignatureWithList(signature, return_type, arguments);
   nativeMethod.signature = const_cast<char*>(strdup(signature.c_str()));
   va_end(arguments);
 
