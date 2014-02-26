@@ -1,0 +1,55 @@
+#ifndef __JniWeakGlobalRef_h__
+#define __JniWeakGlobalRef_h__
+
+#include "JniHelpersCommon.h"
+#include "JavaThreadUtils.h"
+#include "JniLocalRef.h"
+
+namespace spotify {
+namespace jni {
+
+// RAII helper to maintain global references automatically.
+template<typename JniType>
+class EXPORT JniWeakGlobalRef {
+ public:
+  JniWeakGlobalRef() : _obj(NULL) {}
+  JniWeakGlobalRef(const JniWeakGlobalRef<JniType> &ref) : _obj(NULL) { set(ref.get()); }
+  JniWeakGlobalRef(const JniLocalRef<JniType> &ref) : _obj(NULL) { set(ref.get()); }
+
+  ~JniWeakGlobalRef() { set(NULL); }
+
+  JniType get() const { return _obj; }
+
+  JniType leak() {
+    JniType obj = _obj;
+    _obj = NULL;
+    return obj;
+  }
+
+  void set(JniType obj) {
+    JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
+    if (!env) {
+        _obj = NULL;
+        return;
+    }
+    if (_obj) {
+      env->DeleteGlobalRef(_obj);
+      _obj = NULL;
+    }
+    if (obj) {
+      _obj = (JniType)env->NewWeakGlobalRef(obj);
+    }
+  }
+
+  operator JniType() const { return _obj; }
+
+  void operator=(const JniLocalRef<JniType> &ref) { set(ref.get()); }
+
+ private:
+  JniType _obj;
+};
+
+} // namespace jni
+} // namespace spotify
+
+#endif // __JniWeakGlobalRef_h__
