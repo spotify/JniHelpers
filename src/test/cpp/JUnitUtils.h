@@ -67,9 +67,9 @@ using namespace spotify::jni;
 #define JUNIT_ASSERT_EQUALS_CSTRING(_E, _R) _JUNIT_ASSERT_EQUALS_CSTRING(_E, _R, __FILE__, __LINE__)
 
 #define _JUNIT_ASSERT_EQUALS_STRING(_EXPECTED, _RESULT, _FILE, _LINE) { \
-  if (_EXPECTED != _RESULT) { \
+  if (strcmp(_EXPECTED, _RESULT.c_str()) != 0) { \
     JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \
-      "expected <%s> but was: <%s> (at %s:%d)", _EXPECTED.c_str(), _RESULT.c_str(), _FILE, _LINE); \
+      "expected <%s> but was: <%s> (at %s:%d)", _EXPECTED, _RESULT.c_str(), _FILE, _LINE); \
   } \
 }
 #define JUNIT_ASSERT_EQUALS_STRING(_E, _R) _JUNIT_ASSERT_EQUALS_STRING(_E, _R, __FILE__, __LINE__)
