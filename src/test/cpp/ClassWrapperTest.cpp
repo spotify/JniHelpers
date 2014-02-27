@@ -81,7 +81,7 @@ void ClassWrapperTest::testMerge(JNIEnv *env, jobject javaThis) {
 
 jobject ClassWrapperTest::createPersistedObject(JNIEnv *env, jobject javaThis) {
   PersistedObject *persistedObject = new PersistedObject(env);
-  persistedObject->i = 42;
+  persistedObject->i = TEST_INTEGER;
   // Persist should be called for us here. Note that the original object is leaked; it will
   // be cleaned up in destroyPersistedObject().
   return persistedObject->toJavaObject(env);
@@ -92,7 +92,7 @@ jobject ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject javaThis, jo
   ClassRegistry registry;
   registry.add(env, &persistedObjectInfo);
   PersistedObject *persistedObject = registry.newInstance<PersistedObject>(env, object);
-  JUNIT_ASSERT_EQUALS_INT(42, persistedObject->i);
+  JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, persistedObject->i);
   JUNIT_ASSERT_NOT_NULL(persistedObject->getCanonicalName());
   JUNIT_ASSERT_NOT_NULL(persistedObject->getClass().get());
   return persistedObject->toJavaObject(env);
