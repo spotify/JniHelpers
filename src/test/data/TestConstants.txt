@@ -1,0 +1,12 @@
+# Common values for tests which pass objects through JNI
+# This file is used to generate test constant definitions for both Java and C++
+
+# Format is:
+# Java type @ Constant name @ Constant value
+#
+# Note that this means your can't have a substring " @ " inside a string.
+
+String @ TEST_STRING @ "hello"
+int @ TEST_INTEGER @ 42
+float @ TEST_FLOAT @ 3.14159f
+double @ TEST_FLOAT_TOLERANCE @ 0.01
