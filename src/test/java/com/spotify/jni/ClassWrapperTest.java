@@ -25,8 +25,11 @@ public class ClassWrapperTest {
     native public void merge() throws Exception;
 
     native public PersistedObject createPersistedObject();
+
     native public PersistedObject getPersistedInstance(PersistedObject object);
+
     native public void destroyPersistedObject(PersistedObject object);
+
     @Test
     public void persist() throws Exception {
         PersistedObject object = createPersistedObject();
@@ -51,6 +54,7 @@ public class ClassWrapperTest {
     }
 
     native public boolean nativePersistInvalidClass(TestObject testObject);
+
     @Ignore
     @Test
     public void persistInvalidClass() throws Exception {
@@ -76,6 +80,7 @@ public class ClassWrapperTest {
     }
 
     native public boolean nativeDestroyInvalidClass(TestObject testObject);
+
     @Ignore
     @Test
     public void destroyInvalidClass() throws Exception {
@@ -90,6 +95,7 @@ public class ClassWrapperTest {
     native public void destroyNullObject() throws Exception;
 
     native public void nativeSetJavaObject(TestObject object);
+
     @Test
     public void setJavaObject() throws Exception {
         TestObject object = new TestObject(TestConstants.TEST_STRING,
@@ -98,6 +104,7 @@ public class ClassWrapperTest {
     }
 
     native public TestObject nativeToJavaObject();
+
     @Test
     public void toJavaObject() throws Exception {
         TestObject object = nativeToJavaObject();
