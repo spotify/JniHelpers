@@ -29,6 +29,11 @@ void ClassWrapper::merge(const ClassWrapper *globalInstance) {
 
 bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
   if (isPersisted()) {
+    if (javaThis == NULL) {
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
+        "Cannot persist object without corresponding Java instance");
+      return false;
+    }
     jlong resultPtr = reinterpret_cast<jlong>(this);
     env->SetLongField(javaThis, getField(PERSIST_FIELD_NAME), resultPtr);
     return true;
@@ -63,7 +68,19 @@ ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) 
 
 void ClassWrapper::destroy(JNIEnv *env, jobject javaThis) {
   if (isPersisted()) {
+    if (javaThis == NULL) {
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
+        "Cannot destroy persisted object without corresponding Java instance");
+      return;
+    }
+
     jfieldID persistField = getField(PERSIST_FIELD_NAME);
+    if (persistField == NULL) {
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+        "Cannot destroy, object lacks persist field");
+      return;
+    }
+
     jlong resultPtr = env->GetLongField(javaThis, persistField);
     ClassWrapper *instance = reinterpret_cast<ClassWrapper*>(resultPtr);
     if (instance != NULL) {
