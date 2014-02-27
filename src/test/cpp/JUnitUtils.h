@@ -26,6 +26,14 @@ using namespace spotify::jni;
 }
 #define JUNIT_ASSERT_TRUE(_R) _JUNIT_ASSERT_TRUE(_R, __FILE__, __LINE__)
 
+#define _JUNIT_ASSERT_FALSE(_RESULT, _FILE, _LINE) { \
+  if (_RESULT) { \
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \
+      "expected false but was true (at %s:%d)", _FILE, _LINE); \
+  } \
+}
+#define JUNIT_ASSERT_FALSE(_R) _JUNIT_ASSERT_FALSE(_R, __FILE__, __LINE__)
+
 #define _JUNIT_ASSERT_NOT_NULL(_RESULT, _FILE, _LINE) { \
   if (_RESULT == NULL) { \
     JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \

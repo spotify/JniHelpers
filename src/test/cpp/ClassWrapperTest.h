@@ -26,9 +26,9 @@ private:
   static jobject createPersistedObject(JNIEnv *env, jobject javaThis);
   static jobject getPersistedInstance(JNIEnv *env, jobject javaThis, jobject object);
   static void destroyPersistedObject(JNIEnv *env, jobject javaThis, jobject object);
-  static jboolean nativePersistInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject);
+  static void persistInvalidClass(JNIEnv *env, jobject javaThis);
   static void persistNullObject(JNIEnv *env, jobject javaThis);
-  static jboolean nativeDestroyInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject);
+  static void destroyInvalidClass(JNIEnv *env, jobject javaThis);
   static void destroyNullObject(JNIEnv *env, jobject javaThis);
   static void nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobject object);
   static jobject nativeToJavaObject(JNIEnv *env, jobject javaThis);

@@ -17,9 +17,9 @@ void ClassWrapperTest::initialize(JNIEnv *env) {
   addNativeMethod("createPersistedObject", (void*)&ClassWrapperTest::createPersistedObject, persistedObjectName, NULL);
   addNativeMethod("getPersistedInstance", (void*)&ClassWrapperTest::getPersistedInstance, persistedObjectName, persistedObjectName, NULL);
   addNativeMethod("destroyPersistedObject", (void*)&ClassWrapperTest::destroyPersistedObject, kTypeVoid, persistedObjectName, NULL);
-  addNativeMethod("nativePersistInvalidClass", (void*)&ClassWrapperTest::nativePersistInvalidClass, kTypeBool, testObjectName, NULL);
+  addNativeMethod("persistInvalidClass", (void*)&ClassWrapperTest::persistInvalidClass, kTypeVoid, NULL);
   addNativeMethod("persistNullObject", (void*)&ClassWrapperTest::persistNullObject, kTypeVoid, NULL);
-  addNativeMethod("nativeDestroyInvalidClass", (void*)&ClassWrapperTest::nativeDestroyInvalidClass, kTypeBool, testObjectName, NULL);
+  addNativeMethod("destroyInvalidClass", (void*)&ClassWrapperTest::destroyInvalidClass, kTypeVoid, NULL);
   addNativeMethod("destroyNullObject", (void*)&ClassWrapperTest::destroyNullObject, kTypeVoid, NULL);
   addNativeMethod("nativeSetJavaObject", (void*)&ClassWrapperTest::nativeSetJavaObject, kTypeVoid, testObjectName, NULL);
   addNativeMethod("nativeToJavaObject", (void*)&ClassWrapperTest::nativeToJavaObject, testObjectName, NULL);
@@ -106,18 +106,36 @@ void ClassWrapperTest::destroyPersistedObject(JNIEnv *env, jobject javaThis, job
   persistedObject->destroy(env, object);
 }
 
-jboolean ClassWrapperTest::nativePersistInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject) {
-  return false;
+void ClassWrapperTest::persistInvalidClass(JNIEnv *env, jobject javaThis) {
+  PersistedObject persistedObject(env);
+  persistedObject.mapFields();
+  persistedObject.persist(env, javaThis);
 }
 
 void ClassWrapperTest::persistNullObject(JNIEnv *env, jobject javaThis) {
+  PersistedObject persistedObject(env);
+  persistedObject.mapFields();
+  JUNIT_ASSERT_FALSE(persistedObject.persist(env, NULL));
 }
 
-jboolean ClassWrapperTest::nativeDestroyInvalidClass(JNIEnv *env, jobject javaThis, jobject testObject) {
-  return false;
+void ClassWrapperTest::destroyInvalidClass(JNIEnv *env, jobject javaThis) {
+#if 0
+  // This test is almost impossible to replicate from Java, and frankly should
+  // not happen from (responsible) C++ code either. It would be possible to catch
+  // if we are willing to do fieldID lookups on the fly rather than cached, but
+  // that assumes that performance is not an issue here. For that reason, this
+  // test is excluded and the erroneous behavior will (and probably should) crash
+  // the JVM if enabled.
+  PersistedObject persistedObject(env);
+  persistedObject.mapFields();
+  persistedObject.destroy(env, javaThis);
+#endif
 }
 
 void ClassWrapperTest::destroyNullObject(JNIEnv *env, jobject javaThis) {
+  PersistedObject persistedObject(env);
+  persistedObject.mapFields();
+  persistedObject.destroy(env, NULL);
 }
 
 void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobject object) {

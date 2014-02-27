@@ -53,16 +53,9 @@ public class ClassWrapperTest {
         destroyPersistedObject(object);
     }
 
-    native public boolean nativePersistInvalidClass(TestObject testObject);
-
-    @Ignore
     @Test
-    public void persistInvalidClass() throws Exception {
-        TestObject testObject = new TestObject();
-        assertFalse(nativePersistInvalidClass(testObject));
-    }
+    native public void persistInvalidClass() throws Exception;
 
-    @Ignore
     @Test(expected = IllegalArgumentException.class)
     native public void persistNullObject() throws Exception;
 
@@ -79,18 +72,9 @@ public class ClassWrapperTest {
         assertEquals(TestConstants.TEST_INTEGER, object.i);
     }
 
-    native public boolean nativeDestroyInvalidClass(TestObject testObject);
-
-    @Ignore
     @Test
-    public void destroyInvalidClass() throws Exception {
-        TestObject testObject = new TestObject();
-        // Nothing should happen, since destroy() returns void. However the native
-        // code also shouldn't crash.
-        nativeDestroyInvalidClass(testObject);
-    }
+    native public void destroyInvalidClass() throws Exception;
 
-    @Ignore
     @Test(expected = IllegalArgumentException.class)
     native public void destroyNullObject() throws Exception;
 
