@@ -10,3 +10,7 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+tasks.withType(Test) {
+    systemProperty "java.library.path", "./src/test/cpp/Debug"
+}
