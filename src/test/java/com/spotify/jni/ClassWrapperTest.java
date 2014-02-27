@@ -12,8 +12,6 @@ public class ClassWrapperTest {
         System.loadLibrary("JniHelpersTest");
     }
 
-    static final double TEST_FLOAT_TOLERANCE = 0.01;
-
     @Test
     native public void createClassWrapper() throws Exception;
 
@@ -34,7 +32,7 @@ public class ClassWrapperTest {
         PersistedObject object = createPersistedObject();
         assertNotEquals(0, object.nPtr);
         // These properties should be set by the first native method in this case
-        assertEquals(42, object.i);
+        assertEquals(TestConstants.TEST_INTEGER, object.i);
 
         // Now create a new empty object, but copy the nPtr field to it. Note that
         // the i field is *not* copied; that value is stored natively and should
@@ -68,13 +66,13 @@ public class ClassWrapperTest {
     public void destroyPersistedObject() throws Exception {
         PersistedObject object = createPersistedObject();
         assertNotEquals(0, object.nPtr);
-        assertEquals(42, object.i);
+        assertEquals(TestConstants.TEST_INTEGER, object.i);
 
         destroyPersistedObject(object);
 
         assertEquals(0, object.nPtr);
         // Destroy should only alter the nPtr field, this should remain untouched
-        assertEquals(42, object.i);
+        assertEquals(TestConstants.TEST_INTEGER, object.i);
     }
 
     native public boolean nativeDestroyInvalidClass(TestObject testObject);
@@ -94,7 +92,8 @@ public class ClassWrapperTest {
     native public void nativeSetJavaObject(TestObject object);
     @Test
     public void setJavaObject() throws Exception {
-        TestObject object = new TestObject("hello", 1, 3.14f);
+        TestObject object = new TestObject(TestConstants.TEST_STRING,
+                TestConstants.TEST_INTEGER, TestConstants.TEST_FLOAT);
         nativeSetJavaObject(object);
     }
 
@@ -102,9 +101,9 @@ public class ClassWrapperTest {
     @Test
     public void toJavaObject() throws Exception {
         TestObject object = nativeToJavaObject();
-        assertEquals("hello", object.s);
-        assertEquals(1, object.i);
-        assertEquals(3.14, object.f, TEST_FLOAT_TOLERANCE);
+        assertEquals(TestConstants.TEST_STRING, object.s);
+        assertEquals(TestConstants.TEST_INTEGER, object.i);
+        assertEquals(TestConstants.TEST_FLOAT, object.f, TestConstants.TEST_FLOAT_TOLERANCE);
     }
 
     @Test

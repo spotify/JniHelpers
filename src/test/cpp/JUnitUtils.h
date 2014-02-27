@@ -9,6 +9,7 @@
 #define __JUnitUtils_h__
 
 #include "JniHelpers.h"
+#include "TestConstants.h"
 #include <math.h>
 #include <string.h>
 

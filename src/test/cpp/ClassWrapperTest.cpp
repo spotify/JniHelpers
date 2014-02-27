@@ -123,17 +123,16 @@ void ClassWrapperTest::destroyNullObject(JNIEnv *env, jobject javaThis) {
 void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobject object) {
   TestObject testObject(env);
   testObject.setJavaObject(env, object);
-  std::string expectedHello("hello");
-  JUNIT_ASSERT_EQUALS_STRING(expectedHello, testObject.s.getValue());
-  JUNIT_ASSERT_EQUALS_INT(1, testObject.i);
-  JUNIT_ASSERT_EQUALS_FLOAT(3.14f, testObject.f, DEFAULT_FLOAT_TOLERANCE);
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testObject.s.getValue());
+  JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, testObject.i);
+  JUNIT_ASSERT_EQUALS_FLOAT(TEST_FLOAT, testObject.f, DEFAULT_FLOAT_TOLERANCE);
 }
 
 jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
   TestObject testObject(env);
-  testObject.s.setValue("hello");
-  testObject.i = 1;
-  testObject.f = 3.14f;
+  testObject.s.setValue(TEST_STRING);
+  testObject.i = TEST_INTEGER;
+  testObject.f = TEST_FLOAT;
   return testObject.toJavaObject(env);
 }
 

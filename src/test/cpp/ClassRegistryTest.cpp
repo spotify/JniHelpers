@@ -116,9 +116,9 @@ void ClassRegistryTest::nativeNewInstance(JNIEnv *env, jobject javaThis, jobject
   registry.add(env, &obj);
   TestObject *result = registry.newInstance<TestObject>(env, javaTestObject);
   JUNIT_ASSERT_NOT_NULL(result);
-  JUNIT_ASSERT_EQUALS_INT(1, result->i);
-  std::string expected = "hello";
-  JUNIT_ASSERT_EQUALS_STRING(expected, result->s.getValue());
+  JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, result->i);
+  std::string expected = TEST_STRING;
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, result->s.getValue());
   // TODO: Floats, bytes
 }
 
