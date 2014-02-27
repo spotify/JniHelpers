@@ -45,6 +45,7 @@ typedef std::map<std::string, jmethodID> MethodMap;
  * distributed with JniHelpers.
  */
 class EXPORT ClassWrapper {
+// Constructors /////////////////////////////////////////////////////////////////////
 public:
   /**
    * @brief Create a new empty instance.
@@ -75,6 +76,8 @@ public:
 
   virtual ~ClassWrapper();
 
+// Pure virtual methods /////////////////////////////////////////////////////////////
+public:
   /**
    * @brief Cache Java class information
    *
@@ -88,8 +91,30 @@ public:
    * @param env JNIEnv
    */
   virtual void initialize(JNIEnv *env) = 0;
+
+  /**
+   * @brief Check to see if global class info is registered for this object
+   *
+   * Instances of ClassWrapper are still usable without having been initialized,
+   * however most JNI-related operations such as toJavaObject() and setJavaObject()
+   * will not work properly.
+   *
+   * @return True if this instance has valid class info, false otherwise
+   */
   bool isInitialized() const;
 
+  /**
+   * @brief Configure field mappings per instance
+   *
+   * If you want to create field mappings (see mapField()), then you should do it
+   * here. That will configure direct mappings between your class' local fields
+   * and those of the Java world, which allow setJavaObject() and toJavaObject()
+   * to automatically copy data between C++/Java class instances.
+   *
+   * If you don't care about syncing data between Java/C++ classes (for instance, in
+   * the case of a class which is only designed to receive native callbacks), you
+   * can ignore this method and simply implement it as an empty body.
+   */
   virtual void mapFields() = 0;
 
   /**
@@ -104,6 +129,7 @@ public:
    */
   virtual const char* getCanonicalName() const = 0;
 
+// Public methods ///////////////////////////////////////////////////////////////////
 public:
   /**
    * @brief Return the simple name for the class (ie, com.example.Foo -> "Foo")
@@ -124,16 +150,6 @@ public:
    * For this to work correctly, the cached class/field/method data which was fetched
    * during initialize() must be populated into this instance. That is done with this
    * method.
-   *
-   * If you want to create field mappings (see mapField()), then you should override
-   * this method (making sure to call the super!), and make those calls here. That
-   * will set up direct mappings between your class' local fields and those of the
-   * Java world, which allow setJavaObject() and toJavaObject() to automatically set
-   * data to the given object.
-   *
-   * If you don't care about syncing data between Java/C++ classes (for instance, in
-   * the case of a class which is only designed to receive native callbacks), you
-   * can ignore this method.
    *
    * @param globalInstance Global instance from ClassRegistry (should not be NULL)
    */
@@ -178,7 +194,22 @@ public:
    *         method will return false rather than throwing.
    */
   bool persist(JNIEnv *env, jobject javaThis);
+
+  /**
+   * @brief Check to see if this class is persisted natively
+   *
+   * See the persist() method for more information on ClassWrapper persistence.
+   *
+   * @return True if the class is persisted, false otherwise
+   */
   bool isPersisted() const;
+
+  /**
+   * @brief Return the object saved by a previous call to persist()
+   * @param env JNIEnv
+   * @param javaThis Java object to set the field from
+   * @return Object instance, or NULL if no persisted instance exists.
+   */
   ClassWrapper* getPersistedInstance(JNIEnv *env, jobject javaThis) const;
 
   /**
@@ -243,6 +274,7 @@ public:
    */
   jfieldID getField(const char* field_name) const;
 
+// Internal helper calls ////////////////////////////////////////////////////////////
 protected:
   /**
    * @brief Find and save JNI class information for this object
@@ -318,6 +350,7 @@ protected:
    */
   bool registerNativeMethods(JNIEnv *env);
 
+// Fields ///////////////////////////////////////////////////////////////////////////
 protected:
   JniGlobalRef<jclass> _clazz;
   jmethodID _constructor;
