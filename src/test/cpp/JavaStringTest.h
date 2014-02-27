@@ -1,0 +1,30 @@
+#ifndef __JavaStringTest_h__
+#define __JavaStringTest_h__
+
+#include "JniHelpers.h"
+#include "JniHelpersTest.h"
+
+using namespace spotify::jni;
+
+class EXPORT JavaStringTest : public ClassWrapper {
+public:
+  JavaStringTest() : ClassWrapper() {}
+  JavaStringTest(JNIEnv *env) : ClassWrapper(env) {
+    initialize(env);
+  }
+  ~JavaStringTest() {}
+
+  void initialize(JNIEnv *env);
+  void mapFields() {}
+  const char* getCanonicalName() const {
+    return MAKE_CANONICAL_NAME(PACKAGE, JavaStringTest);
+  }
+
+private:
+  static void createJavaString(JNIEnv *env, jobject javaThis);
+  static void createJavaStringFromJavaString(JNIEnv *env, jobject javaThis, jobject javaString);
+  static jstring nativeGetJavaString(JNIEnv *env, jobject javaThis);
+  static void nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaString);
+};
+
+#endif // __JavaStringTest_h__
