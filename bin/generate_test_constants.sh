@@ -1,8 +1,14 @@
 #!/bin/sh
 
-TEST_CONSTANTS_FILE='src/test/data/TestConstants.txt'
-CPP_TEST_CONSTANTS_FILE='src/test/cpp/TestConstants.h'
-JAVA_TEST_CONSTANTS_FILE='src/test/java/com/spotify/jni/TestConstants.java'
+if [ $# -ne 3 ]
+then
+  echo "Usage: $(basename $0) <INPUT_FILE> <OUTPUT_CPP_FILE> <OUTPUT_JAVA_FILE>" >&2
+  exit 1
+fi
+
+TEST_CONSTANTS_FILE=$1
+CPP_TEST_CONSTANTS_FILE=$2
+JAVA_TEST_CONSTANTS_FILE=$3
 
 TEST_CONSTANTS_DOC='/**
  * Common values for tests which pass objects through JNI.

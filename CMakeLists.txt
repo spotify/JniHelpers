@@ -8,3 +8,4 @@ include_directories(${JNI_INCLUDE_DIRS})
 
 add_subdirectory(src/main/cpp)
 add_subdirectory(src/test/cpp)
+add_subdirectory(src/test/data)

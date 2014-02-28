@@ -6,7 +6,7 @@
 #
 # Note that this means your can't have a substring " @ " inside a string.
 
-String @ TEST_STRING @ "hello"
+String @ TEST_STRING @ "hello, is it me you're looking foooor?"
 int @ TEST_INTEGER @ 42
 float @ TEST_FLOAT @ 3.14159f
 double @ TEST_FLOAT_TOLERANCE @ 0.01
