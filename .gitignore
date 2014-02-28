@@ -42,3 +42,4 @@ Makefile.in
 *.cmake
 **/*.dir
 classes
+TestConstants.*
