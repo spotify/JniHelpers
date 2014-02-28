@@ -22,7 +22,7 @@ public:
 
 private:
   static void createJavaString(JNIEnv *env, jobject javaThis);
-  static void createJavaStringFromJavaString(JNIEnv *env, jobject javaThis, jobject javaString);
+  static void nativeCreateJavaStringFromJavaString(JNIEnv *env, jobject javaThis, jobject javaString);
   static jstring nativeGetJavaString(JNIEnv *env, jobject javaThis);
   static void nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaString);
 };

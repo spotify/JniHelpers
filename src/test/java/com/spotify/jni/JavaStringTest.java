@@ -1,5 +1,6 @@
 package com.spotify.jni;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -12,8 +13,13 @@ public class JavaStringTest {
     @Test
     native public void createJavaString() throws Exception;
 
+    native public void nativeCreateJavaStringFromJavaString(String s);
+
+
     @Test
-    native public void createJavaStringFromJavaString() throws Exception;
+    public void createJavaStringFromJavaString() throws Exception {
+        nativeCreateJavaStringFromJavaString(TestConstants.TEST_STRING);
+    }
 
 
     native public String nativeGetJavaString();
