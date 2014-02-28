@@ -42,4 +42,5 @@ Makefile.in
 *.cmake
 **/*.dir
 classes
-TestConstants.*
+TestConstants.h
+TestConstants.java

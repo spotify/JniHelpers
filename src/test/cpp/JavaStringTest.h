@@ -22,8 +22,11 @@ public:
 
 private:
   static void createJavaString(JNIEnv *env, jobject javaThis);
+  static void createJavaStringFromStdString(JNIEnv *env, jobject javaThis);
   static void nativeCreateJavaStringFromJavaString(JNIEnv *env, jobject javaThis, jobject javaString);
   static jstring nativeGetJavaString(JNIEnv *env, jobject javaThis);
+  static jstring nativeGetJavaStringUtf16(JNIEnv *env, jobject javaThis);
+  static jstring nativeGetJavaStringUtf8(JNIEnv *env, jobject javaThis);
   static void nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaString);
 };
 

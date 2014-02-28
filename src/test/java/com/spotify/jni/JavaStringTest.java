@@ -17,6 +17,10 @@ public class JavaStringTest {
 
 
     @Test
+    native public void createJavaStringFromStdString() throws Exception;
+
+
+    @Test
     public void createJavaStringFromJavaString() throws Exception {
         nativeCreateJavaStringFromJavaString(TestConstants.TEST_STRING);
     }
@@ -29,6 +33,24 @@ public class JavaStringTest {
         String result = nativeGetJavaString();
         assertEquals(TestConstants.TEST_STRING, result);
     }
+
+
+    native public String nativeGetJavaStringUtf16();
+    native public String nativeGetJavaStringUtf8();
+
+    @Ignore
+    @Test
+    public void getJavaStringUtf16() throws Exception {
+        String result = nativeGetJavaStringUtf16();
+        assertEquals(TestConstants.TEST_UTF16_STRING, result);
+    }
+
+    @Test
+    public void getJavaStringUtf8() throws Exception {
+        String result = nativeGetJavaStringUtf8();
+        assertEquals(TestConstants.TEST_UTF8_STRING, result);
+    }
+
 
     native public void nativeSetValue(String s);
 

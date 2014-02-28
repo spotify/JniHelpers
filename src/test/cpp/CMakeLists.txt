@@ -8,3 +8,5 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../main/cpp)
 link_directories(${JNI_LIBRARIES})
 add_library(${PROJECT_NAME} SHARED ${libJniHelpersTest_SOURCES} ${libJniHelpersTest_HEADERS})
 target_link_libraries(${PROJECT_NAME} JniHelpers)
+
+set(CMAKE_CXX_FLAGS "-std=c++11")
