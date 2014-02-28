@@ -14,21 +14,21 @@ void JavaStringTest::initialize(JNIEnv *env) {
 
 void JavaStringTest::createJavaString(JNIEnv *env, jobject javaThis) {
   JavaString javaString;
-  JUNIT_ASSERT_EQUALS_CSTRING("", javaString.getValue().c_str());
+  JUNIT_ASSERT_EQUALS_STRING("", javaString.getValue());
 }
 
 void JavaStringTest::createJavaStringFromJavaString(JNIEnv *env, jobject javaThis, jobject javaString) {
   JavaString helloString(env, (jstring)javaString);
-  JUNIT_ASSERT_EQUALS_CSTRING("hello", helloString.getValue().c_str());
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, helloString.getValue());
 }
 
 jstring JavaStringTest::nativeGetJavaString(JNIEnv *env, jobject javaThis) {
-  JavaString javaString("hello");
+  JavaString javaString(TEST_STRING);
   return javaString.getJavaString(env).leak();
 }
 
 void JavaStringTest::nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaString) {
   JavaString helloString;
   helloString.setValue(env, (jstring)javaString);
-  JUNIT_ASSERT_EQUALS_CSTRING("hello", helloString.getValue().c_str());
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, helloString.getValue());
 }

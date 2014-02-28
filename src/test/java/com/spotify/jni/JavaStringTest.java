@@ -21,13 +21,13 @@ public class JavaStringTest {
     @Test
     public void getJavaString() throws Exception {
         String result = nativeGetJavaString();
-        assertEquals("hello", result);
+        assertEquals(TestConstants.TEST_STRING, result);
     }
 
     native public void nativeSetValue(String s);
 
     @Test
     public void setValue() throws Exception {
-        nativeSetValue("hello");
+        nativeSetValue(TestConstants.TEST_STRING);
     }
 }
