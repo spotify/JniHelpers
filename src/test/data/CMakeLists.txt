@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(JniHelpersTestsData)
 
-
-set(TESTS_DIR ${CMAKE_SOURCE_DIR}/src/test)
+set(TESTS_DIR ${PROJECT_SOURCE_DIR}/..)
 set(TEST_CONSTANTS_GENERATOR_COMMAND ${CMAKE_CURRENT_LIST_DIR}/../bin/generate_test_constants.sh)
 set(TEST_CONSTANTS_CPP_FILE ${TESTS_DIR}/cpp/TestConstants.h)
 set(TEST_CONSTANTS_JAVA_FILE ${TESTS_DIR}/java/com/spotify/jni/TestConstants.java)
