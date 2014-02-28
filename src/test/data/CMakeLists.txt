@@ -3,7 +3,7 @@ project(JniHelpersTestsData)
 
 
 set(TESTS_DIR ${CMAKE_SOURCE_DIR}/src/test)
-set(TEST_CONSTANTS_GENERATOR_COMMAND ${CMAKE_SOURCE_DIR}/bin/generate_test_constants.sh)
+set(TEST_CONSTANTS_GENERATOR_COMMAND ${CMAKE_CURRENT_LIST_DIR}/../bin/generate_test_constants.sh)
 set(TEST_CONSTANTS_CPP_FILE ${TESTS_DIR}/cpp/TestConstants.h)
 set(TEST_CONSTANTS_JAVA_FILE ${TESTS_DIR}/java/com/spotify/jni/TestConstants.java)
 set(TEST_CONSTANTS_DATA_FILE ${CMAKE_CURRENT_LIST_DIR}/TestConstants.txt)
