@@ -14,7 +14,7 @@ add_custom_command(OUTPUT ${TEST_CONSTANTS_CPP_FILE} ${TEST_CONSTANTS_JAVA_FILE}
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-add_custom_target(JniHelpersTestsData ALL
+add_custom_target(JniHelpersTestsGenerateData ALL
   DEPENDS ${TEST_CONSTANTS_CPP_FILE}
   DEPENDS ${TEST_CONSTANTS_JAVA_FILE}
 )
