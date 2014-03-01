@@ -73,7 +73,10 @@ void JavaClassUtils::makeSignatureWithList(std::string &receiver, const char *re
 
 void JavaClassUtils::appendTypeToSignature(std::stringstream &stringstream, const char *argument) {
   if (strlen(argument) == 1) {
-    // Primitive type; can be directly appended
+    // Primitive type, can be directly appended
+    stringstream << argument;
+  } else if (argument[0] == '[') {
+    // Array types can also be directly appended
     stringstream << argument;
   } else {
     // Class names must be proceeded with an "L" and have a semicolon at the end,
