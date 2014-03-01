@@ -1,4 +1,5 @@
 #include "JniHelpersTest.h"
+#include "ByteArrayTest.h"
 #include "ClassRegistryTest.h"
 #include "ClassWrapperTest.h"
 #include "JavaClassUtilsTest.h"
@@ -15,6 +16,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void*) {
   jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
 
   jniHelpersInitialize(jvm, env);
+  gClasses.add(env, new ByteArrayTest(env));
   gClasses.add(env, new ClassRegistryTest(env));
   gClasses.add(env, new ClassWrapperTest(env));
   gClasses.add(env, new JavaStringTest(env));
