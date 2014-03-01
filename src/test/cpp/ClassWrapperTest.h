@@ -12,11 +12,11 @@ public:
   ClassWrapperTest(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
   ~ClassWrapperTest() {}
 
-  void initialize(JNIEnv *env);
-  void mapFields() {}
   const char* getCanonicalName() const {
     return MAKE_CANONICAL_NAME(PACKAGE, ClassWrapperTest);
   }
+  void initialize(JNIEnv *env);
+  void mapFields() {}
 
 private:
   static void createClassWrapper(JNIEnv *env, jobject javaThis);
