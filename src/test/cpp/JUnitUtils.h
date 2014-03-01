@@ -82,4 +82,12 @@ using namespace spotify::jni;
 }
 #define JUNIT_ASSERT_EQUALS_STRING(_E, _R) _JUNIT_ASSERT_EQUALS_STRING(_E, _R, __FILE__, __LINE__)
 
+#define _JUNIT_ASSERT_EQUALS_ARRAY(_EXPECTED, _RESULT, _SIZE, _FILE, _LINE) { \
+  if (memcmp(_EXPECTED, _RESULT, _SIZE) != 0) { \
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \
+      "(at %s:%d)", _FILE, _LINE); \
+  } \
+}
+#define JUNIT_ASSERT_EQUALS_ARRAY(_E, _R, _S) _JUNIT_ASSERT_EQUALS_ARRAY(_E, _R, _S, __FILE__, __LINE__)
+
 #endif // __JUnitUtils_h__
