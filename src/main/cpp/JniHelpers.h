@@ -3,6 +3,7 @@
 
 #include "JniHelpersCommon.h"
 
+#include "ByteArray.h"
 #include "ClassWrapper.h"
 #include "ClassRegistry.h"
 #include "JavaClassUtils.h"
