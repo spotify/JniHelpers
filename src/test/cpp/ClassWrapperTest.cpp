@@ -46,6 +46,7 @@ void ClassWrapperTest::createClassWrapper(JNIEnv *env, jobject javaThis) {
   JUNIT_ASSERT_EQUALS_FLOAT(0.0f, emptyObject.f, DEFAULT_FLOAT_TOLERANCE);
   JUNIT_ASSERT_EQUALS_FLOAT(0.0, emptyObject.d, DEFAULT_FLOAT_TOLERANCE);
   JUNIT_ASSERT_EQUALS_STRING("", emptyObject.string.getValue());
+  JUNIT_ASSERT_EQUALS_BOOL(false, emptyObject.z);
 
   // When creating with a JNIEnv*, initialize() should be called and class info
   // will be populated.
@@ -152,6 +153,7 @@ void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobjec
   JUNIT_ASSERT_EQUALS_INT(TEST_SHORT, testObject.s);
   JUNIT_ASSERT_EQUALS_FLOAT(TEST_FLOAT, testObject.f, DEFAULT_FLOAT_TOLERANCE);
   JUNIT_ASSERT_EQUALS_FLOAT(TEST_DOUBLE, testObject.d, DEFAULT_FLOAT_TOLERANCE);
+  JUNIT_ASSERT_EQUALS_BOOL(TEST_BOOLEAN, testObject.z);
 }
 
 jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
@@ -161,6 +163,7 @@ jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
   testObject.s = TEST_SHORT;
   testObject.f = TEST_FLOAT;
   testObject.d = TEST_DOUBLE;
+  testObject.z = TEST_BOOLEAN;
   return testObject.toJavaObject(env);
 }
 

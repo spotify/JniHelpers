@@ -35,12 +35,17 @@ awk -F' @ ' '
   java_type = $1;
   name = $2;
   value = $3;
+  lang = toupper($4);
   java_value = value;
   if (value ~ /".+"/) {
     sub(/^[^\"]*/, "", java_value);
   }
-  print "#define "name" "value >> "'${CPP_TEST_CONSTANTS_FILE}'";
-  print "    public static final "java_type" "name" = "java_value";" >> "'${JAVA_TEST_CONSTANTS_FILE}'";
+  if (lang !~ /JAVA/) {
+    print "#define "name" "value >> "'${CPP_TEST_CONSTANTS_FILE}'";
+  }
+  if (lang !~ /CPP/) {
+    print "    public static final "java_type" "name" = "java_value";" >> "'${JAVA_TEST_CONSTANTS_FILE}'";
+  }
 }
 ' ${TEST_CONSTANTS_FILE}
 

@@ -2,9 +2,10 @@
 # This file is used to generate test constant definitions for both Java and C++
 
 # Format is:
-# Java type @ Constant name @ Constant value
+# Java type @ Constant name @ Constant value @ [JAVA|CPP]
 #
-# Note that this means your can't have a substring " @ " inside a string.
+# The optional 4th field is for when Java and C++ can't share the same entry. Note that for C++ 11
+# string prefixes this is often not needed because the generator handles the common cases.
 
 String @ TEST_STRING @ "hello, is it me you're looking for?"
 String @ TEST_NULL_CHAR @ "\0"
@@ -13,6 +14,7 @@ String @ TEST_UTF16_STRING @ u"UTF16 hello: \u2018."
 String @ TEST_UTF8_STRING @ u8"a \u0915\u093E\u091A\u0902 \u00F6 1 2 3"
 int @ TEST_INTEGER @ 42
 short @ TEST_SHORT @ 42
+boolean @ TEST_BOOLEAN @ true
 float @ TEST_FLOAT @ 3.14159f
 double @ TEST_FLOAT_TOLERANCE @ 0.01
 double @ TEST_DOUBLE @ 3.14159

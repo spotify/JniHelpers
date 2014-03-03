@@ -34,6 +34,8 @@ using namespace spotify::jni;
 }
 #define JUNIT_ASSERT_FALSE(_R) _JUNIT_ASSERT_FALSE(_R, __FILE__, __LINE__)
 
+#define JUNIT_ASSERT_EQUALS_BOOL(_E, _R) _JUNIT_ASSERT_TRUE(_E &&_R, __FILE__, __LINE__)
+
 #define _JUNIT_ASSERT_NOT_NULL(_RESULT, _FILE, _LINE) { \
   if (_RESULT == NULL) { \
     JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \

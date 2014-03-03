@@ -25,6 +25,7 @@ public:
   short s;
   float f;
   double d;
+  bool z;
   // TODO: byte[] b;
 };
 
