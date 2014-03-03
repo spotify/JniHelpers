@@ -4,6 +4,7 @@
 #include <string.h>
 
 #define kTypeInt "I"
+#define kTypeShort "S"
 #define kTypeLong "J"
 #define kTypeFloat "F"
 #define kTypeDouble "D"

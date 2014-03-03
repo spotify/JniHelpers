@@ -42,9 +42,10 @@ void ClassWrapperTest::createClassWrapper(JNIEnv *env, jobject javaThis) {
   JUNIT_ASSERT_NOT_NULL(emptyObject.getSimpleName());
 
   JUNIT_ASSERT_EQUALS_INT(0, emptyObject.i);
+  JUNIT_ASSERT_EQUALS_INT(0, emptyObject.s);
   JUNIT_ASSERT_EQUALS_FLOAT(0.0f, emptyObject.f, DEFAULT_FLOAT_TOLERANCE);
   JUNIT_ASSERT_EQUALS_FLOAT(0.0, emptyObject.d, DEFAULT_FLOAT_TOLERANCE);
-  JUNIT_ASSERT_EQUALS_STRING("", emptyObject.s.getValue());
+  JUNIT_ASSERT_EQUALS_STRING("", emptyObject.string.getValue());
 
   // When creating with a JNIEnv*, initialize() should be called and class info
   // will be populated.
@@ -52,11 +53,6 @@ void ClassWrapperTest::createClassWrapper(JNIEnv *env, jobject javaThis) {
   JUNIT_ASSERT_NOT_NULL(infoObject.getClass().get());
   JUNIT_ASSERT_NOT_NULL(infoObject.getField("i"));
   JUNIT_ASSERT_NOT_NULL(infoObject.getMethod("getI"));
-
-  JUNIT_ASSERT_EQUALS_INT(0, infoObject.i);
-  JUNIT_ASSERT_EQUALS_FLOAT(0.0f, infoObject.f, DEFAULT_FLOAT_TOLERANCE);
-  JUNIT_ASSERT_EQUALS_FLOAT(0.0, infoObject.d, DEFAULT_FLOAT_TOLERANCE);
-  JUNIT_ASSERT_EQUALS_STRING("", infoObject.s.getValue());
 }
 
 void ClassWrapperTest::testGetCanonicalName(JNIEnv *env, jobject javaThis) {
@@ -151,16 +147,18 @@ void ClassWrapperTest::destroyNullObject(JNIEnv *env, jobject javaThis) {
 void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobject object) {
   TestObject testObject(env);
   testObject.setJavaObject(env, object);
-  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testObject.s.getValue());
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testObject.string.getValue());
   JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, testObject.i);
+  JUNIT_ASSERT_EQUALS_INT(TEST_SHORT, testObject.s);
   JUNIT_ASSERT_EQUALS_FLOAT(TEST_FLOAT, testObject.f, DEFAULT_FLOAT_TOLERANCE);
   JUNIT_ASSERT_EQUALS_FLOAT(TEST_DOUBLE, testObject.d, DEFAULT_FLOAT_TOLERANCE);
 }
 
 jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
   TestObject testObject(env);
-  testObject.s.setValue(TEST_STRING);
+  testObject.string.setValue(TEST_STRING);
   testObject.i = TEST_INTEGER;
+  testObject.s = TEST_SHORT;
   testObject.f = TEST_FLOAT;
   testObject.d = TEST_DOUBLE;
   return testObject.toJavaObject(env);
@@ -168,7 +166,7 @@ jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
 
 void ClassWrapperTest::getCachedMethod(JNIEnv *env, jobject javaThis) {
   TestObject testObject(env);
-  jmethodID method = testObject.getMethod("getS");
+  jmethodID method = testObject.getMethod("getString");
   JUNIT_ASSERT_NOT_NULL(method);
 }
 
@@ -180,13 +178,13 @@ void ClassWrapperTest::getInvalidCachedMethod(JNIEnv *env, jobject javaThis) {
 
 void ClassWrapperTest::getCachedMethodOnUninitialized(JNIEnv *env, jobject javaThis) {
   TestObject testObject;
-  jmethodID method = testObject.getMethod("getS");
+  jmethodID method = testObject.getMethod("getString");
   JUNIT_ASSERT_NULL(method);
 }
 
 void ClassWrapperTest::getCachedField(JNIEnv *env, jobject javaThis) {
   TestObject testObject(env);
-  jfieldID field = testObject.getField("s");
+  jfieldID field = testObject.getField("string");
   JUNIT_ASSERT_NOT_NULL(field);
 }
 
@@ -198,6 +196,6 @@ void ClassWrapperTest::getInvalidCachedField(JNIEnv *env, jobject javaThis) {
 
 void ClassWrapperTest::getCachedFieldOnUninitialized(JNIEnv *env, jobject javaThis) {
   TestObject testObject;
-  jfieldID field = testObject.getField("s");
+  jfieldID field = testObject.getField("string");
   JUNIT_ASSERT_NULL(field);
 }

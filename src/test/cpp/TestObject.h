@@ -20,8 +20,9 @@ public:
   void mapFields();
 
 public:
-  JavaString s;
+  JavaString string;
   int i;
+  short s;
   float f;
   double d;
   // TODO: byte[] b;

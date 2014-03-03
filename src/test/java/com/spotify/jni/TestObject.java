@@ -1,8 +1,9 @@
 package com.spotify.jni;
 
 public class TestObject {
-    String s;
+    String string;
     int i;
+    short s;
     float f;
     double d;
     byte[] b;
@@ -11,19 +12,20 @@ public class TestObject {
         // TODO: Need to deal with classes that don't have a no-arg ctor
     }
 
-    public TestObject(String s, int i, float f, double d) {
-        this.s = s;
+    public TestObject(String string, int i, short s, float f, double d) {
+        this.string = string;
         this.i = i;
+        this.s = s;
         this.f = f;
         this.d = d;
     }
 
-    public String getS() {
-        return s;
+    public String getString() {
+        return string;
     }
 
-    public void setS(String s) {
-        this.s = s;
+    public void setString(String string) {
+        this.string = string;
     }
 
     public int getI() {
@@ -32,6 +34,14 @@ public class TestObject {
 
     public void setI(int i) {
         this.i = i;
+    }
+
+    public short getS() {
+        return s;
+    }
+
+    public void setS(short s) {
+        this.s = s;
     }
 
     public float getF() {

@@ -1,5 +1,6 @@
 package com.spotify.jni;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ClassRegistryTest {
@@ -42,7 +43,10 @@ public class ClassRegistryTest {
     @Test
     public void newInstance() throws Exception {
         TestObject testObject = new TestObject(TestConstants.TEST_STRING,
-                TestConstants.TEST_INTEGER, TestConstants.TEST_FLOAT, TestConstants.TEST_DOUBLE);
+                TestConstants.TEST_INTEGER,
+                TestConstants.TEST_SHORT,
+                TestConstants.TEST_FLOAT,
+                TestConstants.TEST_DOUBLE);
         nativeNewInstance(testObject);
     }
 

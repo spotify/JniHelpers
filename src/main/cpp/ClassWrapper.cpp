@@ -105,6 +105,9 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
       if (TYPE_EQUALS(mapping->type, kTypeInt)) {
         int *address = static_cast<int*>(mapping->address);
         *address = env->GetIntField(javaThis, field);
+      } else if (TYPE_EQUALS(mapping->type, kTypeShort)) {
+        short *address = static_cast<short*>(mapping->address);
+        *address = env->GetShortField(javaThis, field);
       } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
         float *address = static_cast<float*>(mapping->address);
         *address = env->GetFloatField(javaThis, field);
@@ -155,6 +158,9 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
       if (TYPE_EQUALS(mapping->type, kTypeInt)) {
         int *address = static_cast<int*>(mapping->address);
         env->SetIntField(result, field, *address);
+      } else if (TYPE_EQUALS(mapping->type, kTypeShort)) {
+        short *address = static_cast<short*>(mapping->address);
+        env->SetShortField(result, field, *address);
       } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
         float *address = static_cast<float*>(mapping->address);
         env->SetFloatField(result, field, *address);

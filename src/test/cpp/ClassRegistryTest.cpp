@@ -118,7 +118,7 @@ void ClassRegistryTest::nativeNewInstance(JNIEnv *env, jobject javaThis, jobject
   JUNIT_ASSERT_NOT_NULL(result);
   JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, result->i);
   std::string expected = TEST_STRING;
-  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, result->s.getValue());
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, result->string.getValue());
   // TODO: Floats, bytes
 }
 
