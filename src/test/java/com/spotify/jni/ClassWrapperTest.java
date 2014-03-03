@@ -83,7 +83,7 @@ public class ClassWrapperTest {
     @Test
     public void setJavaObject() throws Exception {
         TestObject object = new TestObject(TestConstants.TEST_STRING,
-                TestConstants.TEST_INTEGER, TestConstants.TEST_FLOAT);
+                TestConstants.TEST_INTEGER, TestConstants.TEST_FLOAT, TestConstants.TEST_DOUBLE);
         nativeSetJavaObject(object);
     }
 
@@ -95,6 +95,7 @@ public class ClassWrapperTest {
         assertEquals(TestConstants.TEST_STRING, object.s);
         assertEquals(TestConstants.TEST_INTEGER, object.i);
         assertEquals(TestConstants.TEST_FLOAT, object.f, TestConstants.TEST_FLOAT_TOLERANCE);
+        assertEquals(TestConstants.TEST_DOUBLE, object.d, TestConstants.TEST_FLOAT_TOLERANCE);
     }
 
     @Test

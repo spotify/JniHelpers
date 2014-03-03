@@ -42,7 +42,7 @@ public class ClassRegistryTest {
     @Test
     public void newInstance() throws Exception {
         TestObject testObject = new TestObject(TestConstants.TEST_STRING,
-                TestConstants.TEST_INTEGER, TestConstants.TEST_FLOAT);
+                TestConstants.TEST_INTEGER, TestConstants.TEST_FLOAT, TestConstants.TEST_DOUBLE);
         nativeNewInstance(testObject);
     }
 

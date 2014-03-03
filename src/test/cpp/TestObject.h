@@ -23,6 +23,7 @@ public:
   JavaString s;
   int i;
   float f;
+  double d;
   // TODO: byte[] b;
 };
 

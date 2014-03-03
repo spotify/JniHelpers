@@ -64,6 +64,5 @@ void JavaStringTest::nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaS
 jstring JavaStringTest::nativeSetAndReturnValue(JNIEnv *env, jobject javaThis, jobject javaString) {
   JavaString testString;
   testString.setValue(env, (jstring)javaString);
-  //JUNIT_ASSERT_EQUALS_STRING(javaString, testString.getValue());
   return testString.getJavaString(env).leak();
 }

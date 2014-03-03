@@ -108,6 +108,9 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
       } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
         float *address = static_cast<float*>(mapping->address);
         *address = env->GetFloatField(javaThis, field);
+      } else if (TYPE_EQUALS(mapping->type, kTypeDouble)) {
+        double *address = static_cast<double*>(mapping->address);
+        *address = env->GetDoubleField(javaThis, field);
       } else if (TYPE_EQUALS(mapping->type, kTypeString)) {
         jstring string = (jstring)env->GetObjectField(javaThis, field);
         JavaString *address = static_cast<JavaString*>(mapping->address);
@@ -155,6 +158,9 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
       } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
         float *address = static_cast<float*>(mapping->address);
         env->SetFloatField(result, field, *address);
+      } else if (TYPE_EQUALS(mapping->type, kTypeDouble)) {
+        double *address = static_cast<double*>(mapping->address);
+        env->SetDoubleField(result, field, *address);
       } else if (TYPE_EQUALS(mapping->type, kTypeString)) {
         JavaString *address = static_cast<JavaString*>(mapping->address);
         JniLocalRef<jstring> string = address->getJavaString(env);
