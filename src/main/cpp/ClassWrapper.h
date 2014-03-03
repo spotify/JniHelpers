@@ -101,7 +101,7 @@ public:
    *
    * @return True if this instance has valid class info, false otherwise
    */
-  bool isInitialized() const;
+  virtual bool isInitialized() const;
 
   /**
    * @brief Configure field mappings per instance
@@ -135,7 +135,7 @@ public:
    * @brief Return the simple name for the class (ie, com.example.Foo -> "Foo")
    * @return Class name (should not be NULL)
    */
-  const char* getSimpleName() const;
+  virtual const char* getSimpleName() const;
 
   /**
    * @brief Copy cached class info data from the global instance
@@ -153,7 +153,7 @@ public:
    *
    * @param globalInstance Global instance from ClassRegistry (should not be NULL)
    */
-  void merge(const ClassWrapper *globalInstance);
+  virtual void merge(const ClassWrapper *globalInstance);
 
   /**
    * @brief Persist this object as a reference in a Java object
@@ -193,7 +193,7 @@ public:
    *         incorrectly configured (ie, has no field named `nPtr`) then this
    *         method will return false rather than throwing.
    */
-  bool persist(JNIEnv *env, jobject javaThis);
+  virtual bool persist(JNIEnv *env, jobject javaThis);
 
   /**
    * @brief Check to see if this class is persisted natively
@@ -202,7 +202,7 @@ public:
    *
    * @return True if the class is persisted, false otherwise
    */
-  bool isPersisted() const;
+  virtual bool isPersisted() const;
 
   /**
    * @brief Return the object saved by a previous call to persist()
@@ -210,7 +210,7 @@ public:
    * @param javaThis Java object to set the field from
    * @return Object instance, or NULL if no persisted instance exists.
    */
-  ClassWrapper* getPersistedInstance(JNIEnv *env, jobject javaThis) const;
+  virtual ClassWrapper* getPersistedInstance(JNIEnv *env, jobject javaThis) const;
 
   /**
    * @brief Free an object set with persist()
@@ -225,7 +225,7 @@ public:
    * @param env JNIEnv
    * @param javaThis Java object to free the field on (may not be NULL)
    */
-  void destroy(JNIEnv *env, jobject javaThis);
+  virtual void destroy(JNIEnv *env, jobject javaThis);
 
   /**
    * @brief Set data from a Java instance to this class
@@ -238,7 +238,7 @@ public:
    * @param env JNIEnv
    * @param javaThis Java object to copy data from
    */
-  void setJavaObject(JNIEnv *env, jobject javaThis);
+  virtual void setJavaObject(JNIEnv *env, jobject javaThis);
 
   /**
    * @brief Set data from this instance to a Java object
@@ -252,27 +252,27 @@ public:
    * @param env JNIEnv
    * @return Initialized Java object, or NULL if the object could not be created
    */
-  jobject toJavaObject(JNIEnv *env);
+  virtual jobject toJavaObject(JNIEnv *env);
 
   /**
    * @brief Get JNI class information for this object type
    * @return JNI class object
    */
-  JniGlobalRef<jclass> getClass() const;
+  virtual JniGlobalRef<jclass> getClass() const;
 
   /**
    * @brief Retreive a method from the cache
    * @param method_name Method name (without signature)
    * @return JNI method ID, or NULL if no such method was cached
    */
-  jmethodID getMethod(const char *method_name) const;
+  virtual jmethodID getMethod(const char *method_name) const;
 
   /**
    * @brief Retreive a field from the cache
    * @param field_name Field name
    * @return JNI field ID, or NULL if no such field was cached
    */
-  jfieldID getField(const char* field_name) const;
+  virtual jfieldID getField(const char* field_name) const;
 
 // Internal helper calls ////////////////////////////////////////////////////////////
 protected:
@@ -286,7 +286,7 @@ protected:
    *
    * @param env JNIEnv
    */
-  void setClass(JNIEnv *env);
+  virtual void setClass(JNIEnv *env);
 
   /**
    * @brief Find a method and save it in the cache
@@ -296,7 +296,7 @@ protected:
    * @param ... Method argument list, which *must* end with NULL. If the method
    *            takes no arguments, pass only NULL here instead of kTypeVoid.
    */
-  void cacheMethod(JNIEnv *env, const char *method_name, const char *return_type, ...);
+  virtual void cacheMethod(JNIEnv *env, const char *method_name, const char *return_type, ...);
 
   /**
    * @brief Find a field and save it in the cache
@@ -304,7 +304,7 @@ protected:
    * @param field_name Field name, as it appears in the Java class
    * @param field_type Field type (see type definitions in JniTypes.h)
    */
-  void cacheField(JNIEnv *env, const char *field_name, const char *field_type);
+  virtual void cacheField(JNIEnv *env, const char *field_name, const char *field_type);
 
   /**
    * @brief Add a mapping between a Java field name and an instance of this class
@@ -313,9 +313,9 @@ protected:
    * @param field_ptr Pointer to field. Must be public. :(
    */
   // TODO: Would be nice to be able to pass in a setter function, not sure how to manage that
-  void mapField(const char *field_name, const char *field_type, void *field_ptr);
+  virtual void mapField(const char *field_name, const char *field_type, void *field_ptr);
 
-  FieldMapping* getFieldMapping(const std::string &key) const;
+  virtual FieldMapping* getFieldMapping(const std::string &key) const;
 
   /**
    * @brief Add a native function callback to this class
@@ -334,7 +334,7 @@ protected:
    * @param ... Method argument list, which *must* end with NULL. If the method
    *            takes no arguments, pass only NULL here instead of kTypeVoid.
    */
-  void addNativeMethod(const char *method_name, void *function, const char *return_type, ...);
+  virtual void addNativeMethod(const char *method_name, void *function, const char *return_type, ...);
 
   /**
    * @brief Register all native methods on the class
@@ -348,7 +348,7 @@ protected:
    *         do not exist in Java or have invalid signatures, then an exception
    *         may be thrown to Java.
    */
-  bool registerNativeMethods(JNIEnv *env);
+  virtual bool registerNativeMethods(JNIEnv *env);
 
 // Fields ///////////////////////////////////////////////////////////////////////////
 protected:
