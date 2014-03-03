@@ -1,5 +1,6 @@
 #include "ByteArray.h"
 #include "JavaExceptionUtils.h"
+#include <stdlib.h>
 
 namespace spotify {
 namespace jni {
