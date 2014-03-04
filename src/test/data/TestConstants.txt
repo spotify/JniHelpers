@@ -19,4 +19,5 @@ float @ TEST_FLOAT @ 3.14159f
 double @ TEST_FLOAT_TOLERANCE @ 0.01
 double @ TEST_DOUBLE @ 3.14159
 byte @ TEST_BYTE @ 72
-
+char @ TEST_CHAR @ 'ö' @ JAVA
+char @ TEST_CHAR @ L'ö' @ CPP

@@ -10,6 +10,7 @@
 #define kTypeDouble "D"
 #define kTypeBool "Z"
 #define kTypeByte "B"
+#define kTypeChar "C"
 #define kTypeVoid "V"
 #define kTypeString "Ljava/lang/String;"
 #define kTypeClass(x) "L" #x ";"

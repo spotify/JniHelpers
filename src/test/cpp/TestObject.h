@@ -27,6 +27,7 @@ public:
   double d;
   bool z;
   signed char b;
+  wchar_t c;
   // TODO: byte[] b;
 };
 

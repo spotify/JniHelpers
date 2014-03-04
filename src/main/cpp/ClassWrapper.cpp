@@ -124,6 +124,9 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
       } else if (TYPE_EQUALS(mapping->type, kTypeByte)) {
         unsigned char *address = static_cast<unsigned char*>(mapping->address);
         *address = env->GetByteField(javaThis, field);
+      } else if (TYPE_EQUALS(mapping->type, kTypeChar)) {
+        wchar_t *address = static_cast<wchar_t*>(mapping->address);
+        *address = env->GetCharField(javaThis, field);
       } else {
         // TODO throw
       }
@@ -183,6 +186,9 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
       } else if (TYPE_EQUALS(mapping->type, kTypeByte)) {
         unsigned char *address = static_cast<unsigned char*>(mapping->address);
         env->SetByteField(result, field, *address);
+      } else if (TYPE_EQUALS(mapping->type, kTypeChar)) {
+        wchar_t *address = static_cast<wchar_t*>(mapping->address);
+        env->SetCharField(result, field, *address);
       } else {
         // TODO throw
       }

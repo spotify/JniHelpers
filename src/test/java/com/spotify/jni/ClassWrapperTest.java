@@ -97,6 +97,7 @@ public class ClassWrapperTest {
         assertEquals(TestConstants.TEST_DOUBLE, object.d, TestConstants.TEST_FLOAT_TOLERANCE);
         assertEquals(TestConstants.TEST_BOOLEAN, object.z);
         assertEquals(TestConstants.TEST_BYTE, object.b);
+        assertEquals(TestConstants.TEST_CHAR, object.c);
     }
 
     @Test
