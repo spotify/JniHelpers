@@ -1,11 +1,11 @@
 #include "TestObject.h"
 
 TestObject::TestObject() : ClassWrapper(),
-string(), i(0), s(0), f(0.0f), d(0.0), z(false) {
+string(), i(0), s(0), f(0.0f), d(0.0), z(false), b(0) {
 }
 
 TestObject::TestObject(JNIEnv *env) : ClassWrapper(env),
-string(), i(0), s(0), f(0.0f), d(0.0), z(false) {
+string(), i(0), s(0), f(0.0f), d(0.0), z(false), b(0) {
   initialize(env);
   // Set up field mappings for the instance. Normally this isn't necessary,
   // since the global instance is typically used for merging into other objects.
@@ -23,6 +23,7 @@ void TestObject::initialize(JNIEnv *env) {
   cacheField(env, "f", kTypeFloat);
   cacheField(env, "d", kTypeDouble);
   cacheField(env, "z", kTypeBool);
+  cacheField(env, "b", kTypeByte);
   // cacheField(env, "b", kTypeArray(kTypeByte));
 
   cacheMethod(env, "getString", kTypeString, NULL);
@@ -37,6 +38,8 @@ void TestObject::initialize(JNIEnv *env) {
   cacheMethod(env, "setD", kTypeVoid, kTypeDouble, NULL);
   cacheMethod(env, "getZ", kTypeBool, NULL);
   cacheMethod(env, "setZ", kTypeVoid, kTypeBool, NULL);
+  cacheMethod(env, "getB", kTypeByte, NULL);
+  cacheMethod(env, "setB", kTypeVoid, kTypeByte, NULL);
   // TODO: Getters/setters for byte array
 }
 
@@ -47,4 +50,5 @@ void TestObject::mapFields() {
   mapField("d", kTypeDouble, &d);
   mapField("string", kTypeString, &string);
   mapField("z", kTypeBool, &z);
+  mapField("b", kTypeByte, &b);
 }

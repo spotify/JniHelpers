@@ -7,18 +7,20 @@ public class TestObject {
     float f;
     double d;
     boolean z;
+    byte b;
 
     public TestObject() {
         // TODO: Need to deal with classes that don't have a no-arg ctor
     }
 
-    private TestObject(String string, int i, short s, float f, double d, boolean z) {
+    private TestObject(String string, int i, short s, float f, double d, boolean z, byte b) {
         this.string = string;
         this.i = i;
         this.s = s;
         this.f = f;
         this.d = d;
         this.z = z;
+        this.b = b;
     }
 
     public static TestObject createTestObject() {
@@ -27,7 +29,9 @@ public class TestObject {
                 TestConstants.TEST_SHORT,
                 TestConstants.TEST_FLOAT,
                 TestConstants.TEST_DOUBLE,
-                TestConstants.TEST_BOOLEAN);
+                TestConstants.TEST_BOOLEAN,
+                TestConstants.TEST_BYTE
+        );
     }
 
     public String getString() {
@@ -76,5 +80,13 @@ public class TestObject {
 
     public void setZ(boolean z) {
         this.z = z;
+    }
+
+    public byte getB() {
+        return b;
+    }
+
+    public void setB(byte b) {
+        this.b = b;
     }
 }

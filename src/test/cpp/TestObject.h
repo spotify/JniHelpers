@@ -26,6 +26,7 @@ public:
   float f;
   double d;
   bool z;
+  signed char b;
   // TODO: byte[] b;
 };
 

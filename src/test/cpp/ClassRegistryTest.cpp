@@ -117,9 +117,12 @@ void ClassRegistryTest::nativeNewInstance(JNIEnv *env, jobject javaThis, jobject
   TestObject *result = registry.newInstance<TestObject>(env, javaTestObject);
   JUNIT_ASSERT_NOT_NULL(result);
   JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, result->i);
-  std::string expected = TEST_STRING;
+  JUNIT_ASSERT_EQUALS_INT(TEST_SHORT, result->s);
+  JUNIT_ASSERT_EQUALS_FLOAT(TEST_FLOAT, result->f, TEST_FLOAT_TOLERANCE);
+  JUNIT_ASSERT_EQUALS_FLOAT(TEST_DOUBLE, result->d, TEST_FLOAT_TOLERANCE);
+  JUNIT_ASSERT_EQUALS_BOOL(TEST_BOOLEAN, result->z);
   JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, result->string.getValue());
-  // TODO: Floats, bytes
+  JUNIT_ASSERT_EQUALS_INT(TEST_BYTE, result->b);
 }
 
 void ClassRegistryTest::nativeNewInstanceWithNull(JNIEnv *env, jobject javaThis, jobject javaTestObject) {
