@@ -162,7 +162,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
     jfieldID field = iter->second;
-    FieldMapping *mapping = getFieldMapping(key);
+    FieldMapping *mapping = getFieldMapping(key.c_str());
     if (field != NULL && mapping != NULL) {
       if (TYPE_EQUALS(mapping->type, kTypeInt)) {
         int *address = static_cast<int*>(mapping->address);
@@ -293,8 +293,9 @@ void ClassWrapper::mapField(const char *field_name, const char *field_type, void
   _field_mappings[field_name] = mapping;
 }
 
-FieldMapping* ClassWrapper::getFieldMapping(const std::string &key) const {
-  std::map<std::string, FieldMapping*>::const_iterator findMapIter = _field_mappings.find(key);
+FieldMapping* ClassWrapper::getFieldMapping(const char *key) const {
+  std::string keyString(key);
+  std::map<std::string, FieldMapping*>::const_iterator findMapIter = _field_mappings.find(keyString);
   return findMapIter != _field_mappings.end() ? findMapIter->second : NULL;
 }
 

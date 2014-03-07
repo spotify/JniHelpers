@@ -315,7 +315,12 @@ protected:
   // TODO: Would be nice to be able to pass in a setter function, not sure how to manage that
   virtual void mapField(const char *field_name, const char *field_type, void *field_ptr);
 
-  virtual FieldMapping* getFieldMapping(const std::string &key) const;
+  /**
+   * @brief Get a field mapping for this class instance
+   * @param key Field name
+   * @return Field mapping, or NULL if no such field mapping exists
+   */
+  virtual FieldMapping* getFieldMapping(const char *key) const;
 
   /**
    * @brief Add a native function callback to this class
