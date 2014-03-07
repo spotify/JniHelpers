@@ -4,7 +4,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class JavaStringTest {
@@ -42,7 +41,7 @@ public class JavaStringTest {
     }
 
     native public String nativeGetJavaStringUtf16();
-    @Ignore
+    @Ignore("Not currently supported")
     @Test
     public void getJavaStringUtf16() throws Exception {
         String result = nativeGetJavaStringUtf16();
