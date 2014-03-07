@@ -315,6 +315,7 @@ protected:
    * @param field_ptr Pointer to field. Must be public. :(
    */
   // TODO: Would be nice to be able to pass in a setter function, not sure how to manage that
+  // At least, how to manage it without C++11 features or boost::bind...
   virtual void mapField(const char *field_name, const char *field_type, void *field_ptr);
 
   /**
