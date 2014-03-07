@@ -155,7 +155,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   // However, I'm not really sure how to do that without cluttering the interface.
   // Maybe provide an extra argument to setClass()? However, then we would lack
   // the corresponding arguments we'd want to pass in here.
-  JniWeakGlobalRef<jobject> result;
+  JniLocalRef<jobject> result;
   result.set(env->NewObject(_clazz.get(), _constructor));
 
   FieldMap::iterator iter;
