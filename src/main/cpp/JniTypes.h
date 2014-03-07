@@ -21,6 +21,7 @@
 #define kTypeRuntimeException kTypeJavaClass(RuntimeException)
 #define kTypeIllegalArgumentException kTypeJavaClass(IllegalArgumentException)
 #define kTypeIllegalStateException kTypeJavaClass(IllegalStateException)
+#define kTypeUnsupportedOperationException kTypeJavaClass(UnsupportedOperationException)
 
 // Array builder macro
 #define kTypeArray(x) "[" x
