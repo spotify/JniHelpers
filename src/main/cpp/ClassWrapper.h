@@ -291,6 +291,20 @@ protected:
   virtual void setClass(JNIEnv *env);
 
   /**
+   * @brief Cache a constructor
+   *
+   * This method should be called from within initialize() if you plan on using
+   * toJavaObject() with this class instance. If you do not need toJavaObject(),
+   * then it is not necessary to call this.
+   *
+   * Note that only no-argument constructors are supported at the moment. This is
+   * a known limitation and will be addressed in a future version of the library.
+   *
+   * @param env JNIEnv
+   */
+  virtual void cacheConstructor(JNIEnv *env);
+
+  /**
    * @brief Find a method and save it in the cache
    * @param env JNIEnv
    * @param method_name Method name, as it appears in the Java class

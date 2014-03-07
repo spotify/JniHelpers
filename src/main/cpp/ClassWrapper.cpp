@@ -137,7 +137,7 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
 jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   if (_constructor == NULL) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
-      "Cannot call toJavaObject without a constructor");
+      "Cannot call toJavaObject without a constructor (did you forget to call cacheConstructor() in initialize()?");
     return NULL;
   } else if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
@@ -247,9 +247,19 @@ jfieldID ClassWrapper::getField(const char* field_name) const {
 void ClassWrapper::setClass(JNIEnv *env) {
   _clazz.set(env->FindClass(getCanonicalName()));
   JavaExceptionUtils::checkException(env);
+}
+
+void ClassWrapper::cacheConstructor(JNIEnv *env) {
+  if (!isInitialized()) {
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+      "Attempt to call cacheMethod without having set class info");
+    return;
+  }
+
   std::string signature;
   JavaClassUtils::makeSignature(signature, kTypeVoid, NULL);
   _constructor = env->GetMethodID(_clazz.get(), "<init>", signature.c_str());
+  // TODO: Check if ctor was found
 }
 
 void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char* return_type, ...) {
