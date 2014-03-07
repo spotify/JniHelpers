@@ -70,8 +70,10 @@ public:
    * @param env JNIEnv
    */
   ClassWrapper(JNIEnv *env) : _clazz(NULL), _constructor(NULL) {
-    // TODO: Can't call initialize here because of symbol visibility :(
-    // initialize(env);
+    // Ideally, we would like to call initialize() from the ClassWrapper() ctor.
+    // However this won't work because initialize() is pure virtual, and such methods
+    // cannot be called here because the object is in an incomplete state. So instead,
+    // one needs to make sure that initialize(env) is called in the subclass' ctor.
   }
 
   virtual ~ClassWrapper();
