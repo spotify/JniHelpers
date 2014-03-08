@@ -110,7 +110,9 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
         *address = env->GetShortField(javaThis, field);
       } else if (TYPE_EQUALS(mapping->type, kTypeBool)) {
         bool *address = static_cast<bool*>(mapping->address);
-        *address = env->GetBooleanField(javaThis, field);
+        // The somewhat odd "? true : false" fixes a performance warning on windows,
+        // since GetBooleanField actually returns jboolean, not bool.
+        *address = env->GetBooleanField(javaThis, field) ? true : false;
       } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
         float *address = static_cast<float*>(mapping->address);
         *address = env->GetFloatField(javaThis, field);
