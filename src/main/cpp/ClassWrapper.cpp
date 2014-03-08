@@ -100,7 +100,7 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
     jfieldID field = iter->second;
-    FieldMapping *mapping = _field_mappings[key]; // TODO: Should use getter here, if not null will be inserted
+    FieldMapping *mapping = getFieldMapping(key.c_str());
     if (field != NULL && mapping != NULL) {
       if (TYPE_EQUALS(mapping->type, kTypeInt)) {
         int *address = static_cast<int*>(mapping->address);
