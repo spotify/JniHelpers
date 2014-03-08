@@ -27,6 +27,7 @@ void TestObject::initialize(JNIEnv *env) {
   cacheField(env, "c", kTypeChar);
   // cacheField(env, "b", kTypeArray(kTypeByte));
 
+  cacheConstructor(env);
   cacheMethod(env, "getString", kTypeString, NULL);
   cacheMethod(env, "setString", kTypeVoid, kTypeString, NULL);
   cacheMethod(env, "getI", kTypeInt, NULL);

@@ -9,6 +9,7 @@ PersistedObject::PersistedObject(JNIEnv *env) : ClassWrapper(env), i(0) {
 
 void PersistedObject::initialize(JNIEnv *env) {
   setClass(env);
+  cacheConstructor(env);
   cacheField(env, "i", kTypeInt);
   cacheField(env, PERSIST_FIELD_NAME, kTypeLong);
 }
