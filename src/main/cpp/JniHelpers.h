@@ -14,5 +14,6 @@
 #include "JniLocalRef.h"
 
 EXPORT void jniHelpersInitialize(JavaVM *jvm, JNIEnv *env);
+EXPORT JNIEnv *JniCurrentEnv(JavaVM *jvm);
 
 #endif // __JniHelpers_h__
