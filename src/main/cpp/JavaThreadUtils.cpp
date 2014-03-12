@@ -6,16 +6,26 @@ namespace jni {
 
 static JavaVM* sJavaVm = NULL;
 
-void JavaThreadUtils::initialize(JavaVM *jvm) {
+JNIEnv* JavaThreadUtils::initialize(JavaVM *jvm) {
   sJavaVm = jvm;
+  return getEnvForCurrentThread(jvm);
+}
+
+JavaVM* JavaThreadUtils::getJavaVM() {
+  return sJavaVm;
 }
 
 JNIEnv* JavaThreadUtils::getEnvForCurrentThread() {
+  return getEnvForCurrentThread(sJavaVm);
+}
+
+JNIEnv* JavaThreadUtils::getEnvForCurrentThread(JavaVM *jvm) {
   JNIEnv *env;
 
-  if (sJavaVm == NULL) {
+  if (jvm == NULL) {
     return NULL;
-  } else if (sJavaVm->GetEnv((void**) &env, JNI_VERSION_1_4) != JNI_OK) {
+  } else if (jvm->GetEnv((void**) &env, JNI_VERSION_1_4) != JNI_OK) {
+    ILOG_LIB("getenv from jvm failed: %d", jvm->GetEnv((void**) &env, JNI_VERSION_1_4));
     // The current thread isn't attached to a JNIEnv, return NULL.
     return NULL;
   }

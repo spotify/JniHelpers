@@ -13,7 +13,7 @@
 #include "JniGlobalRef.h"
 #include "JniLocalRef.h"
 
-EXPORT void jniHelpersInitialize(JavaVM *jvm, JNIEnv *env);
+EXPORT JNIEnv *jniHelpersInitialize(JavaVM *jvm);
 EXPORT JNIEnv *JniCurrentEnv(JavaVM *jvm);
 
 #endif // __JniHelpers_h__
