@@ -1,7 +1,6 @@
 #include "ClassWrapper.h"
 #include "JavaClassUtils.h"
 #include "JavaExceptionUtils.h"
-#include "JniWeakGlobalRef.h"
 #include <string.h>
 
 namespace spotify {

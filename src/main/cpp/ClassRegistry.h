@@ -98,16 +98,18 @@ public:
       // the persisted long field pointer) can be found.
       result->merge(classInfo);
       ClassWrapper *instance = result->getPersistedInstance(env, fromObject);
-      // Don't leak the result; we will instead return the object pointed to
-      // by the persisted field pointer.
-      delete result;
-      result = dynamic_cast<TypeName*>(instance);
-    } else {
-      result->merge(classInfo);
-      result->mapFields();
-      if (fromObject != NULL) {
-        result->setJavaObject(env, fromObject);
+      if (instance != NULL) {
+        // Don't leak the result; we will instead return the object pointed to
+        // by the persisted field pointer.
+        delete result;
+        return dynamic_cast<TypeName*>(instance);
       }
+    }
+
+    result->merge(classInfo);
+    result->mapFields();
+    if (fromObject != NULL) {
+      result->setJavaObject(env, fromObject);
     }
 
     return result;
