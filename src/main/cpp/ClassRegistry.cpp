@@ -9,14 +9,14 @@ ClassRegistry::~ClassRegistry() {
 
 void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
   if (item == NULL) {
-    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalArgumentException",
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
       "Can't add null item to registry");
     return;
   } else if (item->getCanonicalName() == NULL || strlen(item->getCanonicalName()) == 0) {
-    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalArgumentException",
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
       "Can't add item with empty canonical name to registry");
   } else if (!item->isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalArgumentException",
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
       "Can't add uninitialized ClassWrapper to registry");
   } else {
     _classes[item->getCanonicalName()] = item;
@@ -26,7 +26,7 @@ void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
 const ClassWrapper* ClassRegistry::get(const char* name) {
   if (name == NULL) {
     JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
-    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalArgumentException",
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
       "Can't call get() with NULL");
     return NULL;
   }

@@ -12,13 +12,11 @@
 #define kTypeByte "B"
 #define kTypeChar "C"
 #define kTypeVoid "V"
-#define kTypeString "Ljava/lang/String;"
-#define kTypeClass(x) "L" #x ";"
-#define kTypeJavaClass(x) "Ljava/lang/" #x ";"
+#define kTypeString "java/lang/String"
+#define kTypeJavaClass(x) "java/lang/" #x
 
 // Exceptions
 #define kTypeException kTypeJavaClass(Exception)
-#define kTypeRuntimeException kTypeJavaClass(RuntimeException)
 #define kTypeIllegalArgumentException kTypeJavaClass(IllegalArgumentException)
 #define kTypeIllegalStateException kTypeJavaClass(IllegalStateException)
 #define kTypeUnsupportedOperationException kTypeJavaClass(UnsupportedOperationException)

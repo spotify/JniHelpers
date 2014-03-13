@@ -44,7 +44,7 @@ bool ClassWrapper::isPersisted() const {
   // TODO: Need test for this
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
-      "java/lang/IllegalStateException",
+      kTypeIllegalStateException,
       "Cannot call isPersisted without class info (forgot to merge?)");
     return false;
   }
@@ -75,7 +75,7 @@ void ClassWrapper::destroy(JNIEnv *env, jobject javaThis) {
 
     jfieldID persistField = getField(PERSIST_FIELD_NAME);
     if (persistField == NULL) {
-      JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
         "Cannot destroy, object lacks persist field");
       return;
     }
@@ -137,11 +137,11 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
 
 jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   if (_constructor == NULL) {
-    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Cannot call toJavaObject without a constructor (did you forget to call cacheConstructor() in initialize()?");
     return NULL;
   } else if (!isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Cannot call toJavaObject without registering class info");
     return NULL;
   }
@@ -203,7 +203,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
 jmethodID ClassWrapper::getMethod(const char *method_name) const {
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
-      "java/lang/IllegalStateException",
+      kTypeIllegalStateException,
       "Cannot call getMethod without class info (forgot to merge?)");
     return NULL;
   }
@@ -223,7 +223,7 @@ jmethodID ClassWrapper::getMethod(const char *method_name) const {
 jfieldID ClassWrapper::getField(const char* field_name) const {
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
-      "java/lang/IllegalStateException",
+      kTypeIllegalStateException,
       "Cannot call getField without class info (forgot to merge?)");
     return NULL;
   }
@@ -248,7 +248,7 @@ void ClassWrapper::setClass(JNIEnv *env) {
 
 void ClassWrapper::cacheConstructor(JNIEnv *env) {
   if (!isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Attempt to call cacheMethod without having set class info");
     return;
   }
@@ -261,7 +261,7 @@ void ClassWrapper::cacheConstructor(JNIEnv *env) {
 
 void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char* return_type, ...) {
   if (!isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Attempt to call cacheMethod without having set class info");
     return;
   }
@@ -281,7 +281,7 @@ void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char*
 
 void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *field_type) {
   if (!isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Attempt to call cacheField without having set class info");
     return;
   }

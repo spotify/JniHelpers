@@ -24,11 +24,11 @@ jclass JavaClassUtils::findClass(JNIEnv *env, const char *class_name, bool useCl
       return NULL;
     }
 
-    jclass classLoader = env->FindClass(kTypeJavaClass("ClassLoader"));
+    jclass classLoader = env->FindClass(kTypeJavaClass(ClassLoader));
     JavaExceptionUtils::checkException(env);
 
     std::string signature;
-    makeSignature(signature, kTypeJavaClass("Class"), kTypeString, NULL);
+    makeSignature(signature, kTypeJavaClass(Class), kTypeString, NULL);
     jmethodID methodLoadClass = env->GetMethodID(classLoader, "loadClass", signature.c_str());
     JavaExceptionUtils::checkException(env);
 
@@ -37,7 +37,6 @@ jclass JavaClassUtils::findClass(JNIEnv *env, const char *class_name, bool useCl
 
     jclass result = (jclass)env->CallObjectMethod(sJavaClassLoader, methodLoadClass, className);
     JavaExceptionUtils::checkException(env);
-
   } else {
     result = env->FindClass(class_name);
     JavaExceptionUtils::checkException(env);
