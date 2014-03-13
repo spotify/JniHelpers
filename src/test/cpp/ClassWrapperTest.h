@@ -20,6 +20,7 @@ public:
 
 private:
   static void createClassWrapper(JNIEnv *env, jobject javaThis);
+  static void nativeIsInitialized(JNIEnv *env, jobject javaThis);
   static void testGetCanonicalName(JNIEnv *env, jobject javaThis);
   static void testGetSimpleName(JNIEnv *env, jobject javaThis);
   static void testMerge(JNIEnv *env, jobject javaThis);

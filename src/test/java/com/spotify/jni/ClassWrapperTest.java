@@ -15,6 +15,9 @@ public class ClassWrapperTest {
     native public void createClassWrapper() throws Exception;
 
     @Test
+    native public void isInitialized() throws Exception;
+
+    @Test
     native public void getCanonicalName() throws Exception;
 
     @Test

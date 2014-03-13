@@ -11,6 +11,7 @@ void ClassWrapperTest::initialize(JNIEnv *env) {
   PersistedObject persistedObject;
   const char* persistedObjectName = persistedObject.getCanonicalName();
   addNativeMethod("createClassWrapper", (void*)&ClassWrapperTest::createClassWrapper, kTypeVoid, NULL);
+  addNativeMethod("isInitialized", (void*)&ClassWrapperTest::nativeIsInitialized, kTypeVoid, NULL);
   addNativeMethod("getCanonicalName", (void*)&ClassWrapperTest::testGetCanonicalName, kTypeVoid, NULL);
   addNativeMethod("getSimpleName", (void*)&ClassWrapperTest::testGetSimpleName, kTypeVoid, NULL);
   addNativeMethod("merge", (void*)&ClassWrapperTest::testMerge, kTypeVoid, NULL);
@@ -56,6 +57,13 @@ void ClassWrapperTest::createClassWrapper(JNIEnv *env, jobject javaThis) {
   JUNIT_ASSERT_NOT_NULL(infoObject.getClass().get());
   JUNIT_ASSERT_NOT_NULL(infoObject.getField("i"));
   JUNIT_ASSERT_NOT_NULL(infoObject.getMethod("getI"));
+}
+
+void ClassWrapperTest::nativeIsInitialized(JNIEnv *env, jobject javaThis) {
+  TestObject testObject;
+  JUNIT_ASSERT_FALSE(testObject.isInitialized());
+  testObject.initialize(env);
+  JUNIT_ASSERT_TRUE(testObject.isInitialized());
 }
 
 void ClassWrapperTest::testGetCanonicalName(JNIEnv *env, jobject javaThis) {
