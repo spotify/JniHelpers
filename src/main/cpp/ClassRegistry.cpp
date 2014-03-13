@@ -15,7 +15,7 @@ void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
   } else if (item->getCanonicalName() == NULL || strlen(item->getCanonicalName()) == 0) {
     JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalArgumentException",
       "Can't add item with empty canonical name to registry");
-  } else if (item->getClass().get() == NULL) {
+  } else if (!item->isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalArgumentException",
       "Can't add uninitialized ClassWrapper to registry");
   } else {

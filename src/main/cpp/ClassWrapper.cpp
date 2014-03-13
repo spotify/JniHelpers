@@ -11,7 +11,7 @@ ClassWrapper::~ClassWrapper() {
 }
 
 bool ClassWrapper::isInitialized() const {
-  return _clazz.get() != NULL;
+  return _clazz_foo != NULL;
 }
 
 const char* ClassWrapper::getSimpleName() const {
@@ -20,7 +20,7 @@ const char* ClassWrapper::getSimpleName() const {
 }
 
 void ClassWrapper::merge(const ClassWrapper *globalInstance) {
-  _clazz = globalInstance->_clazz;
+  _clazz_foo = globalInstance->_clazz_global.get();
   _methods = globalInstance->_methods;
   _fields = globalInstance->_fields;
   _constructor = globalInstance->_constructor;
@@ -44,7 +44,7 @@ bool ClassWrapper::isPersisted() const {
   // TODO: Need test for this
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
-      kTypeIllegalStateException,
+      "java/lang/IllegalStateException",
       "Cannot call isPersisted without class info (forgot to merge?)");
     return false;
   }
@@ -75,7 +75,7 @@ void ClassWrapper::destroy(JNIEnv *env, jobject javaThis) {
 
     jfieldID persistField = getField(PERSIST_FIELD_NAME);
     if (persistField == NULL) {
-      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+      JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
         "Cannot destroy, object lacks persist field");
       return;
     }
@@ -137,11 +137,11 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
 
 jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   if (_constructor == NULL) {
-    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
       "Cannot call toJavaObject without a constructor (did you forget to call cacheConstructor() in initialize()?");
     return NULL;
   } else if (!isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
       "Cannot call toJavaObject without registering class info");
     return NULL;
   }
@@ -157,8 +157,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   // Maybe provide an extra argument to setClass()? However, then we would lack
   // the corresponding arguments we'd want to pass in here.
   JniLocalRef<jobject> result;
-  result.set(env->NewObject(_clazz.get(), _constructor));
-
+  result.set(env->NewObject(_clazz_foo, _constructor));
   FieldMap::iterator iter;
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
@@ -201,14 +200,10 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   return result.leak();
 }
 
-JniGlobalRef<jclass> ClassWrapper::getClass() const {
-  return _clazz;
-}
-
 jmethodID ClassWrapper::getMethod(const char *method_name) const {
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
-      kTypeIllegalStateException,
+      "java/lang/IllegalStateException",
       "Cannot call getMethod without class info (forgot to merge?)");
     return NULL;
   }
@@ -228,7 +223,7 @@ jmethodID ClassWrapper::getMethod(const char *method_name) const {
 jfieldID ClassWrapper::getField(const char* field_name) const {
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
-      kTypeIllegalStateException,
+      "java/lang/IllegalStateException",
       "Cannot call getField without class info (forgot to merge?)");
     return NULL;
   }
@@ -246,26 +241,27 @@ jfieldID ClassWrapper::getField(const char* field_name) const {
 }
 
 void ClassWrapper::setClass(JNIEnv *env) {
-  _clazz.set(env->FindClass(getCanonicalName()));
+  _clazz_global.set(env->FindClass(getCanonicalName()));
+  _clazz_foo = _clazz_global.get();
   JavaExceptionUtils::checkException(env);
 }
 
 void ClassWrapper::cacheConstructor(JNIEnv *env) {
   if (!isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
       "Attempt to call cacheMethod without having set class info");
     return;
   }
 
   std::string signature;
   JavaClassUtils::makeSignature(signature, kTypeVoid, NULL);
-  _constructor = env->GetMethodID(_clazz.get(), "<init>", signature.c_str());
+  _constructor = env->GetMethodID(_clazz_global.get(), "<init>", signature.c_str());
   // TODO: Check if ctor was found
 }
 
 void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char* return_type, ...) {
   if (!isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
       "Attempt to call cacheMethod without having set class info");
     return;
   }
@@ -276,7 +272,7 @@ void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char*
   JavaClassUtils::makeSignatureWithList(signature, return_type, arguments);
   va_end(arguments);
 
-  jmethodID method = env->GetMethodID(_clazz.get(), method_name, signature.c_str());
+  jmethodID method = env->GetMethodID(_clazz_global.get(), method_name, signature.c_str());
   JavaExceptionUtils::checkException(env);
   if (method != NULL) {
     _methods[method_name] = method;
@@ -285,7 +281,7 @@ void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char*
 
 void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *field_type) {
   if (!isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+    JavaExceptionUtils::throwExceptionOfType(env, "java/lang/IllegalStateException",
       "Attempt to call cacheField without having set class info");
     return;
   }
@@ -310,7 +306,7 @@ void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *f
     }
   }
 
-  jfieldID field = env->GetFieldID(_clazz.get(), field_name, signatured_type.str().c_str());
+  jfieldID field = env->GetFieldID(_clazz_global.get(), field_name, signatured_type.str().c_str());
   JavaExceptionUtils::checkException(env);
   if (field != NULL) {
     _fields[field_name] = field;
@@ -355,7 +351,7 @@ bool ClassWrapper::registerNativeMethods(JNIEnv *env) {
     return false;
   }
 
-  return (env->RegisterNatives(_clazz.get(), &_jni_methods[0], (jint)_jni_methods.size()) < 0);
+  return (env->RegisterNatives(_clazz_global.get(), &_jni_methods[0], (jint)_jni_methods.size()) < 0);
 }
 
 } // namespace jni

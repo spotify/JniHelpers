@@ -25,8 +25,7 @@ JNIEnv* JavaThreadUtils::getEnvForCurrentThread(JavaVM *jvm) {
   if (jvm == NULL) {
     return NULL;
   } else if (jvm->GetEnv((void**) &env, JNI_VERSION_1_4) != JNI_OK) {
-    ILOG_LIB("getenv from jvm failed: %d", jvm->GetEnv((void**) &env, JNI_VERSION_1_4));
-    // The current thread isn't attached to a JNIEnv, return NULL.
+    // The current thread isn't attached to a JNIEnv
     return NULL;
   }
 

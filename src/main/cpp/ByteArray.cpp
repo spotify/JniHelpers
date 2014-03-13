@@ -25,7 +25,15 @@ _data(NULL), _num_bytes(0) {
 ByteArray::~ByteArray() {
   if (_data != NULL) {
     free(_data);
+    _data = NULL;
   }
+}
+
+void *ByteArray::leak() {
+  void *result = _data;
+  _data = NULL;
+  _num_bytes = 0;
+  return result;
 }
 
 JniLocalRef<jbyteArray> ByteArray::getJavaByteArray(JNIEnv *env) const {

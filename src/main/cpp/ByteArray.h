@@ -17,6 +17,12 @@ public:
   const void* getData() const { return _data; }
   JniLocalRef<jbyteArray> getJavaByteArray(JNIEnv *env) const;
 
+  void *leak();
+
+  //TODO add copyData functionality
+  //void copyData(void *data, const size_t numBytes) {}
+  //void copyData(JNIEnv *env, jbyteArray data);
+
   void setData(void *data, const size_t numBytes);
   void setData(JNIEnv *env, jbyteArray data);
 

@@ -53,7 +53,7 @@ public:
    * This method is invoked by ClassRegistry::newInstance, so it should have a minimal
    * implementation.
    */
-  ClassWrapper() : _clazz(NULL), _constructor(NULL) {}
+  ClassWrapper() : _clazz_global(NULL), _clazz_foo(NULL), _constructor(NULL) {}
 
   /**
    * @brief Create a new ClassWrapper with class information
@@ -69,7 +69,7 @@ public:
    *
    * @param env JNIEnv
    */
-  ClassWrapper(JNIEnv *env) : _clazz(NULL), _constructor(NULL) {
+  ClassWrapper(JNIEnv *env) : _clazz_global(NULL), _clazz_foo(NULL), _constructor(NULL) {
     // Ideally, we would like to call initialize() from the ClassWrapper() ctor.
     // However this won't work because initialize() is pure virtual, and such methods
     // cannot be called here because the object is in an incomplete state. So instead,
@@ -257,12 +257,6 @@ public:
   virtual jobject toJavaObject(JNIEnv *env);
 
   /**
-   * @brief Get JNI class information for this object type
-   * @return JNI class object
-   */
-  virtual JniGlobalRef<jclass> getClass() const;
-
-  /**
    * @brief Retreive a method from the cache
    * @param method_name Method name (without signature)
    * @return JNI method ID, or NULL if no such method was cached
@@ -374,7 +368,8 @@ protected:
 
 // Fields ///////////////////////////////////////////////////////////////////////////
 protected:
-  JniGlobalRef<jclass> _clazz;
+  JniGlobalRef<jclass> _clazz_global;
+  jclass _clazz_foo;
   jmethodID _constructor;
   MethodMap _methods;
   FieldMap _fields;
