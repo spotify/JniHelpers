@@ -3,6 +3,10 @@
 namespace spotify {
 namespace jni {
 
+ClassRegistry::ClassRegistry() {
+  LOG_DEBUG("Creating new class registry");
+}
+
 ClassRegistry::~ClassRegistry() {
   // TODO: Clear map, delete objects, etc.
 }

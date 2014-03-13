@@ -38,7 +38,7 @@ template class EXPORT std::map<std::string, const ClassWrapper*>;
  */
 class EXPORT ClassRegistry {
 public:
-  ClassRegistry() {}
+  ClassRegistry();
   virtual ~ClassRegistry();
 
   /**
