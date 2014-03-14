@@ -53,7 +53,7 @@ public:
    * This method is invoked by ClassRegistry::newInstance, so it should have a minimal
    * implementation.
    */
-  ClassWrapper() : _clazz_global(NULL), _clazz_foo(NULL), _constructor(NULL) {}
+  ClassWrapper() : _clazz_global(NULL), _clazz(NULL), _constructor(NULL) {}
 
   /**
    * @brief Create a new ClassWrapper with class information
@@ -69,7 +69,7 @@ public:
    *
    * @param env JNIEnv
    */
-  ClassWrapper(JNIEnv *env) : _clazz_global(NULL), _clazz_foo(NULL), _constructor(NULL) {
+  ClassWrapper(JNIEnv *env) : _clazz_global(NULL), _clazz(NULL), _constructor(NULL) {
     // Ideally, we would like to call initialize() from the ClassWrapper() ctor.
     // However this won't work because initialize() is pure virtual, and such methods
     // cannot be called here because the object is in an incomplete state. So instead,
@@ -368,12 +368,20 @@ protected:
 
 // Fields ///////////////////////////////////////////////////////////////////////////
 protected:
-  JniGlobalRef<jclass> _clazz_global;
-  jclass _clazz_foo;
+  jclass _clazz;
   jmethodID _constructor;
   MethodMap _methods;
   FieldMap _fields;
   std::map<std::string, FieldMapping*> _field_mappings;
+
+private:
+  // This reference to the class information should *only* be held by the global
+  // instance of the class held in the ClassRegistry. For this reason it is private,
+  // and a pointer to the internal jclass is copied over to any locally created
+  // instances during merging (ie, from newInstance).
+  // Otherwise the global instance will be destroyed when any local instances are
+  // destroyed, which would be bad.
+  JniGlobalRef<jclass> _clazz_global;
 
 private:
   std::vector<JNINativeMethod> _jni_methods;

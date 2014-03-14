@@ -11,7 +11,7 @@ ClassWrapper::~ClassWrapper() {
 }
 
 bool ClassWrapper::isInitialized() const {
-  return _clazz_foo != NULL;
+  return _clazz != NULL;
 }
 
 const char* ClassWrapper::getSimpleName() const {
@@ -20,7 +20,7 @@ const char* ClassWrapper::getSimpleName() const {
 }
 
 void ClassWrapper::merge(const ClassWrapper *globalInstance) {
-  _clazz_foo = globalInstance->_clazz_global.get();
+  _clazz = globalInstance->_clazz_global.get();
   _methods = globalInstance->_methods;
   _fields = globalInstance->_fields;
   _constructor = globalInstance->_constructor;
@@ -157,7 +157,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   // Maybe provide an extra argument to setClass()? However, then we would lack
   // the corresponding arguments we'd want to pass in here.
   JniLocalRef<jobject> result;
-  result.set(env->NewObject(_clazz_foo, _constructor));
+  result.set(env->NewObject(_clazz, _constructor));
   FieldMap::iterator iter;
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
@@ -242,7 +242,7 @@ jfieldID ClassWrapper::getField(const char* field_name) const {
 
 void ClassWrapper::setClass(JNIEnv *env) {
   _clazz_global.set(env->FindClass(getCanonicalName()));
-  _clazz_foo = _clazz_global.get();
+  _clazz = _clazz_global.get();
   JavaExceptionUtils::checkException(env);
 }
 
