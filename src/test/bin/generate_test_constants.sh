@@ -10,6 +10,13 @@ TEST_CONSTANTS_FILE=$1
 CPP_TEST_CONSTANTS_FILE=$2
 JAVA_TEST_CONSTANTS_FILE=$3
 
+if ! [ -e "$(dirname $CPP_TEST_CONSTANTS_FILE)" ] ; then
+  mkdir -p "$(dirname $CPP_TEST_CONSTANTS_FILE)"
+fi
+if ! [ -e "$(dirname $JAVA_TEST_CONSTANTS_FILE)" ] ; then
+  mkdir -p "$(dirname $JAVA_TEST_CONSTANTS_FILE)"
+fi
+
 TEST_CONSTANTS_DOC='/**
  * Common values for tests which pass objects through JNI.
  * NB: This file is GENERATED. DO NOT EDIT.
