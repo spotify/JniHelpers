@@ -7,7 +7,7 @@ endif(NOT ANDROID)
 include_directories(${JNI_INCLUDE_DIRS})
 
 add_subdirectory(src/main/cpp)
-#add_subdirectory(src/test/cpp)
-#add_subdirectory(src/test/data)
+add_subdirectory(src/test/cpp)
+add_subdirectory(src/test/data)
 
-#add_dependencies(JniHelpersTest JniHelpersTestsGenerateData)
+add_dependencies(JniHelpersTest JniHelpersTestsGenerateData)
