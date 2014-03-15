@@ -15,6 +15,15 @@
 #define EXPORT
 #endif
 
+// Whether the JVM should be forcibly terminated if an exception is thrown. This does
+// not apply to exceptions thrown from within JniHelpers or within Java code attached
+// to JNI code. This is mostly relevant when looking up classes/methods/fields which
+// do not exist, and thus represent a misconfiguration on the programmer's end. In such
+// cases it is sometimes prudent to forcibly quit rather than try to continue running.
+#ifndef TERMINATE_ON_EXCEPTION
+#define TERMINATE_ON_EXCEPTION 0
+#endif
+
 #ifndef ENABLE_LOGGING
 #define ENABLE_LOGGING DEBUG
 #endif
@@ -32,15 +41,6 @@
 #define LOG_INFO(...) fprintf(stderr, "INFO: "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n");
 #define LOG_WARN(...) fprintf(stderr, "WARN: "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n");
 #define LOG_ERROR(...) fprintf(stderr, "ERROR: "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n");
-#endif
-
-// Whether the JVM should be forcibly terminated if an exception is thrown. This does
-// not apply to exceptions thrown from within JniHelpers or within Java code attached
-// to JNI code. This is mostly relevant when looking up classes/methods/fields which
-// do not exist, and thus represent a misconfiguration on the programmer's end. In such
-// cases it is sometimes prudent to forcibly quit rather than try to continue running.
-#ifndef TERMINATE_ON_EXCEPTION
-#define TERMINATE_ON_EXCEPTION 0
 #endif
 
 #endif // __JniHelpersCommon_h__
