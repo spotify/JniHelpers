@@ -15,7 +15,9 @@ void JavaExceptionUtils::checkException(JNIEnv *env) {
   }
 
   env->ExceptionDescribe();
+#if TERMINATE_ON_EXCEPTION
   std::terminate();
+#endif
 }
 
 JniLocalRef<jobject> JavaExceptionUtils::newThrowable(JNIEnv *env, const char *message, ...) {
