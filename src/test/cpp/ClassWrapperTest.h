@@ -39,6 +39,7 @@ private:
   static void getCachedField(JNIEnv *env, jobject javaThis);
   static void getInvalidCachedField(JNIEnv *env, jobject javaThis);
   static void getCachedFieldOnUninitialized(JNIEnv *env, jobject javaThis);
+  static void cacheInvalidMethod(JNIEnv *env, jobject javaThis);
 };
 
 #endif // __ClassWrapperTest_h__

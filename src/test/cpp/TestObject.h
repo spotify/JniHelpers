@@ -16,8 +16,8 @@ public:
     return MAKE_CANONICAL_NAME(PACKAGE, TestObject);
   }
 
-  void initialize(JNIEnv *env);
-  void mapFields();
+  virtual void initialize(JNIEnv *env);
+  virtual void mapFields();
 
 public:
   JavaString string;

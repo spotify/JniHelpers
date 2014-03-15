@@ -2,6 +2,8 @@ package com.spotify.jni;
 
 import org.junit.Test;
 
+import java.lang.reflect.Method;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -120,4 +122,7 @@ public class ClassWrapperTest {
 
     @Test(expected = IllegalStateException.class)
     native public void getCachedFieldOnUninitialized() throws Exception;
+
+    @Test(expected = NoSuchMethodError.class)
+    native public void cacheInvalidMethod() throws Exception;
 }
