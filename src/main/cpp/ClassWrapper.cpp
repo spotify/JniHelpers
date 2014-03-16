@@ -6,6 +6,26 @@
 namespace spotify {
 namespace jni {
 
+ClassWrapper::ClassWrapper() :
+_clazz_global(NULL), _clazz(NULL),
+_methods(NULL), _fields(NULL),
+_constructor(NULL) {
+  LOG_DEBUG("Creating new empty instance of class");
+}
+
+ClassWrapper::ClassWrapper(JNIEnv *env) :
+_clazz_global(NULL), _clazz(NULL),
+_methods(NULL), _fields(NULL),
+_constructor(NULL) {
+  // Ideally, we would like to call initialize() from the ClassWrapper() ctor.
+  // However this won't work because initialize() is pure virtual, and such methods
+  // cannot be called here because the object is in an incomplete state. So instead,
+  // one needs to make sure that initialize(env) is called in the subclass' ctor.
+  LOG_DEBUG("Initializing new instance of class");
+  _methods = &_methods_global;
+  _fields = &_fields_global;
+}
+
 ClassWrapper::~ClassWrapper() {
   LOG_DEBUG("Destroying instance of class");
 }

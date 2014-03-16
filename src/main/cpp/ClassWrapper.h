@@ -53,7 +53,7 @@ public:
    * This method is invoked by ClassRegistry::newInstance, so it should have a minimal
    * implementation.
    */
-  ClassWrapper() : _clazz_global(NULL), _clazz(NULL), _constructor(NULL) {}
+  ClassWrapper();
 
   /**
    * @brief Create a new ClassWrapper with class information
@@ -67,14 +67,12 @@ public:
    * as it will be rather expensive to lookup all of the class information. Instead
    * use the empty ctor, or the ClassRegistry::newInstance method.
    *
+   * NOTE: When you subclass ClassWrapper, you *must* call initialize() from within
+   * this constructor.
+   *
    * @param env JNIEnv
    */
-  ClassWrapper(JNIEnv *env) : _clazz_global(NULL), _clazz(NULL), _constructor(NULL) {
-    // Ideally, we would like to call initialize() from the ClassWrapper() ctor.
-    // However this won't work because initialize() is pure virtual, and such methods
-    // cannot be called here because the object is in an incomplete state. So instead,
-    // one needs to make sure that initialize(env) is called in the subclass' ctor.
-  }
+  ClassWrapper(JNIEnv *env);
 
   virtual ~ClassWrapper();
 
