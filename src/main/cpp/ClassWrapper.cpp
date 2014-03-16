@@ -28,7 +28,7 @@ void ClassWrapper::merge(const ClassWrapper *globalInstance) {
 }
 
 bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
-  if (isPersisted()) {
+  if (isPersistenceEnabled()) {
     LOG_DEBUG("Persisting instance of '%s' to Java object", getSimpleName());
     if (javaThis == NULL) {
       JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
@@ -43,7 +43,7 @@ bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
   return false;
 }
 
-bool ClassWrapper::isPersisted() const {
+bool ClassWrapper::isPersistenceEnabled() const {
   // TODO: Need test for this
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
@@ -60,7 +60,7 @@ bool ClassWrapper::isPersisted() const {
 }
 
 ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) const {
-  if (isPersisted()) {
+  if (isPersistenceEnabled()) {
     LOG_DEBUG("Retrieving persisted instance of '%s'", getSimpleName());
     jlong resultPtr = env->GetLongField(javaThis, getField(PERSIST_FIELD_NAME));
     return reinterpret_cast<ClassWrapper*>(resultPtr);
@@ -70,7 +70,7 @@ ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) 
 }
 
 void ClassWrapper::destroy(JNIEnv *env, jobject javaThis) {
-  if (isPersisted()) {
+  if (isPersistenceEnabled()) {
     LOG_DEBUG("Destroying persisted instance of '%s'", getSimpleName());
     if (javaThis == NULL) {
       JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,

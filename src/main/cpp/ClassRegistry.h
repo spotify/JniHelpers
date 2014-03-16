@@ -95,7 +95,7 @@ public:
       return NULL;
     }
 
-    if (classInfo->isPersisted()) {
+    if (classInfo->isPersistenceEnabled()) {
       // Merge must be called so that cached fields information (namely for
       // the persisted long field pointer) can be found.
       result->merge(classInfo);

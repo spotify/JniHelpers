@@ -204,7 +204,7 @@ public:
    *
    * @return True if the class is persisted, false otherwise
    */
-  virtual bool isPersisted() const;
+  virtual bool isPersistenceEnabled() const;
 
   /**
    * @brief Return the object saved by a previous call to persist()
