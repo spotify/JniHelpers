@@ -58,7 +58,7 @@ public:
    *             IllegalArgumentException to Java.
    * @return Pointer to instance, or NULL if no such instance exists.
    */
-  virtual const ClassWrapper* get(const char* name);
+  virtual const ClassWrapper* get(const char* name) const;
 
   /**
    * @brief Create a new instance of a given ClassWrapper subclass

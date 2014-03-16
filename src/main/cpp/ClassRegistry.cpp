@@ -28,7 +28,8 @@ void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
   }
 }
 
-const ClassWrapper* ClassRegistry::get(const char* name) {
+const ClassWrapper* ClassRegistry::get(const char* name) const {
+  LOG_DEBUG("Looking up class named '%s'", name);
   if (name == NULL) {
     JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
@@ -36,8 +37,8 @@ const ClassWrapper* ClassRegistry::get(const char* name) {
     return NULL;
   }
 
-  ClassRegistryMap::iterator iter = _classes.find(name);
-  return iter != _classes.end() ? _classes[name] : NULL;
+  const ClassRegistryMap::const_iterator iter = _classes.find(name);
+  return iter != _classes.end() ? iter->second.get() : NULL;
 }
 
 } // namespace jni
