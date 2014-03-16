@@ -181,13 +181,12 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
     mapFields();
   }
 
-  // Create a new Java argument with the default constructor
-  // TODO: It would be nice to remove the requirement for a no-arg ctor
-  // However, I'm not really sure how to do that without cluttering the interface.
-  // Maybe provide an extra argument to setClass()? However, then we would lack
-  // the corresponding arguments we'd want to pass in here.
   JniLocalRef<jobject> result;
   result.set(env->NewObject(_clazz, _default_constructor));
+  return toJavaObject(env, result.leak());
+}
+
+jobject ClassWrapper::toJavaObject(JNIEnv *env, jobject javaThis) {
   for (FieldMap::const_iterator iter = _fields->begin(); iter != _fields->end(); ++iter) {
     std::string key = iter->first;
     LOG_DEBUG("Copying field %s", key.c_str());
@@ -197,29 +196,29 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
     if (field != NULL && mapping != NULL) {
       if (TYPE_EQUALS(mapping->type, kTypeInt)) {
         int *address = static_cast<int*>(mapping->address);
-        env->SetIntField(result, field, *address);
+        env->SetIntField(javaThis, field, *address);
       } else if (TYPE_EQUALS(mapping->type, kTypeShort)) {
         short *address = static_cast<short*>(mapping->address);
-        env->SetShortField(result, field, *address);
+        env->SetShortField(javaThis, field, *address);
       } else if (TYPE_EQUALS(mapping->type, kTypeBool)) {
         bool *address = static_cast<bool*>(mapping->address);
-        env->SetBooleanField(result, field, *address);
+        env->SetBooleanField(javaThis, field, *address);
       } else if (TYPE_EQUALS(mapping->type, kTypeFloat)) {
         float *address = static_cast<float*>(mapping->address);
-        env->SetFloatField(result, field, *address);
+        env->SetFloatField(javaThis, field, *address);
       } else if (TYPE_EQUALS(mapping->type, kTypeDouble)) {
         double *address = static_cast<double*>(mapping->address);
-        env->SetDoubleField(result, field, *address);
+        env->SetDoubleField(javaThis, field, *address);
       } else if (TYPE_EQUALS(mapping->type, kTypeString)) {
         JavaString *address = static_cast<JavaString*>(mapping->address);
         JniLocalRef<jstring> string = address->getJavaString(env);
-        env->SetObjectField(result, field, string.get());
+        env->SetObjectField(javaThis, field, string.get());
       } else if (TYPE_EQUALS(mapping->type, kTypeByte)) {
         unsigned char *address = static_cast<unsigned char*>(mapping->address);
-        env->SetByteField(result, field, *address);
+        env->SetByteField(javaThis, field, *address);
       } else if (TYPE_EQUALS(mapping->type, kTypeChar)) {
         wchar_t *address = static_cast<wchar_t*>(mapping->address);
-        env->SetCharField(result, field, *address);
+        env->SetCharField(javaThis, field, *address);
       } else {
         LOG_ERROR("Unable to copy data to field '%s'", key.c_str());
       }
@@ -227,8 +226,8 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   }
 
   // Persist the current object address to the Java instance
-  persist(env, result);
-  return result.leak();
+  persist(env, javaThis);
+  return javaThis;
 }
 
 jmethodID ClassWrapper::getMethod(const char *method_name) const {

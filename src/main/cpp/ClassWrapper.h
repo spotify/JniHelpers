@@ -251,10 +251,31 @@ public:
    * you need to set up field mappings by overriding merge() and calling mapField().
    * See the documentation for mapField() for more details.
    *
+   * This override will create a Java object using the default constructor, which
+   * must be cached via cacheConstructor(). If you can't provide a default
+   * constructor, then you should cache the constructor of your choice and create
+   * a NewObject with it, which then can be passed to the other toJavaObject()
+   * override.
+   *
    * @param env JNIEnv
    * @return Initialized Java object, or NULL if the object could not be created
    */
   virtual jobject toJavaObject(JNIEnv *env);
+
+  /**
+  * @brief Set data from this instance to a Java object
+  *
+  * This method copies data to a Java representation of this ClassWrapper instance,
+  * which is then populated with data from this object. The resulting object can
+  * then be passed up to Java and used there. For this method to work properly,
+  * you need to set up field mappings by overriding merge() and calling mapField().
+  * See the documentation for mapField() for more details.
+  *
+  * @param env JNIEnv
+  * @param javaThis Java object created with NewObject (in JNI)
+  * @return Initialized Java object, or NULL if the object could not be created
+  */
+  virtual jobject toJavaObject(JNIEnv *env, jobject javaThis);
 
   /**
    * @brief Retreive a method from the cache
