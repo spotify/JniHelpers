@@ -6,7 +6,10 @@ file(GLOB libJniHelpers_HEADERS *.h)
 
 link_directories(${JNI_LIBRARIES})
 add_library(JniHelpers ${libJniHelpers_SOURCES} ${libJniHelpers_HEADERS})
-set_target_properties(JniHelpers PROPERTIES CMAKE_SHARED_LINKER_FLAGS "-fPIC")
+
 if(${UNIX})
   set(CMAKE_CXX_FLAGS "-fPIC")
+  set_target_properties(JniHelpers PROPERTIES CMAKE_SHARED_LINKER_FLAGS "-fPIC")
+elseif(${WINDOWS})
+  set(CMAKE_CXX_FLAGS "/MP /EHsc")
 endif(${UNIX})
