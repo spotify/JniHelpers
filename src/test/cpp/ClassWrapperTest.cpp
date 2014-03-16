@@ -39,7 +39,7 @@ void ClassWrapperTest::createClassWrapper(JNIEnv *env, jobject javaThis) {
   // For objects created with the no-arg constructor, we would not expect them
   // to have class info, but they should always return a valid canonical name.
   TestObject emptyObject;
-  JUNIT_ASSERT_NULL(emptyObject.getClass().get());
+  JUNIT_ASSERT_FALSE(emptyObject.isInitialized());
   JUNIT_ASSERT_NOT_NULL(emptyObject.getCanonicalName());
   JUNIT_ASSERT_NOT_NULL(emptyObject.getSimpleName());
 
@@ -55,7 +55,7 @@ void ClassWrapperTest::createClassWrapper(JNIEnv *env, jobject javaThis) {
   // When creating with a JNIEnv*, initialize() should be called and class info
   // will be populated.
   TestObject infoObject(env);
-  JUNIT_ASSERT_NOT_NULL(infoObject.getClass().get());
+  JUNIT_ASSERT_TRUE(infoObject.isInitialized());
   JUNIT_ASSERT_NOT_NULL(infoObject.getField("i"));
   JUNIT_ASSERT_NOT_NULL(infoObject.getMethod("getI"));
 }
@@ -72,7 +72,7 @@ void ClassWrapperTest::testGetCanonicalName(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: testGetCanonicalName");
   // Should always be valid, even with no-arg ctor
   TestObject testObject;
-  JUNIT_ASSERT_NULL(testObject.getClass().get());
+  JUNIT_ASSERT_FALSE(testObject.isInitialized());
   JUNIT_ASSERT_NOT_NULL(testObject.getCanonicalName());
   JUNIT_ASSERT_EQUALS_CSTRING("com/spotify/jni/TestObject", testObject.getCanonicalName());
 }
@@ -81,7 +81,7 @@ void ClassWrapperTest::testGetSimpleName(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: testGetSimpleName");
   // Should always be valid, even with no-arg ctor
   TestObject testObject;
-  JUNIT_ASSERT_NULL(testObject.getClass().get());
+  JUNIT_ASSERT_FALSE(testObject.isInitialized());
   JUNIT_ASSERT_NOT_NULL(testObject.getSimpleName());
   JUNIT_ASSERT_EQUALS_CSTRING("TestObject", testObject.getSimpleName());
 }
@@ -89,14 +89,14 @@ void ClassWrapperTest::testGetSimpleName(JNIEnv *env, jobject javaThis) {
 void ClassWrapperTest::testMerge(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: testMerge");
   TestObject testObject(env);
-  JUNIT_ASSERT_NOT_NULL(testObject.getClass().get());
+  JUNIT_ASSERT_TRUE(testObject.isInitialized());
   JUNIT_ASSERT_NOT_NULL(testObject.getField("i"));
   JUNIT_ASSERT_NOT_NULL(testObject.getMethod("getI"));
 
   TestObject mergeObject;
-  JUNIT_ASSERT_NULL(mergeObject.getClass().get());
+  JUNIT_ASSERT_FALSE(mergeObject.isInitialized());
   mergeObject.merge(&testObject);
-  JUNIT_ASSERT_NOT_NULL(mergeObject.getClass().get());
+  JUNIT_ASSERT_TRUE(mergeObject.isInitialized());
   JUNIT_ASSERT_NOT_NULL(mergeObject.getField("i"));
   JUNIT_ASSERT_NOT_NULL(mergeObject.getMethod("getI"));
 }
@@ -118,7 +118,7 @@ jobject ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject javaThis, jo
   PersistedObject *persistedObject = registry.newInstance<PersistedObject>(env, object);
   JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, persistedObject->i);
   JUNIT_ASSERT_NOT_NULL(persistedObject->getCanonicalName());
-  JUNIT_ASSERT_NOT_NULL(persistedObject->getClass().get());
+  JUNIT_ASSERT_TRUE(persistedObject->isInitialized());
   return persistedObject->toJavaObject(env);
 }
 
