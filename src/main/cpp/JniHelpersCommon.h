@@ -15,6 +15,12 @@
 #define EXPORT
 #endif
 
+// What version of Java should be used when initializing JniHelpers. By default this
+// is defined to be Java 1.6.
+#ifndef JAVA_VERSION
+#define JAVA_VERSION JNI_VERSION_1_6
+#endif
+
 // Whether the JVM should be forcibly terminated if an exception is thrown. This does
 // not apply to exceptions thrown from within JniHelpers or within Java code attached
 // to JNI code. This is mostly relevant when looking up classes/methods/fields which

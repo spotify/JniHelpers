@@ -24,8 +24,9 @@ JNIEnv* JavaThreadUtils::getEnvForCurrentThread(JavaVM *jvm) {
 
   if (jvm == NULL) {
     return NULL;
-  } else if (jvm->GetEnv((void**) &env, JNI_VERSION_1_4) != JNI_OK) {
-    // The current thread isn't attached to a JNIEnv
+  } else if (jvm->GetEnv(reinterpret_cast<void**>(&env), JAVA_VERSION) != JNI_OK) {
+    // The current thread isn't attached to a Java thread, this could happen when
+    // mistakenly calling JniHelpers functions directly from other C++ code.
     return NULL;
   }
 
