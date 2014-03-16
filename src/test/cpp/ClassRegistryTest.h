@@ -23,9 +23,7 @@ private:
 class EXPORT ClassRegistryTest : public ClassWrapper {
 public:
   ClassRegistryTest() : ClassWrapper() {}
-  ClassRegistryTest(JNIEnv *env) : ClassWrapper(env) {
-    initialize(env);
-  }
+  ClassRegistryTest(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
   ~ClassRegistryTest() {}
 
   void initialize(JNIEnv *env);
