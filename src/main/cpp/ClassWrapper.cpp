@@ -57,6 +57,7 @@ bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
     }
     jlong resultPtr = reinterpret_cast<jlong>(this);
     env->SetLongField(javaThis, getField(PERSIST_FIELD_NAME), resultPtr);
+    JavaExceptionUtils::checkException(env);
     LOG_DEBUG("Persist was successful");
     return true;
   }
