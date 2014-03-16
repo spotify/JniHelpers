@@ -13,32 +13,34 @@
 void ClassRegistryTest::initialize(JNIEnv *env) {
   setClass(env);
 
-  addNativeMethod("createRegistry", (void*)&ClassRegistryTest::createRegistry, kTypeVoid, NULL);
+  addNativeMethod("createRegistry", createRegistry, kTypeVoid, NULL);
 
-  addNativeMethod("addClass", (void*)&ClassRegistryTest::addClass, kTypeVoid, NULL);
-  addNativeMethod("addNullClass", (void*)&ClassRegistryTest::addNullClass, kTypeVoid, NULL);
-  addNativeMethod("addClassWithEmptyName", (void*)&ClassRegistryTest::addClassWithEmptyName, kTypeVoid, NULL);
-  addNativeMethod("addClassWithNullName", (void*)&ClassRegistryTest::addClassWithNullName, kTypeVoid, NULL);
-  addNativeMethod("addClassWithoutInfo", (void*)&ClassRegistryTest::addClassWithoutInfo, kTypeVoid, NULL);
-  addNativeMethod("addClassMultipleTimes", (void*)&ClassRegistryTest::addClassMultipleTimes, kTypeVoid, NULL);
+  addNativeMethod("addClass", addClass, kTypeVoid, NULL);
+  addNativeMethod("addNullClass", addNullClass, kTypeVoid, NULL);
+  addNativeMethod("addClassWithEmptyName", addClassWithEmptyName, kTypeVoid, NULL);
+  addNativeMethod("addClassWithNullName", addClassWithNullName, kTypeVoid, NULL);
+  addNativeMethod("addClassWithoutInfo", addClassWithoutInfo, kTypeVoid, NULL);
+  addNativeMethod("addClassMultipleTimes", addClassMultipleTimes, kTypeVoid, NULL);
 
-  addNativeMethod("get", (void*)&ClassRegistryTest::get, kTypeVoid, NULL);
-  addNativeMethod("getNullClass", (void*)&ClassRegistryTest::getNullClass, kTypeVoid, NULL);
-  addNativeMethod("getInvalidClass", (void*)&ClassRegistryTest::getInvalidClass, kTypeVoid, NULL);
+  addNativeMethod("get", get, kTypeVoid, NULL);
+  addNativeMethod("getNullClass", getNullClass, kTypeVoid, NULL);
+  addNativeMethod("getInvalidClass", getInvalidClass, kTypeVoid, NULL);
 
   TestObject testObject;
-  addNativeMethod("nativeNewInstance", (void*)&ClassRegistryTest::nativeNewInstance, kTypeVoid, testObject.getCanonicalName(), NULL);
-  addNativeMethod("nativeNewInstanceWithNull", (void*)&ClassRegistryTest::nativeNewInstanceWithNull, kTypeVoid, testObject.getCanonicalName(), NULL);
+  addNativeMethod("nativeNewInstance", nativeNewInstance, kTypeVoid, testObject.getCanonicalName(), NULL);
+  addNativeMethod("nativeNewInstanceWithNull", nativeNewInstanceWithNull, kTypeVoid, testObject.getCanonicalName(), NULL);
 
   registerNativeMethods(env);
 }
 
 void ClassRegistryTest::createRegistry(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: createRegistry");
   ClassRegistry registry;
   JUNIT_ASSERT_EQUALS_INT(0, registry.size());
 }
 
 void ClassRegistryTest::addClass(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: addClass");
   ClassRegistry registry;
   JUNIT_ASSERT_EQUALS_INT(0, registry.size());
   TestObject obj(env);
@@ -47,6 +49,7 @@ void ClassRegistryTest::addClass(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassRegistryTest::addNullClass(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: addNullClass");
   ClassRegistry registry;
   JUNIT_ASSERT_EQUALS_INT(0, registry.size());
   registry.add(env, NULL);
@@ -54,24 +57,28 @@ void ClassRegistryTest::addNullClass(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassRegistryTest::addClassWithEmptyName(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: addClassWithEmptyName");
   ClassRegistry registry;
   ClassWithName emptyName("");
   registry.add(env, &emptyName);
 }
 
 void ClassRegistryTest::addClassWithNullName(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: addClassWithNullName");
   ClassRegistry registry;
   ClassWithName nullName(static_cast<const char*>(NULL));
   registry.add(env, &nullName);
 }
 
 void ClassRegistryTest::addClassWithoutInfo(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: addClassWithoutInfo");
   ClassRegistry registry;
   ClassWithName nameButNoClassInfo("invalid");
   registry.add(env, &nameButNoClassInfo);
 }
 
 void ClassRegistryTest::addClassMultipleTimes(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: addClassMultipleTimes");
   ClassRegistry registry;
   JUNIT_ASSERT_EQUALS_INT(0, registry.size());
   TestObject obj(env);
@@ -83,6 +90,7 @@ void ClassRegistryTest::addClassMultipleTimes(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassRegistryTest::get(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: get");
   ClassRegistry registry;
   TestObject obj(env);
 
@@ -99,18 +107,21 @@ void ClassRegistryTest::get(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassRegistryTest::getNullClass(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: getNullClass");
   ClassRegistry registry;
   // Should throw
   JUNIT_ASSERT_NULL(registry.get(NULL));
 }
 
 void ClassRegistryTest::getInvalidClass(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: getInvalidClass");
   ClassRegistry registry;
   // Should throw
   JUNIT_ASSERT_NULL(registry.get("invalid"));
 }
 
 void ClassRegistryTest::nativeNewInstance(JNIEnv *env, jobject javaThis, jobject javaTestObject) {
+  LOG_INFO("Starting test: nativeNewInstance");
   ClassRegistry registry;
   TestObject obj(env);
   registry.add(env, &obj);
@@ -127,6 +138,7 @@ void ClassRegistryTest::nativeNewInstance(JNIEnv *env, jobject javaThis, jobject
 }
 
 void ClassRegistryTest::nativeNewInstanceWithNull(JNIEnv *env, jobject javaThis, jobject javaTestObject) {
+  LOG_INFO("Starting test: nativeNewInstanceWithNull");
   ClassRegistry registry;
   TestObject obj(env);
   registry.add(env, &obj);

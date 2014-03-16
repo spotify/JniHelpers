@@ -7,7 +7,7 @@ namespace spotify {
 namespace jni {
 
 ClassWrapper::~ClassWrapper() {
-  // TODO: Delete mappings
+  LOG_DEBUG("Destroying instance of class");
 }
 
 bool ClassWrapper::isInitialized() const {
@@ -20,6 +20,7 @@ const char* ClassWrapper::getSimpleName() const {
 }
 
 void ClassWrapper::merge(const ClassWrapper *globalInstance) {
+  LOG_DEBUG("Merging instance of '%s' with global class info", getSimpleName());
   _clazz = globalInstance->_clazz_global.get();
   _methods = globalInstance->_methods;
   _fields = globalInstance->_fields;
@@ -28,6 +29,7 @@ void ClassWrapper::merge(const ClassWrapper *globalInstance) {
 
 bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
   if (isPersisted()) {
+    LOG_DEBUG("Persisting instance of '%s' to Java object", getSimpleName());
     if (javaThis == NULL) {
       JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
         "Cannot persist object without corresponding Java instance");
@@ -35,6 +37,7 @@ bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
     }
     jlong resultPtr = reinterpret_cast<jlong>(this);
     env->SetLongField(javaThis, getField(PERSIST_FIELD_NAME), resultPtr);
+    LOG_DEBUG("Persist was successful");
     return true;
   }
   return false;
@@ -45,7 +48,7 @@ bool ClassWrapper::isPersisted() const {
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
       kTypeIllegalStateException,
-      "Cannot call isPersisted without class info (forgot to merge?)");
+      "Cannot call isPersistenceEnabled without class info (forgot to merge?)");
     return false;
   }
 
@@ -58,6 +61,7 @@ bool ClassWrapper::isPersisted() const {
 
 ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) const {
   if (isPersisted()) {
+    LOG_DEBUG("Retrieving persisted instance of '%s'", getSimpleName());
     jlong resultPtr = env->GetLongField(javaThis, getField(PERSIST_FIELD_NAME));
     return reinterpret_cast<ClassWrapper*>(resultPtr);
   } else {
@@ -67,6 +71,7 @@ ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) 
 
 void ClassWrapper::destroy(JNIEnv *env, jobject javaThis) {
   if (isPersisted()) {
+    LOG_DEBUG("Destroying persisted instance of '%s'", getSimpleName());
     if (javaThis == NULL) {
       JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
         "Cannot destroy persisted object without corresponding Java instance");
@@ -90,6 +95,8 @@ void ClassWrapper::destroy(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
+  LOG_DEBUG("Setting fields from Java object of type '%s' to native instance", getSimpleName());
+
   // Set up field mappings, if this has not already been done
   if (_field_mappings.empty()) {
     mapFields();
@@ -98,6 +105,8 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
   FieldMap::iterator iter;
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
+    LOG_DEBUG("Copying field '%s'", key.c_str());
+
     jfieldID field = iter->second;
     FieldMapping *mapping = getFieldMapping(key.c_str());
     if (field != NULL && mapping != NULL) {
@@ -129,13 +138,15 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
         wchar_t *address = static_cast<wchar_t*>(mapping->address);
         *address = env->GetCharField(javaThis, field);
       } else {
-        // TODO throw
+        LOG_ERROR("Unable to copy data to field '%s'", key.c_str());
       }
     }
   }
 }
 
 jobject ClassWrapper::toJavaObject(JNIEnv *env) {
+  LOG_DEBUG("Converting native instance of '%s' to Java instance", getSimpleName());
+
   if (_constructor == NULL) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Cannot call toJavaObject without a constructor (did you forget to call cacheConstructor() in initialize()?");
@@ -161,6 +172,8 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   FieldMap::iterator iter;
   for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
     std::string key = iter->first;
+    LOG_DEBUG("Copying field %s", key.c_str());
+
     jfieldID field = iter->second;
     FieldMapping *mapping = getFieldMapping(key.c_str());
     if (field != NULL && mapping != NULL) {
@@ -190,7 +203,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
         wchar_t *address = static_cast<wchar_t*>(mapping->address);
         env->SetCharField(result, field, *address);
       } else {
-        // TODO throw
+        LOG_ERROR("Unable to copy data to field '%s'", key.c_str());
       }
     }
   }
@@ -241,12 +254,14 @@ jfieldID ClassWrapper::getField(const char* field_name) const {
 }
 
 void ClassWrapper::setClass(JNIEnv *env) {
+  LOG_INFO("Looking up corresponding Java class for '%s'", getCanonicalName());
   _clazz_global.set(env->FindClass(getCanonicalName()));
-  _clazz = _clazz_global.get();
   JavaExceptionUtils::checkException(env);
+  _clazz = _clazz_global.get();
 }
 
 void ClassWrapper::cacheConstructor(JNIEnv *env) {
+  LOG_DEBUG("Caching constructor in class '%s'", getSimpleName());
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Attempt to call cacheMethod without having set class info");
@@ -256,10 +271,11 @@ void ClassWrapper::cacheConstructor(JNIEnv *env) {
   std::string signature;
   JavaClassUtils::makeSignature(signature, kTypeVoid, NULL);
   _constructor = env->GetMethodID(_clazz_global.get(), "<init>", signature.c_str());
-  // TODO: Check if ctor was found
+  JavaExceptionUtils::checkException(env);
 }
 
 void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char* return_type, ...) {
+  LOG_DEBUG("Caching method '%s' in class '%s'", method_name, getSimpleName());
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Attempt to call cacheMethod without having set class info");
@@ -276,10 +292,15 @@ void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char*
   JavaExceptionUtils::checkException(env);
   if (method != NULL) {
     _methods[method_name] = method;
+  } else {
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaClass(NoSuchMethodError),
+      "Method '%s' (signature: %s) not found on class '%s'",
+      method_name, signature.c_str(), getCanonicalName());
   }
 }
 
 void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *field_type) {
+  LOG_DEBUG("Caching field '%s' (type %s) in class '%s'", field_name, field_type, getSimpleName());
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Attempt to call cacheField without having set class info");
@@ -327,6 +348,7 @@ FieldMapping* ClassWrapper::getFieldMapping(const char *key) const {
 }
 
 void ClassWrapper::addNativeMethod(const char *method_name, void *function, const char *return_type, ...) {
+  LOG_DEBUG("Adding native method '%s' to class '%s'", method_name, getSimpleName());
   JNINativeMethod nativeMethod;
   nativeMethod.name = const_cast<char*>(method_name);
   nativeMethod.fnPtr = function;
@@ -336,12 +358,14 @@ void ClassWrapper::addNativeMethod(const char *method_name, void *function, cons
   std::string signature;
   JavaClassUtils::makeSignatureWithList(signature, return_type, arguments);
   nativeMethod.signature = const_cast<char*>(strdup(signature.c_str()));
+  LOG_DEBUG("Native signature is '%s'", nativeMethod.signature);
   va_end(arguments);
 
   _jni_methods.push_back(nativeMethod);
 }
 
 bool ClassWrapper::registerNativeMethods(JNIEnv *env) {
+  LOG_DEBUG("Registering native methods on class '%s'", getSimpleName());
   if (_jni_methods.empty()) {
     return false;
   }

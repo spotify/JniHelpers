@@ -65,6 +65,7 @@ void JavaExceptionUtils::throwExceptionOfType(JNIEnv *env, const char *exception
 
   char exceptionMessage[kExceptionMaxLength];
   vsnprintf(exceptionMessage, kExceptionMaxLength, message, arguments);
+  LOG_ERROR("Throwing exception %s: %s", exception_class_name, exceptionMessage);
   env->ThrowNew(clazz, exceptionMessage);
 }
 

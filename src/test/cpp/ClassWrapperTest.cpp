@@ -61,6 +61,7 @@ void ClassWrapperTest::createClassWrapper(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassWrapperTest::nativeIsInitialized(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: nativeIsInitialized");
   TestObject testObject;
   JUNIT_ASSERT_FALSE(testObject.isInitialized());
   testObject.initialize(env);
@@ -68,6 +69,7 @@ void ClassWrapperTest::nativeIsInitialized(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassWrapperTest::testGetCanonicalName(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: testGetCanonicalName");
   // Should always be valid, even with no-arg ctor
   TestObject testObject;
   JUNIT_ASSERT_NULL(testObject.getClass().get());
@@ -76,6 +78,7 @@ void ClassWrapperTest::testGetCanonicalName(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassWrapperTest::testGetSimpleName(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: testGetSimpleName");
   // Should always be valid, even with no-arg ctor
   TestObject testObject;
   JUNIT_ASSERT_NULL(testObject.getClass().get());
@@ -84,6 +87,7 @@ void ClassWrapperTest::testGetSimpleName(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassWrapperTest::testMerge(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: testMerge");
   TestObject testObject(env);
   JUNIT_ASSERT_NOT_NULL(testObject.getClass().get());
   JUNIT_ASSERT_NOT_NULL(testObject.getField("i"));
@@ -98,6 +102,7 @@ void ClassWrapperTest::testMerge(JNIEnv *env, jobject javaThis) {
 }
 
 jobject ClassWrapperTest::createPersistedObject(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: createPersistedObject");
   PersistedObject *persistedObject = new PersistedObject(env);
   persistedObject->i = TEST_INTEGER;
   // Persist should be called for us here. Note that the original object is leaked; it will
@@ -106,6 +111,7 @@ jobject ClassWrapperTest::createPersistedObject(JNIEnv *env, jobject javaThis) {
 }
 
 jobject ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject javaThis, jobject object) {
+  LOG_INFO("Starting test: getPersistedInstance");
   PersistedObject persistedObjectInfo(env);
   ClassRegistry registry;
   registry.add(env, &persistedObjectInfo);
@@ -117,6 +123,7 @@ jobject ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject javaThis, jo
 }
 
 void ClassWrapperTest::destroyPersistedObject(JNIEnv *env, jobject javaThis, jobject object) {
+  LOG_INFO("Starting test: destroyPersistedObject");
   PersistedObject persistedObjectInfo(env);
   ClassRegistry registry;
   registry.add(env, &persistedObjectInfo);
@@ -125,25 +132,28 @@ void ClassWrapperTest::destroyPersistedObject(JNIEnv *env, jobject javaThis, job
 }
 
 void ClassWrapperTest::persistInvalidClass(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: persistInvalidClass");
   PersistedObject persistedObject(env);
   persistedObject.mapFields();
   persistedObject.persist(env, javaThis);
 }
 
 void ClassWrapperTest::persistNullObject(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: persistNullObject");
   PersistedObject persistedObject(env);
   persistedObject.mapFields();
   JUNIT_ASSERT_FALSE(persistedObject.persist(env, NULL));
 }
 
 void ClassWrapperTest::destroyInvalidClass(JNIEnv *env, jobject javaThis) {
-#if 0
   // This test is almost impossible to replicate from Java, and frankly should
   // not happen from (responsible) C++ code either. It would be possible to catch
   // if we are willing to do fieldID lookups on the fly rather than cached, but
   // that assumes that performance is not an issue here. For that reason, this
   // test is excluded and the erroneous behavior will (and probably should) crash
   // the JVM if enabled.
+#if 0
+  LOG_INFO("Starting test: destroyInvalidClass");
   PersistedObject persistedObject(env);
   persistedObject.mapFields();
   persistedObject.destroy(env, javaThis);
@@ -151,12 +161,14 @@ void ClassWrapperTest::destroyInvalidClass(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassWrapperTest::destroyNullObject(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: destroyNullObject");
   PersistedObject persistedObject(env);
   persistedObject.mapFields();
   persistedObject.destroy(env, NULL);
 }
 
 void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobject object) {
+  LOG_INFO("Starting test: nativeSetJavaObject");
   TestObject testObject(env);
   testObject.setJavaObject(env, object);
   JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testObject.string.getValue());
@@ -170,6 +182,7 @@ void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobjec
 }
 
 jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: nativeToJavaObject");
   TestObject testObject(env);
   testObject.string.setValue(TEST_STRING);
   testObject.i = TEST_INTEGER;
@@ -183,36 +196,42 @@ jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
 }
 
 void ClassWrapperTest::getCachedMethod(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: getCachedMethod");
   TestObject testObject(env);
   jmethodID method = testObject.getMethod("getString");
   JUNIT_ASSERT_NOT_NULL(method);
 }
 
 void ClassWrapperTest::getInvalidCachedMethod(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: getInvalidCachedMethod");
   TestObject testObject(env);
   jmethodID method = testObject.getMethod("invalid");
   JUNIT_ASSERT_NULL(method);
 }
 
 void ClassWrapperTest::getCachedMethodOnUninitialized(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: getCachedMethodOnUninitialized");
   TestObject testObject;
   jmethodID method = testObject.getMethod("getString");
   JUNIT_ASSERT_NULL(method);
 }
 
 void ClassWrapperTest::getCachedField(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: getCachedField");
   TestObject testObject(env);
   jfieldID field = testObject.getField("string");
   JUNIT_ASSERT_NOT_NULL(field);
 }
 
 void ClassWrapperTest::getInvalidCachedField(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: getInvalidCachedField");
   TestObject testObject(env);
   jfieldID field = testObject.getField("invalid");
   JUNIT_ASSERT_NULL(field);
 }
 
 void ClassWrapperTest::getCachedFieldOnUninitialized(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: getCachedFieldOnUninitialized");
   TestObject testObject;
   jfieldID field = testObject.getField("string");
   JUNIT_ASSERT_NULL(field);
@@ -228,6 +247,7 @@ public:
 };
 
 void ClassWrapperTest::cacheInvalidMethod(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: cacheInvalidMethod");
   CacheInvalidMethod testObject;
   testObject.initialize(env);
 }

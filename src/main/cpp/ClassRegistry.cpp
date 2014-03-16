@@ -8,7 +8,7 @@ ClassRegistry::ClassRegistry() {
 }
 
 ClassRegistry::~ClassRegistry() {
-  // TODO: Clear map, delete objects, etc.
+  LOG_DEBUG("Destroying class registry");
 }
 
 void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
@@ -23,7 +23,8 @@ void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
       "Can't add uninitialized ClassWrapper to registry");
   } else {
-    _classes[item->getCanonicalName()] = item;
+    LOG_INFO("Adding class instance '%s' to registry", item->getCanonicalName());
+    _classes[item->getCanonicalName()] = item;// .reset(item);
   }
 }
 
