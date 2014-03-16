@@ -21,6 +21,7 @@ public:
   }
 
 private:
+  static bool supportsRawStringLiterals(JNIEnv *env);
   static void createJavaString(JNIEnv *env, jobject javaThis);
   static void createJavaStringFromStdString(JNIEnv *env, jobject javaThis);
   static void nativeCreateJavaStringFromJavaString(JNIEnv *env, jobject javaThis, jobject javaString);

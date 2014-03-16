@@ -134,7 +134,9 @@ void ClassRegistryTest::nativeNewInstance(JNIEnv *env, jobject javaThis, jobject
   JUNIT_ASSERT_EQUALS_BOOL(TEST_BOOLEAN, result->z);
   JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, result->string.getValue());
   JUNIT_ASSERT_EQUALS_INT(TEST_BYTE, result->b);
+#if HAS_RAW_STRING_LITERALS
   JUNIT_ASSERT_EQUALS_INT(TEST_CHAR, result->c);
+#endif
 }
 
 void ClassRegistryTest::nativeNewInstanceWithNull(JNIEnv *env, jobject javaThis, jobject javaTestObject) {

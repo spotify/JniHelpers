@@ -178,7 +178,9 @@ void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobjec
   JUNIT_ASSERT_EQUALS_FLOAT(TEST_DOUBLE, testObject.d, DEFAULT_FLOAT_TOLERANCE);
   JUNIT_ASSERT_EQUALS_BOOL(TEST_BOOLEAN, testObject.z);
   JUNIT_ASSERT_EQUALS_INT(TEST_BYTE, testObject.b);
+#if HAS_RAW_STRING_LITERALS
   JUNIT_ASSERT_EQUALS_INT(TEST_CHAR, testObject.c);
+#endif
 }
 
 jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
@@ -191,7 +193,9 @@ jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
   testObject.d = TEST_DOUBLE;
   testObject.z = TEST_BOOLEAN;
   testObject.b = TEST_BYTE;
+#if HAS_RAW_STRING_LITERALS
   testObject.c = TEST_CHAR;
+#endif
   return testObject.toJavaObject(env);
 }
 

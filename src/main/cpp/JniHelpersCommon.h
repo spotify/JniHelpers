@@ -21,6 +21,13 @@
 #define JAVA_VERSION JNI_VERSION_1_6
 #endif
 
+// Whether string literals are supported by the platform. This is a C++11 feature
+// which the Visual C++ does not yet support. Currently this feature is only used
+// by the test suite.
+#if ! WIN32
+#define HAS_RAW_STRING_LITERALS 1
+#endif
+
 // Whether the JVM should be forcibly terminated if an exception is thrown. This does
 // not apply to exceptions thrown from within JniHelpers or within Java code attached
 // to JNI code. This is mostly relevant when looking up classes/methods/fields which

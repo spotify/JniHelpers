@@ -11,6 +11,8 @@ public class JavaStringTest {
         System.loadLibrary("JniHelpersTest");
     }
 
+    native static public boolean supportsRawStringLiterals();
+
     @Test
     native public void createJavaString() throws Exception;
 
@@ -51,8 +53,10 @@ public class JavaStringTest {
     native public String nativeGetJavaStringUtf8();
     @Test
     public void getJavaStringUtf8() throws Exception {
-        String result = nativeGetJavaStringUtf8();
-        assertEquals(TestConstants.TEST_UTF8_STRING, result);
+        if (JavaStringTest.supportsRawStringLiterals()) {
+            String result = nativeGetJavaStringUtf8();
+            assertEquals(TestConstants.TEST_UTF8_STRING, result);
+        }
     }
 
     native public void nativeSetValue(String s);

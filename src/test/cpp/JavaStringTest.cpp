@@ -4,6 +4,7 @@
 void JavaStringTest::initialize(JNIEnv *env) {
   setClass(env);
 
+  addNativeMethod("supportsRawStringLiterals", supportsRawStringLiterals, kTypeBool, NULL);
   addNativeMethod("createJavaString", (void*)&JavaStringTest::createJavaString, kTypeVoid, NULL);
   addNativeMethod("createJavaStringFromStdString", (void*)&JavaStringTest::createJavaStringFromStdString, kTypeVoid, NULL);
   addNativeMethod("nativeCreateJavaStringFromJavaString", (void*)&JavaStringTest::nativeCreateJavaStringFromJavaString, kTypeVoid, kTypeString, NULL);
@@ -15,6 +16,14 @@ void JavaStringTest::initialize(JNIEnv *env) {
   addNativeMethod("nativeSetAndReturnValue", (void*)&JavaStringTest::nativeSetAndReturnValue, kTypeString, kTypeString, NULL);
 
   registerNativeMethods(env);
+}
+
+bool JavaStringTest::supportsRawStringLiterals(JNIEnv *env) {
+#if HAS_RAW_STRING_LITERALS
+  return true;
+#else
+  return false;
+#endif
 }
 
 void JavaStringTest::createJavaString(JNIEnv *env, jobject javaThis) {
@@ -44,15 +53,19 @@ jstring JavaStringTest::nativeGetJavaStringWithNullChar(JNIEnv *env, jobject jav
 }
 
 jstring JavaStringTest::nativeGetJavaStringUtf16(JNIEnv *env, jobject javaThis) {
-  //This test is disabled on the Java side.
-  //We can't construct from utf16 strings yet.
-  JavaString javaString;//(TEST_UTF16_STRING);
+  // This test is disabled on the Java side.
+  // We can't construct from utf16 strings yet.
+  JavaString javaString; //(TEST_UTF16_STRING);
   return javaString.getJavaString(env).leak();
 }
 
 jstring JavaStringTest::nativeGetJavaStringUtf8(JNIEnv *env, jobject javaThis) {
+#if HAS_RAW_STRING_LITERALS
   JavaString javaString(TEST_UTF8_STRING);
   return javaString.getJavaString(env).leak();
+#else
+  return NULL;
+#endif
 }
 
 void JavaStringTest::nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaString) {
