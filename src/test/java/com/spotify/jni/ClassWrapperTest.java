@@ -77,6 +77,12 @@ public class ClassWrapperTest {
     }
 
     @Test
+    native public void nativeIsPersistenceEnabled() throws Exception;
+
+    @Test(expected = IllegalStateException.class)
+    native public void isPersistenceEnabledWithoutInit() throws Exception;
+
+    @Test
     native public void destroyInvalidClass() throws Exception;
 
     @Test(expected = IllegalArgumentException.class)

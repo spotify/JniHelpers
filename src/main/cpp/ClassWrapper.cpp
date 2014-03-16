@@ -65,7 +65,6 @@ bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
 }
 
 bool ClassWrapper::isPersistenceEnabled() const {
-  // TODO: Need test for this
   if (!isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
       kTypeIllegalStateException,

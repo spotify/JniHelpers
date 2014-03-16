@@ -26,6 +26,8 @@ private:
   static void testMerge(JNIEnv *env, jobject javaThis);
   static jobject createPersistedObject(JNIEnv *env, jobject javaThis);
   static jobject getPersistedInstance(JNIEnv *env, jobject javaThis, jobject object);
+  static void nativeIsPersistenceEnabled(JNIEnv *env, jobject javaThis);
+  static void isPersistenceEnabledWithoutInit(JNIEnv *env, jobject javaThis);
   static void destroyPersistedObject(JNIEnv *env, jobject javaThis, jobject object);
   static void persistInvalidClass(JNIEnv *env, jobject javaThis);
   static void persistNullObject(JNIEnv *env, jobject javaThis);

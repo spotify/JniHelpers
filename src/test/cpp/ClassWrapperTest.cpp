@@ -17,6 +17,8 @@ void ClassWrapperTest::initialize(JNIEnv *env) {
   addNativeMethod("merge", (void*)&ClassWrapperTest::testMerge, kTypeVoid, NULL);
   addNativeMethod("createPersistedObject", (void*)&ClassWrapperTest::createPersistedObject, persistedObjectName, NULL);
   addNativeMethod("getPersistedInstance", (void*)&ClassWrapperTest::getPersistedInstance, persistedObjectName, persistedObjectName, NULL);
+  addNativeMethod("nativeIsPersistenceEnabled", nativeIsPersistenceEnabled, kTypeVoid, NULL);
+  addNativeMethod("isPersistenceEnabledWithoutInit", isPersistenceEnabledWithoutInit, kTypeVoid, NULL);
   addNativeMethod("destroyPersistedObject", (void*)&ClassWrapperTest::destroyPersistedObject, kTypeVoid, persistedObjectName, NULL);
   addNativeMethod("persistInvalidClass", (void*)&ClassWrapperTest::persistInvalidClass, kTypeVoid, NULL);
   addNativeMethod("persistNullObject", (void*)&ClassWrapperTest::persistNullObject, kTypeVoid, NULL);
@@ -119,6 +121,22 @@ jobject ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject javaThis, jo
   JUNIT_ASSERT_NOT_NULL(persistedObject->getCanonicalName());
   JUNIT_ASSERT_TRUE(persistedObject->isInitialized());
   return persistedObject->toJavaObject(env);
+}
+
+void ClassWrapperTest::nativeIsPersistenceEnabled(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: nativeIsPersistenceEnabled");
+  PersistedObject persistedObject(env);
+  JUNIT_ASSERT_TRUE(persistedObject.isPersistenceEnabled());
+  PersistedObject mergedObject;
+  mergedObject.merge(&persistedObject);
+  JUNIT_ASSERT_TRUE(mergedObject.isPersistenceEnabled());
+  TestObject testObject(env);
+  JUNIT_ASSERT_FALSE(testObject.isPersistenceEnabled());
+}
+
+void ClassWrapperTest::isPersistenceEnabledWithoutInit(JNIEnv *env, jobject javaThis) {
+  PersistedObject persistedObject;
+  JUNIT_ASSERT_FALSE(persistedObject.isPersistenceEnabled());
 }
 
 void ClassWrapperTest::destroyPersistedObject(JNIEnv *env, jobject javaThis, jobject object) {
