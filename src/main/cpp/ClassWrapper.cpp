@@ -9,14 +9,14 @@ namespace jni {
 ClassWrapper::ClassWrapper() :
 _clazz_global(NULL), _clazz(NULL),
 _methods(NULL), _fields(NULL),
-_constructor(NULL) {
+_default_constructor(NULL) {
   LOG_DEBUG("Creating new empty instance of class");
 }
 
 ClassWrapper::ClassWrapper(JNIEnv *env) :
 _clazz_global(NULL), _clazz(NULL),
 _methods(NULL), _fields(NULL),
-_constructor(NULL) {
+_default_constructor(NULL) {
   // Ideally, we would like to call initialize() from the ClassWrapper() ctor.
   // However this won't work because initialize() is pure virtual, and such methods
   // cannot be called here because the object is in an incomplete state. So instead,
@@ -44,7 +44,7 @@ void ClassWrapper::merge(const ClassWrapper *globalInstance) {
   _clazz = globalInstance->_clazz_global.get();
   _methods = &globalInstance->_methods_global;
   _fields = &globalInstance->_fields_global;
-  _constructor = globalInstance->_constructor;
+  _default_constructor = globalInstance->_default_constructor;
 }
 
 bool ClassWrapper::persist(JNIEnv *env, jobject javaThis) {
@@ -166,7 +166,7 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
 jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   LOG_DEBUG("Converting native instance of '%s' to Java instance", getSimpleName());
 
-  if (_constructor == NULL) {
+  if (_default_constructor == NULL) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
       "Cannot call toJavaObject without a constructor (did you forget to call cacheConstructor() in initialize()?");
     return NULL;
@@ -187,7 +187,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   // Maybe provide an extra argument to setClass()? However, then we would lack
   // the corresponding arguments we'd want to pass in here.
   JniLocalRef<jobject> result;
-  result.set(env->NewObject(_clazz, _constructor));
+  result.set(env->NewObject(_clazz, _default_constructor));
   for (FieldMap::const_iterator iter = _fields->begin(); iter != _fields->end(); ++iter) {
     std::string key = iter->first;
     LOG_DEBUG("Copying field %s", key.c_str());
@@ -288,7 +288,7 @@ void ClassWrapper::cacheConstructor(JNIEnv *env) {
 
   std::string signature;
   JavaClassUtils::makeSignature(signature, kTypeVoid, NULL);
-  _constructor = env->GetMethodID(_clazz_global.get(), "<init>", signature.c_str());
+  _default_constructor = env->GetMethodID(_clazz_global.get(), "<init>", signature.c_str());
   JavaExceptionUtils::checkException(env);
 }
 

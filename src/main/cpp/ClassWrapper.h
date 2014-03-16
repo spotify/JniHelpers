@@ -369,7 +369,7 @@ protected:
 // Fields ///////////////////////////////////////////////////////////////////////////
 protected:
   jclass _clazz;
-  jmethodID _constructor;
+  jmethodID _default_constructor;
   const MethodMap *_methods;
   const FieldMap *_fields;
   FieldMappingMap _field_mappings;
