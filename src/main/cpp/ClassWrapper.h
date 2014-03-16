@@ -28,12 +28,13 @@ typedef struct {
 #if WIN32
 // TODO: This is a MSVC thing, should refactor to use PIMPL instead (ugh)
 template class EXPORT std::vector<JNINativeMethod>;
-template class EXPORT std::map<std::string, jmethodID>;
 template class EXPORT std::map<std::string, jfieldID>;
-template class EXPORT std::map<std::string, FieldMapping*>; 
+template class EXPORT std::map<std::string, const FieldMapping *>;
+template class EXPORT std::map<std::string, jmethodID>;
 #endif
 
 typedef std::map<std::string, jfieldID> FieldMap;
+typedef std::map<std::string, const FieldMapping *> FieldMappingMap; // meta meta!
 typedef std::map<std::string, jmethodID> MethodMap;
 
 /**
@@ -329,7 +330,7 @@ protected:
    * @param key Field name
    * @return Field mapping, or NULL if no such field mapping exists
    */
-  virtual FieldMapping* getFieldMapping(const char *key) const;
+  virtual const FieldMapping* getFieldMapping(const char *key) const;
 
   /**
    * @brief Add a native function callback to this class
@@ -368,9 +369,9 @@ protected:
 protected:
   jclass _clazz;
   jmethodID _constructor;
-  MethodMap _methods;
-  FieldMap _fields;
-  std::map<std::string, FieldMapping*> _field_mappings;
+  const MethodMap *_methods;
+  const FieldMap *_fields;
+  FieldMappingMap _field_mappings;
 
 private:
   // This reference to the class information should *only* be held by the global
@@ -380,6 +381,8 @@ private:
   // Otherwise the global instance will be destroyed when any local instances are
   // destroyed, which would be bad.
   JniGlobalRef<jclass> _clazz_global;
+  MethodMap _methods_global;
+  FieldMap _fields_global;
 
 private:
   std::vector<JNINativeMethod> _jni_methods;

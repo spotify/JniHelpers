@@ -42,8 +42,8 @@ const char* ClassWrapper::getSimpleName() const {
 void ClassWrapper::merge(const ClassWrapper *globalInstance) {
   LOG_DEBUG("Merging instance of '%s' with global class info", getSimpleName());
   _clazz = globalInstance->_clazz_global.get();
-  _methods = globalInstance->_methods;
-  _fields = globalInstance->_fields;
+  _methods = &globalInstance->_methods_global;
+  _fields = &globalInstance->_fields_global;
   _constructor = globalInstance->_constructor;
 }
 
@@ -76,8 +76,8 @@ bool ClassWrapper::isPersistenceEnabled() const {
   // We expect the persisted field to be cached, otherwise searching for persisted
   // fields in non-persisted classes will throw java.lang.NoSuchField exception. :(
   const std::string key(PERSIST_FIELD_NAME);
-  FieldMap::const_iterator mapFindIter = _fields.find(key);
-  return mapFindIter != _fields.end();
+  FieldMap::const_iterator mapFindIter = _fields->find(key);
+  return mapFindIter != _fields->end();
 }
 
 ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) const {
@@ -123,13 +123,12 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
     mapFields();
   }
 
-  FieldMap::iterator iter;
-  for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
+   for (FieldMap::const_iterator iter = _fields->begin(); iter != _fields->end(); ++iter) {
     std::string key = iter->first;
     LOG_DEBUG("Copying field '%s'", key.c_str());
 
     jfieldID field = iter->second;
-    FieldMapping *mapping = getFieldMapping(key.c_str());
+    const FieldMapping *mapping = getFieldMapping(key.c_str());
     if (field != NULL && mapping != NULL) {
       if (TYPE_EQUALS(mapping->type, kTypeInt)) {
         int *address = static_cast<int*>(mapping->address);
@@ -190,13 +189,12 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env) {
   // the corresponding arguments we'd want to pass in here.
   JniLocalRef<jobject> result;
   result.set(env->NewObject(_clazz, _constructor));
-  FieldMap::iterator iter;
-  for (iter = _fields.begin(); iter != _fields.end(); ++iter) {
+  for (FieldMap::const_iterator iter = _fields->begin(); iter != _fields->end(); ++iter) {
     std::string key = iter->first;
     LOG_DEBUG("Copying field %s", key.c_str());
 
     jfieldID field = iter->second;
-    FieldMapping *mapping = getFieldMapping(key.c_str());
+    const FieldMapping *mapping = getFieldMapping(key.c_str());
     if (field != NULL && mapping != NULL) {
       if (TYPE_EQUALS(mapping->type, kTypeInt)) {
         int *address = static_cast<int*>(mapping->address);
@@ -243,8 +241,8 @@ jmethodID ClassWrapper::getMethod(const char *method_name) const {
   }
 
   const std::string key(method_name);
-  MethodMap::const_iterator mapFindIter = _methods.find(key);
-  if (mapFindIter == _methods.end()) {
+  MethodMap::const_iterator mapFindIter = _methods->find(key);
+  if (mapFindIter == _methods->end()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
       kTypeIllegalArgumentException,
       "Method '%s' is not cached in class '%s'", method_name, getCanonicalName());
@@ -263,8 +261,8 @@ jfieldID ClassWrapper::getField(const char* field_name) const {
   }
 
   const std::string key(field_name);
-  FieldMap::const_iterator mapFindIter = _fields.find(key);
-  if (mapFindIter == _fields.end()) {
+  FieldMap::const_iterator mapFindIter = _fields->find(key);
+  if (mapFindIter == _fields->end()) {
     JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
       kTypeIllegalArgumentException,
       "Field '%s' is not cached in class '%s'", field_name, getCanonicalName());
@@ -312,7 +310,7 @@ void ClassWrapper::cacheMethod(JNIEnv *env, const char* method_name, const char*
   jmethodID method = env->GetMethodID(_clazz_global.get(), method_name, signature.c_str());
   JavaExceptionUtils::checkException(env);
   if (method != NULL) {
-    _methods[method_name] = method;
+    _methods_global[method_name] = method;
   } else {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaClass(NoSuchMethodError),
       "Method '%s' (signature: %s) not found on class '%s'",
@@ -351,7 +349,7 @@ void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *f
   jfieldID field = env->GetFieldID(_clazz_global.get(), field_name, signatured_type.str().c_str());
   JavaExceptionUtils::checkException(env);
   if (field != NULL) {
-    _fields[field_name] = field;
+    _fields_global[field_name] = field;
   }
 }
 
@@ -359,12 +357,12 @@ void ClassWrapper::mapField(const char *field_name, const char *field_type, void
   FieldMapping *mapping = new FieldMapping;
   mapping->type = field_type;
   mapping->address = field_ptr;
-  _field_mappings[field_name] = mapping;
+  _field_mappings[field_name] = mapping; // .reset(mapping);
 }
 
-FieldMapping* ClassWrapper::getFieldMapping(const char *key) const {
+const FieldMapping* ClassWrapper::getFieldMapping(const char *key) const {
   std::string keyString(key);
-  std::map<std::string, FieldMapping*>::const_iterator findMapIter = _field_mappings.find(keyString);
+  FieldMappingMap::const_iterator findMapIter = _field_mappings.find(keyString);
   return findMapIter != _field_mappings.end() ? findMapIter->second : NULL;
 }
 
