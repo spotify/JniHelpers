@@ -13,8 +13,10 @@ namespace jni {
 
 #if WIN32
 // TODO: This is a MSVC thing, should refactor to use PIMPL instead (ugh)
-template class EXPORT std::map<std::string, const ClassWrapper*>;
+template class EXPORT std::map<std::string, const ClassWrapper *>;
 #endif
+
+typedef std::map<std::string, const ClassWrapper *> ClassRegistryMap;
 
 /**
  * @brief Keeps a map of cached ClassWrapper instances
@@ -124,7 +126,7 @@ public:
   }
 
 protected:
-  std::map<std::string, const ClassWrapper*> _classes;
+  ClassRegistryMap _classes;
 };
 
 } // namespace jni

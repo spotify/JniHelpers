@@ -36,7 +36,7 @@ const ClassWrapper* ClassRegistry::get(const char* name) {
     return NULL;
   }
 
-  std::map<std::string, const ClassWrapper*>::iterator iter = _classes.find(name);
+  ClassRegistryMap::iterator iter = _classes.find(name);
   return iter != _classes.end() ? _classes[name] : NULL;
 }
 
