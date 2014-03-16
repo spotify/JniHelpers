@@ -24,7 +24,7 @@ void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
       "Can't add uninitialized ClassWrapper to registry");
   } else {
     LOG_INFO("Adding class instance '%s' to registry", item->getCanonicalName());
-    _classes[item->getCanonicalName()] = item;// .reset(item);
+    _classes[item->getCanonicalName()].reset(item);
   }
 }
 

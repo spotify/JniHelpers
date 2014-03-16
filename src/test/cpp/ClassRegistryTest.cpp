@@ -43,8 +43,7 @@ void ClassRegistryTest::addClass(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: addClass");
   ClassRegistry registry;
   JUNIT_ASSERT_EQUALS_INT(0, registry.size());
-  TestObject obj(env);
-  registry.add(env, &obj);
+  registry.add(env, new TestObject(env));
   JUNIT_ASSERT_EQUALS_INT(1, registry.size());
 }
 
@@ -59,32 +58,28 @@ void ClassRegistryTest::addNullClass(JNIEnv *env, jobject javaThis) {
 void ClassRegistryTest::addClassWithEmptyName(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: addClassWithEmptyName");
   ClassRegistry registry;
-  ClassWithName emptyName("");
-  registry.add(env, &emptyName);
+  registry.add(env, new ClassWithName(""));
 }
 
 void ClassRegistryTest::addClassWithNullName(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: addClassWithNullName");
   ClassRegistry registry;
-  ClassWithName nullName(static_cast<const char*>(NULL));
-  registry.add(env, &nullName);
+  registry.add(env, new ClassWithName(static_cast<const char*>(NULL)));
 }
 
 void ClassRegistryTest::addClassWithoutInfo(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: addClassWithoutInfo");
   ClassRegistry registry;
-  ClassWithName nameButNoClassInfo("invalid");
-  registry.add(env, &nameButNoClassInfo);
+  registry.add(env, new ClassWithName("invalid"));
 }
 
 void ClassRegistryTest::addClassMultipleTimes(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: addClassMultipleTimes");
   ClassRegistry registry;
   JUNIT_ASSERT_EQUALS_INT(0, registry.size());
-  TestObject obj(env);
-  registry.add(env, &obj);
+  registry.add(env, new TestObject(env));
   JUNIT_ASSERT_EQUALS_INT(1, registry.size());
-  registry.add(env, &obj);
+  registry.add(env, new TestObject(env));
   // Should not be inserted multiple times
   JUNIT_ASSERT_EQUALS_INT(1, registry.size());
 }
@@ -92,18 +87,18 @@ void ClassRegistryTest::addClassMultipleTimes(JNIEnv *env, jobject javaThis) {
 void ClassRegistryTest::get(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: get");
   ClassRegistry registry;
-  TestObject obj(env);
+  TestObject dummy;
 
   JUNIT_ASSERT_EQUALS_INT(0, registry.size());
-  const TestObject *shouldBeNull = dynamic_cast<const TestObject*>(registry.get(obj.getCanonicalName()));
+  const TestObject *shouldBeNull = dynamic_cast<const TestObject*>(registry.get(dummy.getCanonicalName()));
   JUNIT_ASSERT_NULL(shouldBeNull);
 
-  registry.add(env, &obj);
+  registry.add(env, new TestObject(env));
   JUNIT_ASSERT_EQUALS_INT(1, registry.size());
-  const TestObject *result = dynamic_cast<const TestObject*>(registry.get(obj.getCanonicalName()));
+  const TestObject *result = dynamic_cast<const TestObject*>(registry.get(dummy.getCanonicalName()));
   JUNIT_ASSERT_NOT_NULL(result);
   // Sanity check just to make sure that the returned result matches our test object
-  JUNIT_ASSERT_EQUALS_CSTRING(obj.getCanonicalName(), result->getCanonicalName());
+  JUNIT_ASSERT_EQUALS_CSTRING(dummy.getCanonicalName(), result->getCanonicalName());
 }
 
 void ClassRegistryTest::getNullClass(JNIEnv *env, jobject javaThis) {
@@ -123,8 +118,7 @@ void ClassRegistryTest::getInvalidClass(JNIEnv *env, jobject javaThis) {
 void ClassRegistryTest::nativeNewInstance(JNIEnv *env, jobject javaThis, jobject javaTestObject) {
   LOG_INFO("Starting test: nativeNewInstance");
   ClassRegistry registry;
-  TestObject obj(env);
-  registry.add(env, &obj);
+  registry.add(env, new TestObject(env));
   TestObject *result = registry.newInstance<TestObject>(env, javaTestObject);
   JUNIT_ASSERT_NOT_NULL(result);
   JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, result->i);
@@ -142,8 +136,7 @@ void ClassRegistryTest::nativeNewInstance(JNIEnv *env, jobject javaThis, jobject
 void ClassRegistryTest::nativeNewInstanceWithNull(JNIEnv *env, jobject javaThis, jobject javaTestObject) {
   LOG_INFO("Starting test: nativeNewInstanceWithNull");
   ClassRegistry registry;
-  TestObject obj(env);
-  registry.add(env, &obj);
+  registry.add(env, new TestObject(env));
   TestObject *result = registry.newInstance<TestObject>(env, NULL);
   JUNIT_ASSERT_NOT_NULL(result);
   // Should have populated class info

@@ -5,6 +5,7 @@
 #include "ClassWrapper.h"
 #include "JavaExceptionUtils.h"
 #include <map>
+#include <memory>
 #include <string>
 #include <string.h>
 
@@ -13,10 +14,10 @@ namespace jni {
 
 #if WIN32
 // TODO: This is a MSVC thing, should refactor to use PIMPL instead (ugh)
-template class EXPORT std::map<std::string, const ClassWrapper *>;
+template class EXPORT std::map<std::string, std::shared_ptr<const ClassWrapper> >;
 #endif
 
-typedef std::map<std::string, const ClassWrapper *> ClassRegistryMap;
+typedef std::map<std::string, std::shared_ptr<const ClassWrapper> > ClassRegistryMap;
 
 /**
  * @brief Keeps a map of cached ClassWrapper instances

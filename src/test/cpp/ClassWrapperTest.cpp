@@ -112,9 +112,8 @@ jobject ClassWrapperTest::createPersistedObject(JNIEnv *env, jobject javaThis) {
 
 jobject ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject javaThis, jobject object) {
   LOG_INFO("Starting test: getPersistedInstance");
-  PersistedObject persistedObjectInfo(env);
   ClassRegistry registry;
-  registry.add(env, &persistedObjectInfo);
+  registry.add(env, new PersistedObject(env));
   PersistedObject *persistedObject = registry.newInstance<PersistedObject>(env, object);
   JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, persistedObject->i);
   JUNIT_ASSERT_NOT_NULL(persistedObject->getCanonicalName());
@@ -124,9 +123,8 @@ jobject ClassWrapperTest::getPersistedInstance(JNIEnv *env, jobject javaThis, jo
 
 void ClassWrapperTest::destroyPersistedObject(JNIEnv *env, jobject javaThis, jobject object) {
   LOG_INFO("Starting test: destroyPersistedObject");
-  PersistedObject persistedObjectInfo(env);
   ClassRegistry registry;
-  registry.add(env, &persistedObjectInfo);
+  registry.add(env, new PersistedObject(env));
   PersistedObject *persistedObject = registry.newInstance<PersistedObject>(env, object);
   persistedObject->destroy(env, object);
 }
