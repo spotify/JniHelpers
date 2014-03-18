@@ -17,8 +17,8 @@ void ClassWrapperTest::initialize(JNIEnv *env) {
   addNativeMethod("merge", (void*)&ClassWrapperTest::testMerge, kTypeVoid, NULL);
   addNativeMethod("createPersistedObject", (void*)&ClassWrapperTest::createPersistedObject, persistedObjectName, NULL);
   addNativeMethod("getPersistedInstance", (void*)&ClassWrapperTest::getPersistedInstance, persistedObjectName, persistedObjectName, NULL);
-  addNativeMethod("nativeIsPersistenceEnabled", nativeIsPersistenceEnabled, kTypeVoid, NULL);
-  addNativeMethod("isPersistenceEnabledWithoutInit", isPersistenceEnabledWithoutInit, kTypeVoid, NULL);
+  addNativeMethod("nativeIsPersistenceEnabled", (void*)nativeIsPersistenceEnabled, kTypeVoid, NULL);
+  addNativeMethod("isPersistenceEnabledWithoutInit", (void*)isPersistenceEnabledWithoutInit, kTypeVoid, NULL);
   addNativeMethod("destroyPersistedObject", (void*)&ClassWrapperTest::destroyPersistedObject, kTypeVoid, persistedObjectName, NULL);
   addNativeMethod("persistInvalidClass", (void*)&ClassWrapperTest::persistInvalidClass, kTypeVoid, NULL);
   addNativeMethod("persistNullObject", (void*)&ClassWrapperTest::persistNullObject, kTypeVoid, NULL);

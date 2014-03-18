@@ -4,7 +4,7 @@
 void JavaStringTest::initialize(JNIEnv *env) {
   setClass(env);
 
-  addNativeMethod("supportsRawStringLiterals", supportsRawStringLiterals, kTypeBool, NULL);
+  addNativeMethod("supportsRawStringLiterals", (void*)supportsRawStringLiterals, kTypeBool, NULL);
   addNativeMethod("createJavaString", (void*)&JavaStringTest::createJavaString, kTypeVoid, NULL);
   addNativeMethod("createJavaStringFromStdString", (void*)&JavaStringTest::createJavaStringFromStdString, kTypeVoid, NULL);
   addNativeMethod("nativeCreateJavaStringFromJavaString", (void*)&JavaStringTest::nativeCreateJavaStringFromJavaString, kTypeVoid, kTypeString, NULL);

@@ -355,13 +355,13 @@ void ClassWrapper::mapField(const char *field_name, const char *field_type, void
   FieldMapping *mapping = new FieldMapping;
   mapping->type = field_type;
   mapping->address = field_ptr;
-  _field_mappings[field_name].reset(mapping);
+  _field_mappings[field_name] = mapping;//.reset(mapping);
 }
 
 const FieldMapping* ClassWrapper::getFieldMapping(const char *key) const {
   std::string keyString(key);
   const FieldMappingMap::const_iterator findMapIter = _field_mappings.find(keyString);
-  return findMapIter != _field_mappings.end() ? findMapIter->second.get() : NULL;
+  return findMapIter != _field_mappings.end() ? findMapIter->second/*.get()*/ : NULL;
 }
 
 void ClassWrapper::addNativeMethod(const char *method_name, void *function, const char *return_type, ...) {

@@ -44,7 +44,7 @@
 
 // Determines whether logging messages will be printed by JniHelpers
 #ifndef ENABLE_LOGGING
-#define ENABLE_LOGGING DEBUG
+#define ENABLE_LOGGING 0
 #endif
 
 #if ENABLE_LOGGING

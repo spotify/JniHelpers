@@ -13,22 +13,22 @@
 void ClassRegistryTest::initialize(JNIEnv *env) {
   setClass(env);
 
-  addNativeMethod("createRegistry", createRegistry, kTypeVoid, NULL);
+  addNativeMethod("createRegistry", (void*)createRegistry, kTypeVoid, NULL);
 
-  addNativeMethod("addClass", addClass, kTypeVoid, NULL);
-  addNativeMethod("addNullClass", addNullClass, kTypeVoid, NULL);
-  addNativeMethod("addClassWithEmptyName", addClassWithEmptyName, kTypeVoid, NULL);
-  addNativeMethod("addClassWithNullName", addClassWithNullName, kTypeVoid, NULL);
-  addNativeMethod("addClassWithoutInfo", addClassWithoutInfo, kTypeVoid, NULL);
-  addNativeMethod("addClassMultipleTimes", addClassMultipleTimes, kTypeVoid, NULL);
+  addNativeMethod("addClass", (void*)addClass, kTypeVoid, NULL);
+  addNativeMethod("addNullClass", (void*)addNullClass, kTypeVoid, NULL);
+  addNativeMethod("addClassWithEmptyName", (void*)addClassWithEmptyName, kTypeVoid, NULL);
+  addNativeMethod("addClassWithNullName", (void*)addClassWithNullName, kTypeVoid, NULL);
+  addNativeMethod("addClassWithoutInfo", (void*)addClassWithoutInfo, kTypeVoid, NULL);
+  addNativeMethod("addClassMultipleTimes", (void*)addClassMultipleTimes, kTypeVoid, NULL);
 
-  addNativeMethod("get", get, kTypeVoid, NULL);
-  addNativeMethod("getNullClass", getNullClass, kTypeVoid, NULL);
-  addNativeMethod("getInvalidClass", getInvalidClass, kTypeVoid, NULL);
+  addNativeMethod("get", (void*)get, kTypeVoid, NULL);
+  addNativeMethod("getNullClass", (void*)getNullClass, kTypeVoid, NULL);
+  addNativeMethod("getInvalidClass", (void*)getInvalidClass, kTypeVoid, NULL);
 
   TestObject testObject;
-  addNativeMethod("nativeNewInstance", nativeNewInstance, kTypeVoid, testObject.getCanonicalName(), NULL);
-  addNativeMethod("nativeNewInstanceWithNull", nativeNewInstanceWithNull, kTypeVoid, testObject.getCanonicalName(), NULL);
+  addNativeMethod("nativeNewInstance", (void*)nativeNewInstance, kTypeVoid, testObject.getCanonicalName(), NULL);
+  addNativeMethod("nativeNewInstanceWithNull", (void*)nativeNewInstanceWithNull, kTypeVoid, testObject.getCanonicalName(), NULL);
 
   registerNativeMethods(env);
 }

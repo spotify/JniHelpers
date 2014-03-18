@@ -5,7 +5,6 @@
 #include "JavaString.h"
 #include "JniGlobalRef.h"
 #include <map>
-#include <memory>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -30,12 +29,12 @@ typedef struct {
 // TODO: This is a MSVC thing, should refactor to use PIMPL instead (ugh)
 template class EXPORT std::vector<JNINativeMethod>;
 template class EXPORT std::map<std::string, jfieldID>;
-template class EXPORT std::map<std::string, std::shared_ptr<const FieldMapping> >;
+template class EXPORT std::map<std::string, const FieldMapping* >;
 template class EXPORT std::map<std::string, jmethodID>;
 #endif
 
 typedef std::map<std::string, jfieldID> FieldMap;
-typedef std::map<std::string, std::shared_ptr<const FieldMapping> > FieldMappingMap; // meta meta!
+typedef std::map<std::string, const FieldMapping* > FieldMappingMap; // meta meta!
 typedef std::map<std::string, jmethodID> MethodMap;
 
 /**
