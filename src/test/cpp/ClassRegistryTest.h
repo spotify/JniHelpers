@@ -43,6 +43,7 @@ private:
   static void addClassMultipleTimes(JNIEnv *env, jobject javaThis);
 
   static void get(JNIEnv *env, jobject javaThis);
+  static void getWithBracketOperator(JNIEnv *env, jobject javaThis);
   static void getNullClass(JNIEnv *env, jobject javaThis);
   static void getInvalidClass(JNIEnv *env, jobject javaThis);
 

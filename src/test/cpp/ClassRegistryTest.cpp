@@ -23,6 +23,7 @@ void ClassRegistryTest::initialize(JNIEnv *env) {
   addNativeMethod("addClassMultipleTimes", (void*)addClassMultipleTimes, kTypeVoid, NULL);
 
   addNativeMethod("get", (void*)get, kTypeVoid, NULL);
+  addNativeMethod("getWithBracketOperator", (void*)getWithBracketOperator, kTypeVoid, NULL);
   addNativeMethod("getNullClass", (void*)getNullClass, kTypeVoid, NULL);
   addNativeMethod("getInvalidClass", (void*)getInvalidClass, kTypeVoid, NULL);
 
@@ -96,6 +97,23 @@ void ClassRegistryTest::get(JNIEnv *env, jobject javaThis) {
   registry.add(env, new TestObject(env));
   JUNIT_ASSERT_EQUALS_INT(1, registry.size());
   const TestObject *result = dynamic_cast<const TestObject*>(registry.get(dummy.getCanonicalName()));
+  JUNIT_ASSERT_NOT_NULL(result);
+  // Sanity check just to make sure that the returned result matches our test object
+  JUNIT_ASSERT_EQUALS_CSTRING(dummy.getCanonicalName(), result->getCanonicalName());
+}
+
+void ClassRegistryTest::getWithBracketOperator(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting test: getWithBracketOperator");
+  ClassRegistry registry;
+  TestObject dummy;
+
+  JUNIT_ASSERT_EQUALS_INT(0, registry.size());
+  const TestObject *shouldBeNull = dynamic_cast<const TestObject*>(registry[dummy.getCanonicalName()]);
+  JUNIT_ASSERT_NULL(shouldBeNull);
+
+  registry.add(env, new TestObject(env));
+  JUNIT_ASSERT_EQUALS_INT(1, registry.size());
+  const TestObject *result = dynamic_cast<const TestObject*>(registry[dummy.getCanonicalName()]);
   JUNIT_ASSERT_NOT_NULL(result);
   // Sanity check just to make sure that the returned result matches our test object
   JUNIT_ASSERT_EQUALS_CSTRING(dummy.getCanonicalName(), result->getCanonicalName());

@@ -31,6 +31,9 @@ public class ClassRegistryTest {
     @Test
     native public void get() throws Exception;
 
+    @Test
+    native public void getWithBracketOperator() throws Exception;
+
     @Test(expected = IllegalArgumentException.class)
     native public void getNullClass() throws Exception;
 
