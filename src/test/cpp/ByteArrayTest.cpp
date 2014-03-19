@@ -5,14 +5,14 @@
 void ByteArrayTest::initialize(JNIEnv *env) {
   setClass(env);
 
-  addNativeMethod("createNewByteArray", (void*)&ByteArrayTest::createNewByteArray, kTypeVoid, NULL);
-  addNativeMethod("createNewByteArrayWithData", (void*)&ByteArrayTest::createNewByteArrayWithData, kTypeVoid, NULL);
-  addNativeMethod("nativeCreateNewByteArrayWithJavaData", (void*)&ByteArrayTest::nativeCreateNewByteArrayWithJavaData, kTypeVoid, kTypeArray(kTypeByte), NULL);
-  addNativeMethod("createNewByteArrayWithNull", (void*)&ByteArrayTest::createNewByteArrayWithNull, kTypeVoid, NULL);
-  addNativeMethod("createNewByteArrayWithNullAndNonZeroLength", (void*)&ByteArrayTest::createNewByteArrayWithNullAndNonZeroLength, kTypeVoid, NULL);
-  addNativeMethod("nativeGetTestJavaByteArray", (void*)&ByteArrayTest::nativeGetTestJavaByteArray, kTypeArray(kTypeByte), NULL);
-  addNativeMethod("setData", (void*)&ByteArrayTest::setData, kTypeVoid, NULL);
-  addNativeMethod("nativeSetJavaByteArray", (void*)&ByteArrayTest::nativeSetJavaByteArray, kTypeVoid, kTypeArray(kTypeByte), kTypeInt, NULL);
+  addNativeMethod("createNewByteArray", (void*)createNewByteArray, kTypeVoid, NULL);
+  addNativeMethod("createNewByteArrayWithData", (void*)createNewByteArrayWithData, kTypeVoid, NULL);
+  addNativeMethod("nativeCreateNewByteArrayWithJavaData", (void*)nativeCreateNewByteArrayWithJavaData, kTypeVoid, kTypeArray(kTypeByte), NULL);
+  addNativeMethod("createNewByteArrayWithNull", (void*)createNewByteArrayWithNull, kTypeVoid, NULL);
+  addNativeMethod("createNewByteArrayWithNullAndNonZeroLength", (void*)createNewByteArrayWithNullAndNonZeroLength, kTypeVoid, NULL);
+  addNativeMethod("nativeGetTestJavaByteArray", (void*)nativeGetTestJavaByteArray, kTypeArray(kTypeByte), NULL);
+  addNativeMethod("setData", (void*)setData, kTypeVoid, NULL);
+  addNativeMethod("nativeSetJavaByteArray", (void*)nativeSetJavaByteArray, kTypeVoid, kTypeArray(kTypeByte), kTypeInt, NULL);
 
   registerNativeMethods(env);
 }

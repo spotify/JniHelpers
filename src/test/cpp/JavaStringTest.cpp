@@ -6,18 +6,18 @@ void JavaStringTest::initialize(JNIEnv *env) {
 
   addNativeMethod("supportsRawStringLiterals", (void*)supportsRawStringLiterals, kTypeBool, NULL);
 
-  addNativeMethod("createJavaString", (void*)&JavaStringTest::createJavaString, kTypeVoid, NULL);
-  addNativeMethod("createJavaStringFromStdString", (void*)&JavaStringTest::createJavaStringFromStdString, kTypeVoid, NULL);
-  addNativeMethod("nativeCreateJavaStringFromJavaString", (void*)&JavaStringTest::nativeCreateJavaStringFromJavaString, kTypeVoid, kTypeString, NULL);
+  addNativeMethod("createJavaString", (void*)createJavaString, kTypeVoid, NULL);
+  addNativeMethod("createJavaStringFromStdString", (void*)createJavaStringFromStdString, kTypeVoid, NULL);
+  addNativeMethod("nativeCreateJavaStringFromJavaString", (void*)nativeCreateJavaStringFromJavaString, kTypeVoid, kTypeString, NULL);
 
-  addNativeMethod("nativeGetJavaString", (void*)&JavaStringTest::nativeGetJavaString, kTypeString, NULL);
-  addNativeMethod("nativeGetJavaStringWithNullChar", (void*)&JavaStringTest::nativeGetJavaStringWithNullChar, kTypeString, NULL);
-  addNativeMethod("nativeGetJavaStringUtf16", (void*)&JavaStringTest::nativeGetJavaStringUtf16, kTypeString, NULL);
-  addNativeMethod("nativeGetJavaStringUtf8", (void*)&JavaStringTest::nativeGetJavaStringUtf8, kTypeString, NULL);
+  addNativeMethod("nativeGetJavaString", (void*)nativeGetJavaString, kTypeString, NULL);
+  addNativeMethod("nativeGetJavaStringWithNullChar", (void*)nativeGetJavaStringWithNullChar, kTypeString, NULL);
+  addNativeMethod("nativeGetJavaStringUtf16", (void*)nativeGetJavaStringUtf16, kTypeString, NULL);
+  addNativeMethod("nativeGetJavaStringUtf8", (void*)nativeGetJavaStringUtf8, kTypeString, NULL);
 
-  addNativeMethod("nativeSetValue", (void*)&JavaStringTest::nativeSetValue, kTypeVoid, kTypeString, NULL);
+  addNativeMethod("nativeSetValue", (void*)nativeSetValue, kTypeVoid, kTypeString, NULL);
   addNativeMethod("nativeSetValueWithOperator", (void*)nativeSetValueWithOperator, kTypeVoid, NULL);
-  addNativeMethod("nativeSetAndReturnValue", (void*)&JavaStringTest::nativeSetAndReturnValue, kTypeString, kTypeString, NULL);
+  addNativeMethod("nativeSetAndReturnValue", (void*)nativeSetAndReturnValue, kTypeString, kTypeString, NULL);
 
   registerNativeMethods(env);
 }

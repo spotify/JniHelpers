@@ -3,10 +3,10 @@
 
 void JavaExceptionUtilsTest::initialize(JNIEnv *env) {
   setClass(env);
-  addNativeMethod("nativeThrowException", (void*)&JavaExceptionUtilsTest::nativeThrowException, kTypeVoid, NULL);
-  addNativeMethod("nativeThrowExceptionWithFormatString", (void*)&JavaExceptionUtilsTest::nativeThrowExceptionWithFormatString, kTypeVoid, NULL);
-  addNativeMethod("nativeThrowRuntimeException", (void*)&JavaExceptionUtilsTest::nativeThrowRuntimeException, kTypeVoid, NULL);
-  addNativeMethod("nativeThrowExceptionOfType", (void*)&JavaExceptionUtilsTest::nativeThrowExceptionOfType, kTypeVoid, NULL);
+  addNativeMethod("nativeThrowException", (void*)nativeThrowException, kTypeVoid, NULL);
+  addNativeMethod("nativeThrowExceptionWithFormatString", (void*)nativeThrowExceptionWithFormatString, kTypeVoid, NULL);
+  addNativeMethod("nativeThrowRuntimeException", (void*)nativeThrowRuntimeException, kTypeVoid, NULL);
+  addNativeMethod("nativeThrowExceptionOfType", (void*)nativeThrowExceptionOfType, kTypeVoid, NULL);
   registerNativeMethods(env);
 }
 
