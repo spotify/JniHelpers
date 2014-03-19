@@ -14,17 +14,15 @@ public:
   ByteArray(JNIEnv *env, jbyteArray data);
   virtual ~ByteArray();
 
-  const void* getData() const { return _data; }
-  JniLocalRef<jbyteArray> getJavaByteArray(JNIEnv *env) const;
+  const void* get() const { return _data; }
+  JniLocalRef<jbyteArray> toJavaByteArray(JNIEnv *env) const;
 
   void *leak();
 
-  //TODO add copyData functionality
-  //void copyData(void *data, const size_t numBytes) {}
-  //void copyData(JNIEnv *env, jbyteArray data);
-
-  void setData(void *data, const size_t numBytes);
-  void setData(JNIEnv *env, jbyteArray data);
+  void copy(void *data, const size_t numBytes);
+  void copy(JNIEnv *env, jbyteArray data);
+  void set(void *data, const size_t numBytes);
+  void set(JNIEnv *env, jbyteArray data);
 
   const size_t size() const { return _num_bytes; }
 

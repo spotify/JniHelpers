@@ -32,56 +32,56 @@ size_t ByteArrayTest::getTestDataSize() {
 void ByteArrayTest::createNewByteArray(JNIEnv *env, jobject javaThis) {
   ByteArray byteArray;
   JUNIT_ASSERT_EQUALS_INT(0, byteArray.size());
-  JUNIT_ASSERT_NULL(byteArray.getData());
+  JUNIT_ASSERT_NULL(byteArray.get());
 }
 
 void ByteArrayTest::createNewByteArrayWithData(JNIEnv *env, jobject javaThis) {
   void *data = getTestData();
   ByteArray byteArray(data, getTestDataSize());
   JUNIT_ASSERT_EQUALS_INT(getTestDataSize(), byteArray.size());
-  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.getData(), byteArray.size());
+  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.get(), byteArray.size());
 }
 
 void ByteArrayTest::nativeCreateNewByteArrayWithJavaData(JNIEnv *env, jobject javaThis, jbyteArray javaData) {
   void *data = getTestData();
   ByteArray byteArray(env, javaData);
   JUNIT_ASSERT_EQUALS_INT(getTestDataSize(), byteArray.size());
-  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.getData(), byteArray.size());
+  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.get(), byteArray.size());
 }
 
 void ByteArrayTest::createNewByteArrayWithNull(JNIEnv *env, jobject javaThis) {
-  ByteArray byteArray(env, NULL);
+  ByteArray byteArray(env, (jbyteArray)NULL);
   JUNIT_ASSERT_EQUALS_INT(0, byteArray.size());
-  JUNIT_ASSERT_NULL(byteArray.getData());
+  JUNIT_ASSERT_NULL(byteArray.get());
 }
 
 void ByteArrayTest::createNewByteArrayWithNullAndNonZeroLength(JNIEnv *env, jobject javaThis) {
   ByteArray byteArray(NULL, 1);
   JUNIT_ASSERT_EQUALS_INT(0, byteArray.size());
-  JUNIT_ASSERT_NULL(byteArray.getData());
+  JUNIT_ASSERT_NULL(byteArray.get());
 }
 
 jbyteArray ByteArrayTest::nativeGetTestJavaByteArray(JNIEnv *env, jobject javaThis) {
   void *data = getTestData();
   ByteArray byteArray(data, getTestDataSize());
   JUNIT_ASSERT_EQUALS_INT(getTestDataSize(), byteArray.size());
-  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.getData(), byteArray.size());
-  JniLocalRef<jbyteArray> result = byteArray.getJavaByteArray(env);
+  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.get(), byteArray.size());
+  JniLocalRef<jbyteArray> result = byteArray.toJavaByteArray(env);
   return result.leak();
 }
 
 void ByteArrayTest::setData(JNIEnv *env, jobject javaThis) {
   void *data = getTestData();
   ByteArray byteArray;
-  byteArray.setData(data, getTestDataSize());
+  byteArray.set(data, getTestDataSize());
   JUNIT_ASSERT_EQUALS_INT(getTestDataSize(), byteArray.size());
-  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.getData(), byteArray.size());
+  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.get(), byteArray.size());
 }
 
 void ByteArrayTest::nativeSetJavaByteArray(JNIEnv *env, jobject javaThis, jbyteArray javaData, jint expectedSize) {
   void *data = getTestData();
   ByteArray byteArray;
-  byteArray.setData(env, javaData);
+  byteArray.set(env, javaData);
   JUNIT_ASSERT_EQUALS_INT(expectedSize, byteArray.size());
-  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.getData(), byteArray.size());
+  JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.get(), byteArray.size());
 }

@@ -19,8 +19,9 @@ _data(data), _num_bytes(numBytes) {
 
 ByteArray::ByteArray(JNIEnv *env, jbyteArray data) :
 _data(NULL), _num_bytes(0) {
-  setData(env, data);
+  set(env, data);
 }
+
 
 ByteArray::~ByteArray() {
   if (_data != NULL) {
@@ -36,7 +37,7 @@ void *ByteArray::leak() {
   return result;
 }
 
-JniLocalRef<jbyteArray> ByteArray::getJavaByteArray(JNIEnv *env) const {
+JniLocalRef<jbyteArray> ByteArray::toJavaByteArray(JNIEnv *env) const {
   JniLocalRef<jbyteArray> result = env->NewByteArray((jsize)_num_bytes);
   JavaExceptionUtils::checkException(env);
   if (_num_bytes == 0 || _data == NULL) {
@@ -46,7 +47,7 @@ JniLocalRef<jbyteArray> ByteArray::getJavaByteArray(JNIEnv *env) const {
   return result.leak();
 }
 
-void ByteArray::setData(void *data, const size_t numBytes) {
+void ByteArray::set(void *data, const size_t numBytes) {
   if (data == NULL && numBytes > 0) {
     JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException, 
@@ -63,7 +64,7 @@ void ByteArray::setData(void *data, const size_t numBytes) {
   _num_bytes = numBytes;
 }
 
-void ByteArray::setData(JNIEnv *env, jbyteArray data) {
+void ByteArray::set(JNIEnv *env, jbyteArray data) {
   if (_data != NULL) {
     free(_data);
   }
