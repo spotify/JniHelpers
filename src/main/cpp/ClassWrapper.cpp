@@ -153,7 +153,7 @@ void ClassWrapper::setJavaObject(JNIEnv *env, jobject javaThis) {
       } else if (TYPE_EQUALS(mapping->type, kTypeString)) {
         jstring string = (jstring)env->GetObjectField(javaThis, field);
         JavaString *address = static_cast<JavaString*>(mapping->address);
-        address->setValue(env, string);
+        address->set(env, string);
       } else if (TYPE_EQUALS(mapping->type, kTypeByte)) {
         unsigned char *address = static_cast<unsigned char*>(mapping->address);
         *address = env->GetByteField(javaThis, field);

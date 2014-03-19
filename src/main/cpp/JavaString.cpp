@@ -13,7 +13,7 @@ JavaString::JavaString(const std::string &string) {
 }
 
 JavaString::JavaString(JNIEnv *env, jstring javaString) {
-  setValue(env, javaString);
+  set(env, javaString);
 }
 
 const std::string& JavaString::get() const {
@@ -24,15 +24,15 @@ JniLocalRef<jstring> JavaString::toJavaString(JNIEnv *env) const {
   return env->NewStringUTF(_value.c_str());
 }
 
-void JavaString::setValue(const char *value) {
+void JavaString::set(const char *value) {
   _value = value;
 }
 
-void JavaString::setValue(const std::string &value) {
+void JavaString::set(const std::string &value) {
   _value = value;
 }
 
-void JavaString::setValue(JNIEnv *env, jstring javaString) {
+void JavaString::set(JNIEnv *env, jstring javaString) {
   if (javaString == NULL) {
     return;
   }

@@ -202,7 +202,7 @@ void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobjec
 jobject ClassWrapperTest::nativeToJavaObject(JNIEnv *env, jobject javaThis) {
   LOG_INFO("Starting test: nativeToJavaObject");
   TestObject testObject(env);
-  testObject.string.setValue(TEST_STRING);
+  testObject.string.set(TEST_STRING);
   testObject.i = TEST_INTEGER;
   testObject.s = TEST_SHORT;
   testObject.f = TEST_FLOAT;

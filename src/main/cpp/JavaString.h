@@ -21,12 +21,13 @@ public:
   virtual ~JavaString() {}
 
   const std::string& get() const;
+  const std::string& operator*() const { return get(); }
 
   JniLocalRef<jstring> toJavaString(JNIEnv *env) const;
 
-  void setValue(const char *value);
-  void setValue(const std::string &value);
-  void setValue(JNIEnv *env, jstring javaString);
+  void set(const char *value);
+  void set(const std::string &value);
+  void set(JNIEnv *env, jstring javaString);
 
 public:
   std::string _value;

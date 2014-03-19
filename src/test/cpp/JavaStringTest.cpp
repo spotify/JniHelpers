@@ -70,12 +70,12 @@ jstring JavaStringTest::nativeGetJavaStringUtf8(JNIEnv *env, jobject javaThis) {
 
 void JavaStringTest::nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaString) {
   JavaString testString;
-  testString.setValue(env, (jstring)javaString);
+  testString.set(env, (jstring)javaString);
   JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testString.get());
 }
 
 jstring JavaStringTest::nativeSetAndReturnValue(JNIEnv *env, jobject javaThis, jobject javaString) {
   JavaString testString;
-  testString.setValue(env, (jstring)javaString);
+  testString.set(env, (jstring)javaString);
   return testString.toJavaString(env).leak();
 }
