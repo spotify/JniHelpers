@@ -28,18 +28,18 @@ bool JavaStringTest::supportsRawStringLiterals(JNIEnv *env) {
 
 void JavaStringTest::createJavaString(JNIEnv *env, jobject javaThis) {
   JavaString javaString;
-  JUNIT_ASSERT_EQUALS_STRING("", javaString.getValue());
+  JUNIT_ASSERT_EQUALS_STRING("", javaString.get());
 }
 
 void JavaStringTest::createJavaStringFromStdString(JNIEnv *env, jobject javaThis) {
   std::string stdString = TEST_STRING;
   JavaString javaString(stdString);
-  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, javaString.getValue());
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, javaString.get());
 }
 
 void JavaStringTest::nativeCreateJavaStringFromJavaString(JNIEnv *env, jobject javaThis, jobject javaString) {
   JavaString testString(env, (jstring)javaString);
-  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testString.getValue());
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testString.get());
 }
 
 jstring JavaStringTest::nativeGetJavaString(JNIEnv *env, jobject javaThis) {
@@ -71,7 +71,7 @@ jstring JavaStringTest::nativeGetJavaStringUtf8(JNIEnv *env, jobject javaThis) {
 void JavaStringTest::nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaString) {
   JavaString testString;
   testString.setValue(env, (jstring)javaString);
-  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testString.getValue());
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testString.get());
 }
 
 jstring JavaStringTest::nativeSetAndReturnValue(JNIEnv *env, jobject javaThis, jobject javaString) {

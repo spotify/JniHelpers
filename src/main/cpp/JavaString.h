@@ -20,7 +20,8 @@ public:
   JavaString(JNIEnv *env, jstring javaString);
   virtual ~JavaString() {}
 
-  const std::string& getValue() const;
+  const std::string& get() const;
+
   JniLocalRef<jstring> toJavaString(JNIEnv *env) const;
 
   void setValue(const char *value);

@@ -49,7 +49,7 @@ void ClassWrapperTest::createClassWrapper(JNIEnv *env, jobject javaThis) {
   JUNIT_ASSERT_EQUALS_INT(0, emptyObject.s);
   JUNIT_ASSERT_EQUALS_FLOAT(0.0f, emptyObject.f, DEFAULT_FLOAT_TOLERANCE);
   JUNIT_ASSERT_EQUALS_FLOAT(0.0, emptyObject.d, DEFAULT_FLOAT_TOLERANCE);
-  JUNIT_ASSERT_EQUALS_STRING("", emptyObject.string.getValue());
+  JUNIT_ASSERT_EQUALS_STRING("", emptyObject.string.get());
   JUNIT_ASSERT_EQUALS_BOOL(false, emptyObject.z);
   JUNIT_ASSERT_EQUALS_INT(0, emptyObject.b);
   JUNIT_ASSERT_EQUALS_INT(0, emptyObject.c);
@@ -187,7 +187,7 @@ void ClassWrapperTest::nativeSetJavaObject(JNIEnv *env, jobject javaThis, jobjec
   LOG_INFO("Starting test: nativeSetJavaObject");
   TestObject testObject(env);
   testObject.setJavaObject(env, object);
-  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testObject.string.getValue());
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testObject.string.get());
   JUNIT_ASSERT_EQUALS_INT(TEST_INTEGER, testObject.i);
   JUNIT_ASSERT_EQUALS_INT(TEST_SHORT, testObject.s);
   JUNIT_ASSERT_EQUALS_FLOAT(TEST_FLOAT, testObject.f, DEFAULT_FLOAT_TOLERANCE);

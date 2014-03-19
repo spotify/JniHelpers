@@ -16,7 +16,7 @@ JavaString::JavaString(JNIEnv *env, jstring javaString) {
   setValue(env, javaString);
 }
 
-const std::string& JavaString::getValue() const {
+const std::string& JavaString::get() const {
   return _value;
 }
 
