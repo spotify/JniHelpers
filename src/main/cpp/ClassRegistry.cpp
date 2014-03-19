@@ -24,7 +24,7 @@ void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
       "Can't add uninitialized ClassWrapper to registry");
   } else {
     LOG_INFO("Adding class instance '%s' to registry", item->getCanonicalName());
-    _classes[item->getCanonicalName()] = item; //.reset(item);
+    _classes[item->getCanonicalName()].set(item);
   }
 }
 
@@ -38,7 +38,7 @@ const ClassWrapper* ClassRegistry::get(const char* name) const {
   }
 
   const ClassRegistryMap::const_iterator iter = _classes.find(name);
-  return iter != _classes.end() ? iter->second/*.get()*/ : NULL;
+  return iter != _classes.end() ? iter->second.get() : NULL;
 }
 
 } // namespace jni

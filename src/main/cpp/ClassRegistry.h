@@ -4,6 +4,7 @@
 #include "JniHelpersCommon.h"
 #include "ClassWrapper.h"
 #include "JavaExceptionUtils.h"
+#include "ScopedPtr.h"
 #include <map>
 #include <string>
 #include <string.h>
@@ -13,10 +14,10 @@ namespace jni {
 
 #if WIN32
 // TODO: This is a MSVC thing, should refactor to use PIMPL instead (ugh)
-template class EXPORT std::map<std::string, const ClassWrapper*>;
+template class EXPORT std::map<std::string, ScopedPtr<const ClassWrapper> >;
 #endif
 
-typedef std::map<std::string, const ClassWrapper*> ClassRegistryMap;
+typedef std::map<std::string, ScopedPtr<const ClassWrapper> > ClassRegistryMap;
 
 /**
  * @brief Keeps a map of cached ClassWrapper instances
