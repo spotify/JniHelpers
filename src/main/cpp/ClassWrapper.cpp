@@ -215,7 +215,7 @@ jobject ClassWrapper::toJavaObject(JNIEnv *env, jobject javaThis) {
         env->SetDoubleField(javaThis, field, *address);
       } else if (TYPE_EQUALS(mapping->type, kTypeString)) {
         JavaString *address = static_cast<JavaString*>(mapping->address);
-        JniLocalRef<jstring> string = address->getJavaString(env);
+        JniLocalRef<jstring> string = address->toJavaString(env);
         env->SetObjectField(javaThis, field, string.get());
       } else if (TYPE_EQUALS(mapping->type, kTypeByte)) {
         unsigned char *address = static_cast<unsigned char*>(mapping->address);

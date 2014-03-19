@@ -21,7 +21,7 @@ public:
   virtual ~JavaString() {}
 
   const std::string& getValue() const;
-  JniLocalRef<jstring> getJavaString(JNIEnv *env) const;
+  JniLocalRef<jstring> toJavaString(JNIEnv *env) const;
 
   void setValue(const char *value);
   void setValue(const std::string &value);

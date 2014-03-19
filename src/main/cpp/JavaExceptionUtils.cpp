@@ -41,7 +41,7 @@ JniLocalRef<jobject> JavaExceptionUtils::newThrowable(JNIEnv *env, const char *m
   vsnprintf(formattedMessage, kExceptionMaxLength, message, arguments);
   va_end(arguments);
   JavaString javaMessage(formattedMessage);
-  JniLocalRef<jobject> result = env->NewObject(throwableClazz, throwableCtor, javaMessage.getJavaString(env).get());
+  JniLocalRef<jobject> result = env->NewObject(throwableClazz, throwableCtor, javaMessage.toJavaString(env).get());
   JavaExceptionUtils::checkException(env);
   if (result == NULL) {
     JavaExceptionUtils::throwRuntimeException(env, "Could not create new Throwable instance");

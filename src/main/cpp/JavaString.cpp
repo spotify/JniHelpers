@@ -20,7 +20,7 @@ const std::string& JavaString::getValue() const {
   return _value;
 }
 
-JniLocalRef<jstring> JavaString::getJavaString(JNIEnv *env) const {
+JniLocalRef<jstring> JavaString::toJavaString(JNIEnv *env) const {
   return env->NewStringUTF(_value.c_str());
 }
 

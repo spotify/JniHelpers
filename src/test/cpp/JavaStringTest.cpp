@@ -44,25 +44,25 @@ void JavaStringTest::nativeCreateJavaStringFromJavaString(JNIEnv *env, jobject j
 
 jstring JavaStringTest::nativeGetJavaString(JNIEnv *env, jobject javaThis) {
   JavaString javaString(TEST_STRING);
-  return javaString.getJavaString(env).leak();
+  return javaString.toJavaString(env).leak();
 }
 
 jstring JavaStringTest::nativeGetJavaStringWithNullChar(JNIEnv *env, jobject javaThis) {
   JavaString javaString(TEST_STRING_WITH_NULL_CHAR);
-  return javaString.getJavaString(env).leak();
+  return javaString.toJavaString(env).leak();
 }
 
 jstring JavaStringTest::nativeGetJavaStringUtf16(JNIEnv *env, jobject javaThis) {
   // This test is disabled on the Java side.
   // We can't construct from utf16 strings yet.
   JavaString javaString; //(TEST_UTF16_STRING);
-  return javaString.getJavaString(env).leak();
+  return javaString.toJavaString(env).leak();
 }
 
 jstring JavaStringTest::nativeGetJavaStringUtf8(JNIEnv *env, jobject javaThis) {
 #if HAS_RAW_STRING_LITERALS
   JavaString javaString(TEST_UTF8_STRING);
-  return javaString.getJavaString(env).leak();
+  return javaString.toJavaString(env).leak();
 #else
   return NULL;
 #endif
@@ -77,5 +77,5 @@ void JavaStringTest::nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaS
 jstring JavaStringTest::nativeSetAndReturnValue(JNIEnv *env, jobject javaThis, jobject javaString) {
   JavaString testString;
   testString.setValue(env, (jstring)javaString);
-  return testString.getJavaString(env).leak();
+  return testString.toJavaString(env).leak();
 }
