@@ -22,14 +22,18 @@ public:
 
 private:
   static bool supportsRawStringLiterals(JNIEnv *env);
+
   static void createJavaString(JNIEnv *env, jobject javaThis);
   static void createJavaStringFromStdString(JNIEnv *env, jobject javaThis);
   static void nativeCreateJavaStringFromJavaString(JNIEnv *env, jobject javaThis, jobject javaString);
+
   static jstring nativeGetJavaString(JNIEnv *env, jobject javaThis);
   static jstring nativeGetJavaStringWithNullChar(JNIEnv *env, jobject javaThis);
   static jstring nativeGetJavaStringUtf16(JNIEnv *env, jobject javaThis);
   static jstring nativeGetJavaStringUtf8(JNIEnv *env, jobject javaThis);
+
   static void nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaString);
+  static void nativeSetValueWithOperator(JNIEnv *env, jobject javaThis);
   static jstring nativeSetAndReturnValue(JNIEnv *env, jobject javaThis, jobject javaString);
 };
 

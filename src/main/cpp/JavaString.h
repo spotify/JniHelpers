@@ -26,7 +26,9 @@ public:
   JniLocalRef<jstring> toJavaString(JNIEnv *env) const;
 
   void set(const char *value);
+  void operator=(const char *value) { set(value); }
   void set(const std::string &value);
+  void operator=(const std::string &value) { set(value); }
   void set(JNIEnv *env, jstring javaString);
 
 public:

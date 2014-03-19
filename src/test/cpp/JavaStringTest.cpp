@@ -5,14 +5,18 @@ void JavaStringTest::initialize(JNIEnv *env) {
   setClass(env);
 
   addNativeMethod("supportsRawStringLiterals", (void*)supportsRawStringLiterals, kTypeBool, NULL);
+
   addNativeMethod("createJavaString", (void*)&JavaStringTest::createJavaString, kTypeVoid, NULL);
   addNativeMethod("createJavaStringFromStdString", (void*)&JavaStringTest::createJavaStringFromStdString, kTypeVoid, NULL);
   addNativeMethod("nativeCreateJavaStringFromJavaString", (void*)&JavaStringTest::nativeCreateJavaStringFromJavaString, kTypeVoid, kTypeString, NULL);
+
   addNativeMethod("nativeGetJavaString", (void*)&JavaStringTest::nativeGetJavaString, kTypeString, NULL);
   addNativeMethod("nativeGetJavaStringWithNullChar", (void*)&JavaStringTest::nativeGetJavaStringWithNullChar, kTypeString, NULL);
   addNativeMethod("nativeGetJavaStringUtf16", (void*)&JavaStringTest::nativeGetJavaStringUtf16, kTypeString, NULL);
   addNativeMethod("nativeGetJavaStringUtf8", (void*)&JavaStringTest::nativeGetJavaStringUtf8, kTypeString, NULL);
+
   addNativeMethod("nativeSetValue", (void*)&JavaStringTest::nativeSetValue, kTypeVoid, kTypeString, NULL);
+  addNativeMethod("nativeSetValueWithOperator", (void*)nativeSetValueWithOperator, kTypeVoid, NULL);
   addNativeMethod("nativeSetAndReturnValue", (void*)&JavaStringTest::nativeSetAndReturnValue, kTypeString, kTypeString, NULL);
 
   registerNativeMethods(env);
@@ -71,6 +75,12 @@ jstring JavaStringTest::nativeGetJavaStringUtf8(JNIEnv *env, jobject javaThis) {
 void JavaStringTest::nativeSetValue(JNIEnv *env, jobject javaThis, jobject javaString) {
   JavaString testString;
   testString.set(env, (jstring)javaString);
+  JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testString.get());
+}
+
+void JavaStringTest::nativeSetValueWithOperator(JNIEnv *env, jobject javaThis) {
+  JavaString testString;
+  testString = TEST_STRING;
   JUNIT_ASSERT_EQUALS_STRING(TEST_STRING, testString.get());
 }
 

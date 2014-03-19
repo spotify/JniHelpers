@@ -65,6 +65,9 @@ public class JavaStringTest {
         nativeSetValue(TestConstants.TEST_STRING);
     }
 
+    @Test
+    native public void nativeSetValueWithOperator() throws Exception;
+
     native public String nativeSetAndReturnValue(String s);
     @Test
     public void setValueWithNullChar() throws Exception {
