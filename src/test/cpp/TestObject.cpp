@@ -17,6 +17,8 @@ string(), i(0), s(0), f(0.0f), d(0.0), z(false), b(0), c(0) {
 void TestObject::initialize(JNIEnv *env) {
   setClass(env);
 
+  // Cache some jfieldIDs for quick lookup later. Note that this is necessary
+  // for the corresponding fields to be mapped in mapFields().
   cacheField(env, "string", kTypeString);
   cacheField(env, "i", kTypeInt);
   cacheField(env, "s", kTypeShort);
@@ -27,7 +29,13 @@ void TestObject::initialize(JNIEnv *env) {
   cacheField(env, "c", kTypeChar);
   // cacheField(env, "b", kTypeArray(kTypeByte));
 
+  // Cache default constructor
   cacheConstructor(env);
+
+  // Cache methods for later. Currently these are unused, but would provide an
+  // easy mechanism for calling Java methods. Note that when calling cacheMethod,
+  // the last argument must always be NULL. See the documentation for
+  // JavaClassUtils::makeSignature for more details.
   cacheMethod(env, "getString", kTypeString, NULL);
   cacheMethod(env, "setString", kTypeVoid, kTypeString, NULL);
   cacheMethod(env, "getI", kTypeInt, NULL);

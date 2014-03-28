@@ -75,9 +75,8 @@ public:
    *                   from merge().
    * @return New instance, or NULL if none could not be created.
    */
-  // Sorry about the mess in this header file, however some compilers
-  // *cough*MSVC*cough* require templates to be in the header file or else they won't
-  // work.
+  // Sorry about the mess in this header file, however some compilers like MSVC
+  // require templates to be in the header file or else they won't work.
   template<typename TypeName>
   TypeName* newInstance(JNIEnv *env, jobject fromObject) {
     TypeName *result = new TypeName();

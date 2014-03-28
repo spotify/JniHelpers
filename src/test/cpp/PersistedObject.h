@@ -6,6 +6,17 @@
 
 using namespace spotify::jni;
 
+/**
+ * @brief Example of a natively persisted class
+ *
+ * Instances of this class can be created on the heap and then leaked, the
+ * address of the leaked instance is stored in a corresponding Java object
+ * in a long field. When you want to access the native instance again, it
+ * is provided automatically when invoking ClassRegistry::newInstance.
+ *
+ * In order for JniHelpers to correctly recognize a class as being persisted,
+ * you must call enablePersistence() in initialize().
+ */
 class PersistedObject : public ClassWrapper {
 public:
   PersistedObject();
