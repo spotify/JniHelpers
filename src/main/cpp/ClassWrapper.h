@@ -207,6 +207,15 @@ public:
   virtual bool isPersistenceEnabled() const;
 
   /**
+   * @brief Tell JniHelpers that this class is persisted.
+   * @param env JNIEnv
+   *
+   * In order for this method to work, the corresponding Java class must have a field
+   * named `PERSIST_FIELD_NAME`, otherwise this method will throw a Java exception.
+   */
+  virtual void enablePersistence(JNIEnv *env);
+
+  /**
    * @brief Return the object saved by a previous call to persist()
    * @param env JNIEnv
    * @param javaThis Java object to set the field from

@@ -79,6 +79,10 @@ bool ClassWrapper::isPersistenceEnabled() const {
   return mapFindIter != _fields->end();
 }
 
+void ClassWrapper::enablePersistence(JNIEnv *env) {
+  cacheField(env, PERSIST_FIELD_NAME, kTypeLong);
+}
+
 ClassWrapper* ClassWrapper::getPersistedInstance(JNIEnv *env, jobject javaThis) const {
   if (isPersistenceEnabled()) {
     LOG_DEBUG("Retrieving persisted instance of '%s'", getSimpleName());
