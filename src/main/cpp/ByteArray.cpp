@@ -7,13 +7,15 @@ namespace jni {
 
 ByteArray::ByteArray() : _data(NULL), _num_bytes(0) {}
 
-ByteArray::ByteArray(void *data, const size_t numBytes) :
+ByteArray::ByteArray(void *data, const size_t numBytes, bool copyData) :
 _data(data), _num_bytes(numBytes) {
   // In the rare (but possible) event that this constructor is called with
   // NULL but non-zero length data, correct the byte count so as to avoid
   // segfaults later on.
   if (_data == NULL && _num_bytes > 0) {
     _num_bytes = 0;
+  } else {
+    set(data, numBytes, copyData);
   }
 }
 
@@ -21,7 +23,6 @@ ByteArray::ByteArray(JNIEnv *env, jbyteArray data) :
 _data(NULL), _num_bytes(0) {
   set(env, data);
 }
-
 
 ByteArray::~ByteArray() {
   if (_data != NULL) {

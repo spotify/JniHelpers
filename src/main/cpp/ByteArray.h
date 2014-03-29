@@ -10,8 +10,9 @@ namespace jni {
 class EXPORT ByteArray {
 public:
   ByteArray();
-  ByteArray(void *data, const size_t numBytes);
+  ByteArray(void *data, const size_t numBytes, bool copyData);
   ByteArray(JNIEnv *env, jbyteArray data);
+
   virtual ~ByteArray();
 
   const void* get() const { return _data; }
