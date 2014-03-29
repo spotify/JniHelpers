@@ -51,6 +51,9 @@ public class ByteArrayTest {
     @Test
     public native void setData() throws Exception;
 
+    @Test
+    public native void setDataWithCopy() throws Exception;
+
     public native void nativeSetJavaByteArray(byte[] data, int expectedSize);
 
     @Test

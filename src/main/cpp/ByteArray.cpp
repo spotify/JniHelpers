@@ -47,7 +47,7 @@ JniLocalRef<jbyteArray> ByteArray::toJavaByteArray(JNIEnv *env) const {
   return result.leak();
 }
 
-void ByteArray::set(void *data, const size_t numBytes) {
+void ByteArray::set(void *data, const size_t numBytes, bool copyData) {
   if (data == NULL && numBytes > 0) {
     JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException, 
@@ -60,7 +60,12 @@ void ByteArray::set(void *data, const size_t numBytes) {
     free(_data);
   }
 
-  _data = data;
+  if (copyData) {
+    _data = malloc(numBytes);
+    memcpy(_data, data, numBytes);
+  } else {
+    _data = data;
+  }
   _num_bytes = numBytes;
 }
 

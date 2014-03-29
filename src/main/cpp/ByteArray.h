@@ -19,9 +19,7 @@ public:
 
   void *leak();
 
-  void copy(void *data, const size_t numBytes);
-  void copy(JNIEnv *env, jbyteArray data);
-  void set(void *data, const size_t numBytes);
+  void set(void *data, const size_t numBytes, bool copyData);
   void set(JNIEnv *env, jbyteArray data);
 
   const size_t size() const { return _num_bytes; }

@@ -29,6 +29,7 @@ private:
   static void createNewByteArrayWithNullAndNonZeroLength(JNIEnv *env, jobject javaThis);
   static jbyteArray nativeGetTestJavaByteArray(JNIEnv *env, jobject javaThis);
   static void setData(JNIEnv *env, jobject javaThis);
+  static void setDataWithCopy(JNIEnv *env, jobject javaThis);
   static void nativeSetJavaByteArray(JNIEnv *env, jobject javaThis, jbyteArray javaData, jint expectedSize);
 };
 

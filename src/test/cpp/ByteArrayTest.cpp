@@ -12,6 +12,7 @@ void ByteArrayTest::initialize(JNIEnv *env) {
   addNativeMethod("createNewByteArrayWithNullAndNonZeroLength", (void*)createNewByteArrayWithNullAndNonZeroLength, kTypeVoid, NULL);
   addNativeMethod("nativeGetTestJavaByteArray", (void*)nativeGetTestJavaByteArray, kTypeArray(kTypeByte), NULL);
   addNativeMethod("setData", (void*)setData, kTypeVoid, NULL);
+  addNativeMethod("setDataWithCopy", (void*)setData, kTypeVoid, NULL);
   addNativeMethod("nativeSetJavaByteArray", (void*)nativeSetJavaByteArray, kTypeVoid, kTypeArray(kTypeByte), kTypeInt, NULL);
 
   registerNativeMethods(env);
@@ -73,9 +74,22 @@ jbyteArray ByteArrayTest::nativeGetTestJavaByteArray(JNIEnv *env, jobject javaTh
 void ByteArrayTest::setData(JNIEnv *env, jobject javaThis) {
   void *data = getTestData();
   ByteArray byteArray;
-  byteArray.set(data, getTestDataSize());
+  byteArray.set(data, getTestDataSize(), false);
   JUNIT_ASSERT_EQUALS_INT(getTestDataSize(), byteArray.size());
   JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.get(), byteArray.size());
+}
+
+void ByteArrayTest::setDataWithCopy(JNIEnv *env, jobject javaThis) {
+  void *data = getTestData();
+  ByteArray byteArray;
+  byteArray.set(data, getTestDataSize(), true);
+  // Write 0's over the original data to make sure that a false positive
+  // doesn't cause the test to pass.
+  memcpy(data, 0, getTestDataSize());
+  void *expectedData = getTestData();
+  JUNIT_ASSERT_EQUALS_INT(getTestDataSize(), byteArray.size());
+  JUNIT_ASSERT_EQUALS_ARRAY(expectedData, byteArray.get(), byteArray.size());
+  free(expectedData);
 }
 
 void ByteArrayTest::nativeSetJavaByteArray(JNIEnv *env, jobject javaThis, jbyteArray javaData, jint expectedSize) {
