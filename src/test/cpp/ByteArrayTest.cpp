@@ -21,8 +21,8 @@ void ByteArrayTest::initialize(JNIEnv *env) {
 
 void* ByteArrayTest::getTestData() {
   char *result = (char*)malloc(getTestDataSize());
-  for (int i = 0; i < getTestDataSize(); i++) {
-    result[i] = i;
+  for (size_t i = 0; i < getTestDataSize(); i++) {
+    result[i] = (char)i;
   }
   return result;
 }
