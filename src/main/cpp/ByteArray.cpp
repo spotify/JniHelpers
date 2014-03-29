@@ -8,13 +8,13 @@ namespace jni {
 ByteArray::ByteArray() : _data(NULL), _num_bytes(0) {}
 
 ByteArray::ByteArray(void *data, const size_t numBytes, bool copyData) :
-_data(data), _num_bytes(numBytes) {
+_data(NULL), _num_bytes(0) {
   // In the rare (but possible) event that this constructor is called with
   // NULL but non-zero length data, correct the byte count so as to avoid
   // segfaults later on.
-  if (_data == NULL && _num_bytes > 0) {
+  if (data == NULL && numBytes > 0) {
     _num_bytes = 0;
-  } else {
+  } else if (data != NULL && numBytes > 0) {
     set(data, numBytes, copyData);
   }
 }

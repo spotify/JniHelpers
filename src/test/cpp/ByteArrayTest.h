@@ -24,6 +24,7 @@ private:
 
   static void createNewByteArray(JNIEnv *env, jobject javaThis);
   static void createNewByteArrayWithData(JNIEnv *env, jobject javaThis);
+  static void createNewByteArrayWithDataCopy(JNIEnv *env, jobject javaThis);
   static void nativeCreateNewByteArrayWithJavaData(JNIEnv *env, jobject javaThis, jbyteArray javaData);
   static void createNewByteArrayWithNull(JNIEnv *env, jobject javaThis);
   static void createNewByteArrayWithNullAndNonZeroLength(JNIEnv *env, jobject javaThis);

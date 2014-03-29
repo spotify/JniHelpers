@@ -23,6 +23,9 @@ public class ByteArrayTest {
     @Test
     public native void createNewByteArrayWithData() throws Exception;
 
+    @Test
+    public native void createNewByteArrayWithDataCopy() throws Exception;
+
     public native void nativeCreateNewByteArrayWithJavaData(byte[] data);
 
     @Test
