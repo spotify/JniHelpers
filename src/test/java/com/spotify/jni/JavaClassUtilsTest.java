@@ -19,6 +19,9 @@ public class JavaClassUtilsTest {
         assertEquals(Object.class.getCanonicalName(), result.getCanonicalName());
     }
 
+    @Test(expected = NoClassDefFoundError.class)
+    public native void findInvalidClass() throws Exception;
+
     public native Class nativeFindClassWithLoader();
 
     @Test
@@ -27,4 +30,7 @@ public class JavaClassUtilsTest {
         assertNotNull(result);
         assertEquals(this.getClass().getCanonicalName(), result.getCanonicalName());
     }
+
+    @Test(expected = NoClassDefFoundError.class)
+    public native void findInvalidClassWithLoader() throws Exception;
 }

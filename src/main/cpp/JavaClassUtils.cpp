@@ -90,6 +90,11 @@ jclass JavaClassUtils::findClass(JNIEnv *env, const char *class_name, bool useCl
   }
 
   LOG_DEBUG("Lookup of class was %s", result != NULL ? "successful" : "unsuccessful");
+  if (result == NULL) {
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaClass(NoClassDefFoundError),
+      "Class '%s' not found (%s Java ClassLoader)",
+      class_name, useClassLoader ? "using" : "not using");
+  }
   return result;
 }
 

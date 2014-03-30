@@ -18,7 +18,9 @@ public:
 
 public:
   static jclass findObjectClass(JNIEnv *env, jobject javaThis);
+  static void findInvalidClass(JNIEnv *env, jobject javaThis);
   static jclass nativeFindClassWithLoader(JNIEnv *env, jobject javaThis);
+  static void findInvalidClassWithLoader(JNIEnv *env, jobject javaThis);
 };
 
 #endif // __JavaClassUtilsTest_h__
