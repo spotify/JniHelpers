@@ -132,6 +132,9 @@ public class ClassWrapperTest {
     @Test(expected = IllegalStateException.class)
     native public void getCachedFieldOnUninitialized() throws Exception;
 
+    @Test(expected = NoSuchFieldError.class)
+    native public void cacheInvalidField() throws Exception;
+
     @Test(expected = NoSuchMethodError.class)
     native public void cacheInvalidMethod() throws Exception;
 }

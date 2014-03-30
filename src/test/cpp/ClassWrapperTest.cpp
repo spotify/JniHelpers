@@ -32,6 +32,7 @@ void ClassWrapperTest::initialize(JNIEnv *env) {
   addNativeMethod("getCachedField", (void*)&ClassWrapperTest::getCachedField, kTypeVoid, NULL);
   addNativeMethod("getInvalidCachedField", (void*)&ClassWrapperTest::getInvalidCachedField, kTypeVoid, NULL);
   addNativeMethod("getCachedFieldOnUninitialized", (void*)&ClassWrapperTest::getCachedFieldOnUninitialized, kTypeVoid, NULL);
+  addNativeMethod("cacheInvalidField", (void*)&ClassWrapperTest::cacheInvalidField, kTypeVoid, NULL);
   addNativeMethod("cacheInvalidMethod", (void*)&ClassWrapperTest::cacheInvalidMethod, kTypeVoid, NULL);
 
   registerNativeMethods(env);
@@ -255,6 +256,21 @@ void ClassWrapperTest::getCachedFieldOnUninitialized(JNIEnv *env, jobject javaTh
   TestObject testObject;
   jfieldID field = testObject.getField("string");
   JUNIT_ASSERT_NULL(field);
+}
+
+class CacheInvalidField : public TestObject {
+public:
+  CacheInvalidField() : TestObject() {}
+  virtual void initialize(JNIEnv *env) {
+    TestObject::initialize(env);
+    cacheField(env, "invalid", kTypeString);
+  }
+};
+
+void ClassWrapperTest::cacheInvalidField(JNIEnv *env, jobject javaThis) {
+  LOG_INFO("Starting testn: cacheInvalidField");
+  CacheInvalidField testObject;
+  testObject.initialize(env);
 }
 
 class CacheInvalidMethod : public TestObject {

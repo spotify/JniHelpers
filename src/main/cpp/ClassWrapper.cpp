@@ -334,6 +334,10 @@ void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *f
   JavaExceptionUtils::checkException(env);
   if (field != NULL) {
     _fields_global[field_name] = field;
+  } else {
+    JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaClass(NoSuchFieldError),
+      "Field '%s' (type '%s') not found on class %s",
+      field_name, field_type, getCanonicalName());
   }
 }
 
