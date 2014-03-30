@@ -18,7 +18,7 @@ private:
   virtual ~JavaClassUtils() {}
 
 public:
-  static EXPORT void setJavaClassLoaderForCurrentThread(JNIEnv *env, jobject class_loader);
+  static EXPORT void setJavaClassLoader(JNIEnv *env);
   // TODO: Not sure if this is the best interface here...
   static EXPORT jclass findClass(JNIEnv *env, const char *class_name, bool useClassLoader);
 

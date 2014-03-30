@@ -7,41 +7,89 @@
 namespace spotify {
 namespace jni {
 
-static jobject sJavaClassLoader = NULL;
+class JavaClassLoader : public ClassWrapper {
+public:
+  JavaClassLoader(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
+  ~JavaClassLoader() {}
 
-void JavaClassUtils::setJavaClassLoaderForCurrentThread(JNIEnv *env, jobject class_loader) {
-  if (sJavaClassLoader != NULL) {
-    env->DeleteGlobalRef(class_loader);
+  const char* getCanonicalName() const { return kTypeJavaClass(ClassLoader); }
+
+  void initialize(JNIEnv *env) {
+    setClass(env);
+    cacheMethod(env, "loadClass", kTypeJavaClass(Class), kTypeString, NULL);
+    std::string signature;
+    JavaClassUtils::makeSignature(signature, getCanonicalName(), NULL);
+    methodGetSystemClassLoader = env->GetStaticMethodID(_clazz, "getSystemClassLoader", signature.c_str());
   }
 
-  sJavaClassLoader = env->NewGlobalRef(class_loader);
+  void mapFields() {}
+
+  jobject getClassLoader(JNIEnv *env) {
+    jobject classLoader = env->CallStaticObjectMethod(_clazz, methodGetSystemClassLoader);
+    JavaExceptionUtils::checkException(env);
+    return classLoader;
+  }
+
+  jclass loadClass(JNIEnv *env, const char *class_name) {
+    std::string binaryName = class_name;
+    for (int i = 0; i < binaryName.length(); ++i) {
+      if (binaryName[i] == '/') {
+        binaryName[i] = '.';
+      }
+    }
+
+    LOG_DEBUG("Using ClassLoader to look up '%s'", binaryName.c_str());
+    JavaString className(binaryName);
+    jobject classLoader = getClassLoader(env);
+    jclass result = (jclass)env->CallObjectMethod(classLoader, getMethod("loadClass"),
+      className.toJavaString(env).get());
+    JavaExceptionUtils::checkException(env);
+    return result;
+  }
+
+private:
+  jmethodID methodGetSystemClassLoader;
+};
+
+// Yes, I hate global static data as much as the next guy, however the alternative here would
+// be to keep the ClassLoader instance in the ClassRegistry. While that isn't such a bad idea,
+// it would require findClass() to be altered to take a ClassRegistry parameter, which looks a
+// bit weird. The ClassLoader is provided by the JVM and will live for the lifetime of the
+// application.
+static JavaClassLoader* sJavaClassLoader = NULL;
+
+void JavaClassUtils::setJavaClassLoader(JNIEnv *env) {
+  LOG_DEBUG("Finding Java ClassLoader");
+  if (sJavaClassLoader == NULL) {
+    sJavaClassLoader = new JavaClassLoader(env);
+  }
 }
 
 jclass JavaClassUtils::findClass(JNIEnv *env, const char *class_name, bool useClassLoader) {
   jclass result = NULL;
   if (useClassLoader) {
+    LOG_DEBUG("Finding class '%s' with thread ClassLoader", class_name);
     if (sJavaClassLoader == NULL) {
+      LOG_DEBUG("Java ClassLoader is null, doing lazy initialization");
+      setJavaClassLoader(env);
+    }
+
+    jobject classLoader = sJavaClassLoader->getClassLoader(env);
+    if (classLoader == NULL) {
+      // If we can't get the ClassLoader then we're out of luck and must bail out...
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+        "Could not find ClassLoader for thread");
       return NULL;
     }
 
-    jclass classLoader = env->FindClass(kTypeJavaClass(ClassLoader));
-    JavaExceptionUtils::checkException(env);
-
-    std::string signature;
-    makeSignature(signature, kTypeJavaClass(Class), kTypeString, NULL);
-    jmethodID methodLoadClass = env->GetMethodID(classLoader, "loadClass", signature.c_str());
-    JavaExceptionUtils::checkException(env);
-
-    jstring className = env->NewStringUTF(class_name);
-    JavaExceptionUtils::checkException(env);
-
-    jclass result = (jclass)env->CallObjectMethod(sJavaClassLoader, methodLoadClass, className);
-    JavaExceptionUtils::checkException(env);
+    result = sJavaClassLoader->loadClass(env, class_name);
   } else {
+    LOG_DEBUG("Finding class '%s' with direct JNI call", class_name);
     result = env->FindClass(class_name);
     JavaExceptionUtils::checkException(env);
   }
 
+  LOG_DEBUG("Lookup of class was %s", result != NULL ? "successful" : "unsuccessful");
   return result;
 }
 

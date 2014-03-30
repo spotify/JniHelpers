@@ -15,6 +15,10 @@ public:
 
   void initialize(JNIEnv *env);
   void mapFields() {}
+
+public:
+  static jclass findObjectClass(JNIEnv *env, jobject javaThis);
+  static jclass nativeFindClassWithLoader(JNIEnv *env, jobject javaThis);
 };
 
 #endif // __JavaClassUtilsTest_h__
