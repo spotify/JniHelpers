@@ -23,6 +23,7 @@
 
 // Array builder macro
 #define kTypeArray(x) "[" x
+#define kTypeObjectArray(x) "[L" x ";"
 
 #define TYPE_EQUALS(_TYPE1, _TYPE2) (strcmp(_TYPE1, _TYPE2) == 0)
 

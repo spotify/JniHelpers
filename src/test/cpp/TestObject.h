@@ -34,7 +34,7 @@ public:
 
   /**
    * @brief Return the class canonical name
-   * @return String with JNI canonical name (ie, "com/example/Foo"
+   * @return String with JNI canonical name (ie, "com/example/Foo")
    *
    * Use of the MAKE_CANONICAL_NAME macro is recommended here
    */

@@ -1,5 +1,7 @@
 #include "JavaClassUtilsTest.h"
+#include "JUnitUtils.h"
 #include "JavaClassUtils.h"
+#include "TestObject.h"
 
 void JavaClassUtilsTest::initialize(JNIEnv *env) {
   setClass(env);

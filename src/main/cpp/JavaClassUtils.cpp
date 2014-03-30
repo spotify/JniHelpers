@@ -107,8 +107,20 @@ void JavaClassUtils::makeNameForSignature(std::string &receiver, const char *nam
     // Primitive type, can be directly appended
     receiver = name;
   } else if (name[0] == '[') {
-    // Array types can also be directly appended
-    receiver = name;
+    if (strlen(name) == 2) {
+      // Array of primitive types, again can be directly appended
+      receiver = name;
+    } else {
+      if (name[1] == 'L' && name[strlen(name) - 1] == ';') {
+        // Looks like this is already a proper signature
+        receiver = name;
+      } else {
+        // Otherwise convert the class name to a proper JNI signature
+        std::stringstream stream;
+        stream << "[L" << name << ";";
+        receiver = stream.str();
+      }
+    }
   } else {
     // Class names must be proceeded with an "L" and have a semicolon at the end,
     // however the canonical signatures provided in classes like ClassWrapper are
