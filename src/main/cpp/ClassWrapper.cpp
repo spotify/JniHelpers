@@ -328,27 +328,9 @@ void ClassWrapper::cacheField(JNIEnv *env, const char *field_name, const char *f
     return;
   }
 
-  //TODO copy/pasted from JavaClassUtils. Should be DRYed up.
-  std::stringstream signatured_type;
-  if (strlen(field_type) == 1) {
-    // Primitive type, can be directly appended
-    signatured_type << field_type;
-  } else if (field_type[0] == '[') {
-    // Array types can also be directly appended
-    signatured_type << field_type;
-  } else {
-    // Class names must be proceeded with an "L" and have a semicolon at the end,
-    // however the canonical signatures provided in classes like ClassWrapper are
-    // not expected to provide these. So check to see if this is a proper class
-    // signature, and make one if not.
-    if (field_type[0] == 'L' && field_type[strlen(field_type) - 1] == ';') {
-      signatured_type << field_type;
-    } else {
-      signatured_type << "L" << field_type << ";";
-    }
-  }
-
-  jfieldID field = env->GetFieldID(_clazz_global.get(), field_name, signatured_type.str().c_str());
+  std::string fieldTypeSignature;
+  JavaClassUtils::makeNameForSignature(fieldTypeSignature, field_type);
+  jfieldID field = env->GetFieldID(_clazz_global.get(), field_name, fieldTypeSignature.c_str());
   JavaExceptionUtils::checkException(env);
   if (field != NULL) {
     _fields_global[field_name] = field;

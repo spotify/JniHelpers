@@ -22,6 +22,8 @@ public:
   // TODO: Not sure if this is the best interface here...
   static EXPORT jclass findClass(JNIEnv *env, const char *class_name, bool useClassLoader);
 
+  static EXPORT void makeNameForSignature(std::string &receiver, const char *class_name);
+
   /**
     * @brief Make a method signature from a variable list of arguments
     * @param receiver String to receive the generated signature
@@ -32,9 +34,6 @@ public:
     */
   static EXPORT void makeSignature(std::string &receiver, const char *return_type, ...);
   static EXPORT void makeSignatureWithList(std::string &receiver, const char *return_type, va_list arguments);
-
-protected:
-  static EXPORT void appendTypeToSignature(std::stringstream &stringstream, const char *argument);
 };
 
 } // namespace jni

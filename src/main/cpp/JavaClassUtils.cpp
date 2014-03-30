@@ -45,6 +45,32 @@ jclass JavaClassUtils::findClass(JNIEnv *env, const char *class_name, bool useCl
   return result;
 }
 
+void JavaClassUtils::makeNameForSignature(std::string &receiver, const char *name) {
+  if (name == NULL) {
+    JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
+      kTypeIllegalArgumentException, "Attempt to call makeNameForSignature with NULL name");
+    return;
+  } else if (strlen(name) == 1) {
+    // Primitive type, can be directly appended
+    receiver = name;
+  } else if (name[0] == '[') {
+    // Array types can also be directly appended
+    receiver = name;
+  } else {
+    // Class names must be proceeded with an "L" and have a semicolon at the end,
+    // however the canonical signatures provided in classes like ClassWrapper are
+    // not expected to provide these. So check to see if this is a proper class
+    // signature, and make one if not.
+    if (name[0] == 'L' && name[strlen(name) - 1] == ';') {
+      receiver = name;
+    } else {
+      std::stringstream stream;
+      stream << "L" << name << ";";
+      receiver = stream.str();
+    }
+  }
+}
+
 void JavaClassUtils::makeSignature(std::string &receiver, const char *return_type, ...) {
   va_list arguments;
   va_start(arguments, return_type);
@@ -57,37 +83,21 @@ void JavaClassUtils::makeSignatureWithList(std::string &receiver, const char *re
   stringstream << "(";
   char *argument;
   while ((argument = va_arg(arguments, char*)) != NULL) {
-    appendTypeToSignature(stringstream, argument);
+    std::string argumentSignature;
+    makeNameForSignature(argumentSignature, argument);
+    stringstream << argumentSignature;
   }
   stringstream << ")";
 
   if (return_type == NULL) {
     stringstream << kTypeVoid;
   } else {
-    appendTypeToSignature(stringstream, return_type);
+    std::string returnTypeSignature;
+    makeNameForSignature(returnTypeSignature, return_type);
+    stringstream << returnTypeSignature;
   }
 
   receiver = stringstream.str();
-}
-
-void JavaClassUtils::appendTypeToSignature(std::stringstream &stringstream, const char *argument) {
-  if (strlen(argument) == 1) {
-    // Primitive type, can be directly appended
-    stringstream << argument;
-  } else if (argument[0] == '[') {
-    // Array types can also be directly appended
-    stringstream << argument;
-  } else {
-    // Class names must be proceeded with an "L" and have a semicolon at the end,
-    // however the canonical signatures provided in classes like ClassWrapper are
-    // not expected to provide these. So check to see if this is a proper class
-    // signature, and make one if not.
-    if (argument[0] == 'L' && argument[strlen(argument) - 1] == ';') {
-      stringstream << argument;
-    } else {
-      stringstream << "L" << argument << ";";
-    }
-  }
 }
 
 } // namespace jni
