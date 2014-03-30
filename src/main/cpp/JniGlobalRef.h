@@ -23,8 +23,8 @@ class EXPORT JniGlobalRef {
   void set(JniType obj) {
     JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
     if (!env) {
-        _obj = NULL;
-        return;
+      _obj = NULL;
+      return;
     }
     if (_obj) {
       env->DeleteGlobalRef(_obj);
