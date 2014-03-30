@@ -33,4 +33,22 @@ public class JavaClassUtilsTest {
 
     @Test(expected = NoClassDefFoundError.class)
     public native void findInvalidClassWithLoader() throws Exception;
+
+    @Test(expected = IllegalArgumentException.class)
+    public native void makeNameForSignatureWithNull() throws Exception;
+
+    @Test
+    public native void makeNameForSignatureWithPrimitive() throws Exception;
+
+    @Test
+    public native void makeNameForSignatureWithArray() throws Exception;
+
+    @Test
+    public native void makeNameForSignatureWithObject() throws Exception;
+
+    @Test
+    public native void makeNameForSignatureWithJniSignature() throws Exception;
+
+    @Test
+    public native void makeNameForSignatureWithArrayOfObjects() throws Exception;
 }

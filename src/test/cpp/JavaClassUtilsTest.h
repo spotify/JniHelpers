@@ -21,6 +21,12 @@ public:
   static void findInvalidClass(JNIEnv *env, jobject javaThis);
   static jclass nativeFindClassWithLoader(JNIEnv *env, jobject javaThis);
   static void findInvalidClassWithLoader(JNIEnv *env, jobject javaThis);
+  static void makeNameForSignatureWithNull(JNIEnv *env, jobject javaThis);
+  static void makeNameForSignatureWithPrimitive(JNIEnv *env, jobject javaThis);
+  static void makeNameForSignatureWithArray(JNIEnv *env, jobject javaThis);
+  static void makeNameForSignatureWithObject(JNIEnv *env, jobject javaThis);
+  static void makeNameForSignatureWithJniSignature(JNIEnv *env, jobject javaThis);
+  static void makeNameForSignatureWithArrayOfObjects(JNIEnv *env, jobject javaThis);
 };
 
 #endif // __JavaClassUtilsTest_h__
