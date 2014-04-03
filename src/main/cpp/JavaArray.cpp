@@ -19,16 +19,16 @@
  * under the License.
  */
 
-#include "ByteArray.h"
+#include "JavaArray.h"
 #include "JavaExceptionUtils.h"
 #include <stdlib.h>
 
 namespace spotify {
 namespace jni {
 
-ByteArray::ByteArray() : _data(NULL), _num_bytes(0) {}
+JavaArray::JavaArray() : _data(NULL), _num_bytes(0) {}
 
-ByteArray::ByteArray(void *data, const size_t numBytes, bool copyData) :
+JavaArray::JavaArray(void *data, const size_t numBytes, bool copyData) :
 _data(NULL), _num_bytes(0) {
   // In the rare (but possible) event that this constructor is called with
   // NULL but non-zero length data, correct the byte count so as to avoid
@@ -40,26 +40,26 @@ _data(NULL), _num_bytes(0) {
   }
 }
 
-ByteArray::ByteArray(JNIEnv *env, jbyteArray data) :
+JavaArray::JavaArray(JNIEnv *env, jbyteArray data) :
 _data(NULL), _num_bytes(0) {
   set(env, data);
 }
 
-ByteArray::~ByteArray() {
+JavaArray::~JavaArray() {
   if (_data != NULL) {
     free(_data);
     _data = NULL;
   }
 }
 
-void *ByteArray::leak() {
+void *JavaArray::leak() {
   void *result = _data;
   _data = NULL;
   _num_bytes = 0;
   return result;
 }
 
-JniLocalRef<jbyteArray> ByteArray::toJavaByteArray(JNIEnv *env) const {
+JniLocalRef<jbyteArray> JavaArray::toJavaByteArray(JNIEnv *env) const {
   JniLocalRef<jbyteArray> result = env->NewByteArray((jsize)_num_bytes);
   JavaExceptionUtils::checkException(env);
   if (_num_bytes == 0 || _data == NULL) {
@@ -69,7 +69,7 @@ JniLocalRef<jbyteArray> ByteArray::toJavaByteArray(JNIEnv *env) const {
   return result.leak();
 }
 
-void ByteArray::set(void *data, const size_t numBytes, bool copyData) {
+void JavaArray::set(void *data, const size_t numBytes, bool copyData) {
   if (data == NULL && numBytes > 0) {
     JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException, 
@@ -91,7 +91,7 @@ void ByteArray::set(void *data, const size_t numBytes, bool copyData) {
   _num_bytes = numBytes;
 }
 
-void ByteArray::set(JNIEnv *env, jbyteArray data) {
+void JavaArray::set(JNIEnv *env, jbyteArray data) {
   if (_data != NULL) {
     free(_data);
   }

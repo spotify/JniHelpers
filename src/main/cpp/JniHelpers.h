@@ -27,6 +27,7 @@
 #include "ByteArray.h"
 #include "JavaClass.h"
 #include "ClassRegistry.h"
+#include "JavaArray.h"
 #include "JavaClassUtils.h"
 #include "JavaExceptionUtils.h"
 #include "JavaString.h"

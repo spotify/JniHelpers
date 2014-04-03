@@ -20,8 +20,8 @@
  */
 
 #include "JniHelpersTest.h"
-#include "ByteArrayTest.h"
 #include "ClassRegistryTest.h"
+#include "JavaArrayTest.h"
 #include "JavaClassTest.h"
 #include "JavaClassUtilsTest.h"
 #include "JavaExceptionUtilsTest.h"
@@ -39,8 +39,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void*) {
     return -1;
   }
 
-  gClasses.add(env, new ByteArrayTest(env));
   gClasses.add(env, new ClassRegistryTest(env));
+  gClasses.add(env, new JavaArrayTest(env));
   gClasses.add(env, new JavaClassTest(env));
   gClasses.add(env, new JavaClassUtilsTest(env));
   gClasses.add(env, new JavaExceptionUtilsTest(env));
