@@ -25,7 +25,7 @@
 
 void JavaArrayTest::initialize(JNIEnv *env) {
   setClass(env);
-
+#if 0
   addNativeMethod("createNewByteArray", (void*)createNewByteArray, kTypeVoid, NULL);
   addNativeMethod("createNewByteArrayWithData", (void*)createNewByteArrayWithData, kTypeVoid, NULL);
   addNativeMethod("createNewByteArrayWithDataCopy", (void*)createNewByteArrayWithData, kTypeVoid, NULL);
@@ -36,10 +36,10 @@ void JavaArrayTest::initialize(JNIEnv *env) {
   addNativeMethod("setData", (void*)setData, kTypeVoid, NULL);
   addNativeMethod("setDataWithCopy", (void*)setData, kTypeVoid, NULL);
   addNativeMethod("nativeSetJavaByteArray", (void*)nativeSetJavaByteArray, kTypeVoid, kTypeArray(kTypeByte), kTypeInt, NULL);
-
+#endif
   registerNativeMethods(env);
 }
-
+#if 0
 void* JavaArrayTest::getTestData() {
   char *result = (char*)malloc(getTestDataSize());
   for (size_t i = 0; i < getTestDataSize(); i++) {
@@ -130,3 +130,4 @@ void JavaArrayTest::nativeSetJavaByteArray(JNIEnv *env, jobject javaThis, jbyteA
   JUNIT_ASSERT_EQUALS_INT(expectedSize, byteArray.size());
   JUNIT_ASSERT_EQUALS_ARRAY(data, byteArray.get(), byteArray.size());
 }
+#endif

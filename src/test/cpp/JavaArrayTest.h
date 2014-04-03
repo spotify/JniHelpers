@@ -40,6 +40,7 @@ public:
   void mapFields() {}
 
 private:
+#if 0
   static void* getTestData();
   static size_t getTestDataSize();
 
@@ -53,6 +54,7 @@ private:
   static void setData(JNIEnv *env, jobject javaThis);
   static void setDataWithCopy(JNIEnv *env, jobject javaThis);
   static void nativeSetJavaByteArray(JNIEnv *env, jobject javaThis, jbyteArray javaData, jint expectedSize);
+#endif
 };
 
 #endif // __JavaArrayTest_h__

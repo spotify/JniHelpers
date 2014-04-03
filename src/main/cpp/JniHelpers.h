@@ -24,10 +24,9 @@
 
 #include "JniHelpersCommon.h"
 
-#include "ByteArray.h"
-#include "JavaClass.h"
 #include "ClassRegistry.h"
 #include "JavaArray.h"
+#include "JavaClass.h"
 #include "JavaClassUtils.h"
 #include "JavaExceptionUtils.h"
 #include "JavaString.h"
