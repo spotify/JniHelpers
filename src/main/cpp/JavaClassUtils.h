@@ -25,7 +25,7 @@ namespace jni {
 
 class JavaClassUtils {
 private:
-  // Direct instantiation not allowed for this class
+  // Direct instantiation is not allowed for this class
   JavaClassUtils() {}
   JavaClassUtils(const JavaClassUtils&) {}
   virtual ~JavaClassUtils() {}
