@@ -4,6 +4,7 @@
 #include "JniHelpersCommon.h"
 #include "JavaClass.h"
 #include "JavaExceptionUtils.h"
+#include "NativeObject.h"
 #include "ScopedPtr.h"
 #include <map>
 #include <string>
@@ -77,15 +78,15 @@ public:
    *                   from merge().
    * @return New instance, or NULL if none could not be created.
    */
-  // Sorry about the mess in this header file, however some compilers like MSVC
-  // require templates to be in the header file or else they won't work.
   template<typename TypeName>
   TypeName* newInstance(JNIEnv *env, jobject fromObject) {
+    LOG_DEBUG("Creating new instance of class with registry info");
     TypeName *result = new TypeName();
     const char *name = result->getCanonicalName();
     if (name == NULL || strlen(name) == 0) {
       JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
         "Could not find canonical name for class");
+      delete result;
       return NULL;
     }
 
@@ -93,10 +94,40 @@ public:
     if (classInfo == NULL) {
       JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
         "No class information registered for '%s'", name);
+      delete result;
       return NULL;
     }
 
-    if (classInfo->isPersistenceEnabled()) {
+    result->merge(classInfo);
+    result->mapFields();
+    if (fromObject != NULL) {
+      result->setJavaObject(env, fromObject);
+    }
+
+    return result;
+  }
+
+  template<typename TypeName>
+  TypeName* getNativeInstance(JNIEnv *env, jobject fromObject) {
+    LOG_DEBUG("Getting native instance of class from registry");
+    TypeName *result = new TypeName();
+    const char *name = result->getCanonicalName();
+    if (name == NULL || strlen(name) == 0) {
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
+        "Could not find canonical name for class");
+      delete result;
+      return NULL;
+    }
+
+    const TypeName *classInfo = dynamic_cast<const TypeName*>(get(name));
+    if (classInfo == NULL) {
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
+        "No class information registered for '%s'", name);
+      delete result;
+      return NULL;
+    }
+
+    if (classInfo->isInitialized()) {
       // Merge must be called so that cached fields information (namely for
       // the persisted long field pointer) can be found.
       result->merge(classInfo);
@@ -109,13 +140,7 @@ public:
       }
     }
 
-    result->merge(classInfo);
-    result->mapFields();
-    if (fromObject != NULL) {
-      result->setJavaObject(env, fromObject);
-    }
-
-    return result;
+    return NULL;
   }
 
   /**

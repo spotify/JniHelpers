@@ -7,5 +7,7 @@ public class NativeObject {
     @UsedByNativeCode
     protected long nPtr;
 
+    @SuppressWarnings("UnusedDeclaration")
+    @UsedByNativeCode
     public native void destroy();
 }

@@ -47,77 +47,6 @@ void JavaClass::merge(const JavaClass *globalInstance) {
   _default_constructor = globalInstance->_default_constructor;
 }
 
-bool JavaClass::persist(JNIEnv *env, jobject javaThis) {
-  if (isPersistenceEnabled()) {
-    LOG_DEBUG("Persisting instance of '%s' to Java object", getSimpleName());
-    if (javaThis == NULL) {
-      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
-        "Cannot persist object without corresponding Java instance");
-      return false;
-    }
-    jlong resultPtr = reinterpret_cast<jlong>(this);
-    env->SetLongField(javaThis, getField(PERSIST_FIELD_NAME), resultPtr);
-    JavaExceptionUtils::checkException(env);
-    LOG_DEBUG("Persist was successful");
-    return true;
-  }
-  return false;
-}
-
-bool JavaClass::isPersistenceEnabled() const {
-  if (!isInitialized()) {
-    JavaExceptionUtils::throwExceptionOfType(JavaThreadUtils::getEnvForCurrentThread(),
-      kTypeIllegalStateException,
-      "Cannot call isPersistenceEnabled without class info (forgot to merge?)");
-    return false;
-  }
-
-  // We expect the persisted field to be cached, otherwise searching for persisted
-  // fields in non-persisted classes will throw java.lang.NoSuchField exception. :(
-  const std::string key(PERSIST_FIELD_NAME);
-  FieldMap::const_iterator mapFindIter = _fields->find(key);
-  return mapFindIter != _fields->end();
-}
-
-void JavaClass::enablePersistence(JNIEnv *env) {
-  cacheField(env, PERSIST_FIELD_NAME, kTypeLong);
-}
-
-JavaClass* JavaClass::getPersistedInstance(JNIEnv *env, jobject javaThis) const {
-  if (isPersistenceEnabled()) {
-    LOG_DEBUG("Retrieving persisted instance of '%s'", getSimpleName());
-    jlong resultPtr = env->GetLongField(javaThis, getField(PERSIST_FIELD_NAME));
-    return reinterpret_cast<JavaClass*>(resultPtr);
-  } else {
-    return NULL;
-  }
-}
-
-void JavaClass::destroy(JNIEnv *env, jobject javaThis) {
-  if (isPersistenceEnabled()) {
-    LOG_DEBUG("Destroying persisted instance of '%s'", getSimpleName());
-    if (javaThis == NULL) {
-      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
-        "Cannot destroy persisted object without corresponding Java instance");
-      return;
-    }
-
-    jfieldID persistField = getField(PERSIST_FIELD_NAME);
-    if (persistField == NULL) {
-      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalStateException,
-        "Cannot destroy, object lacks persist field");
-      return;
-    }
-
-    jlong resultPtr = env->GetLongField(javaThis, persistField);
-    JavaClass *instance = reinterpret_cast<JavaClass*>(resultPtr);
-    if (instance != NULL) {
-      delete instance;
-      env->SetLongField(javaThis, persistField, 0);
-    }
-  }
-}
-
 void JavaClass::setJavaObject(JNIEnv *env, jobject javaThis) {
   LOG_DEBUG("Setting fields from Java object of type '%s' to native instance", getSimpleName());
 
@@ -229,8 +158,6 @@ jobject JavaClass::toJavaObject(JNIEnv *env, jobject javaThis) {
     }
   }
 
-  // Persist the current object address to the Java instance
-  persist(env, javaThis);
   return javaThis;
 }
 

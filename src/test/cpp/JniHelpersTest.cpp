@@ -6,6 +6,7 @@
 #include "JavaExceptionUtilsTest.h"
 #include "JavaStringTest.h"
 #include "JavaThreadUtilsTest.h"
+#include "NativeObjectTest.h"
 
 ClassRegistry gClasses;
 
@@ -22,6 +23,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void*) {
   gClasses.add(env, new JavaClassUtilsTest(env));
   gClasses.add(env, new JavaExceptionUtilsTest(env));
   gClasses.add(env, new JavaStringTest(env));
+  gClasses.add(env, new NativeObjectTest(env));
 
   LOG_INFO("Initialization complete");
   return JAVA_VERSION;

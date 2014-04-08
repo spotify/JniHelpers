@@ -11,13 +11,6 @@
 #include <vector>
 #include <stdarg.h>
 
-#ifndef PERSIST_FIELD_NAME
-/**
- * @brief Field name to use for persisting objects (see persist() for details)
- */
-#define PERSIST_FIELD_NAME "nPtr"
-#endif
-
 namespace spotify {
 namespace jni {
 
@@ -95,17 +88,6 @@ public:
   virtual void initialize(JNIEnv *env) = 0;
 
   /**
-   * @brief Check to see if global class info is registered for this object
-   *
-   * Instances of JavaClass are still usable without having been initialized,
-   * however most JNI-related operations such as toJavaObject() and setJavaObject()
-   * will not work properly.
-   *
-   * @return True if this instance has valid class info, false otherwise
-   */
-  virtual bool isInitialized() const;
-
-  /**
    * @brief Configure field mappings per instance
    *
    * If you want to create field mappings (see mapField()), then you should do it
@@ -134,6 +116,17 @@ public:
 // Public methods ///////////////////////////////////////////////////////////////////
 public:
   /**
+  * @brief Check to see if global class info is registered for this object
+  *
+  * Instances of JavaClass are still usable without having been initialized,
+  * however most JNI-related operations such as toJavaObject() and setJavaObject()
+  * will not work properly.
+  *
+  * @return True if this instance has valid class info, false otherwise
+  */
+  virtual bool isInitialized() const;
+
+  /**
    * @brief Return the simple name for the class (ie, com.example.Foo -> "Foo")
    * @return Class name (should not be NULL)
    */
@@ -156,87 +149,6 @@ public:
    * @param globalInstance Global instance from ClassRegistry (should not be NULL)
    */
   virtual void merge(const JavaClass *globalInstance);
-
-  /**
-   * @brief Persist this object as a reference in a Java object
-   *
-   * Sometimes you might need to create a C++ object with a long lifespan which may
-   * be too expensive to keep copying between native and Java code. Or perhaps the
-   * C++ object contains members which are not easily mapped to Java types and can't
-   * be copied up to Java.
-   *
-   * In such cases, it makes more sense to create the C++ object on the heap and
-   * pass a reference to it up to Java. In this manner, subsequent calls from Java
-   * may return to native code and retrieve the native object instance directly.
-   *
-   * For this method to work, your Java class must declare a `long` field named
-   * `PERSIST_FIELD_NAME` (which is defined to `nPtr`). If your class defines such
-   * a field, then it will be used by ClassRegistry::newInstance to give you a
-   * pointer to that instance instead of creating a new object.
-   *
-   * Note that this implies that you may only have one persisted native object in
-   * memory at any given time. Also, you are responsible for disposing of it; the
-   * preferred convention for this is to define a native method to call destroy().
-   * This is perhaps a bit tedious, however that's one of the risks of mixing Java
-   * and C++ lifecycles. Therefore, you should only use this if you absolutely
-   * cannot copy object data to Java via the toJavaObject() method.
-   *
-   * Rather than make assumptions on how your application manages memory, calling
-   * this method multiple times with different objects will leak them rather than
-   * free them. To free the objects, you should call destroy() instead. You've been
-   * warned!
-   *
-   * The restrictions of the hard-coded field name and limitation of one persisted
-   * object may be removed in a future version of the library.
-   *
-   * @param env JNIEnv
-   * @param javaThis Java object to set the field on (may not be NULL)
-   * @return True if the object was persisted, false otherwise. If your class is
-   *         incorrectly configured (ie, has no field named `nPtr`) then this
-   *         method will return false rather than throwing.
-   */
-  virtual bool persist(JNIEnv *env, jobject javaThis);
-
-  /**
-   * @brief Check to see if this class is persisted natively
-   *
-   * See the persist() method for more information on JavaClass persistence.
-   *
-   * @return True if the class is persisted, false otherwise
-   */
-  virtual bool isPersistenceEnabled() const;
-
-  /**
-   * @brief Tell JniHelpers that this class is persisted.
-   * @param env JNIEnv
-   *
-   * In order for this method to work, the corresponding Java class must have a field
-   * named `PERSIST_FIELD_NAME`, otherwise this method will throw a Java exception.
-   */
-  virtual void enablePersistence(JNIEnv *env);
-
-  /**
-   * @brief Return the object saved by a previous call to persist()
-   * @param env JNIEnv
-   * @param javaThis Java object to set the field from
-   * @return Object instance, or NULL if no persisted instance exists.
-   */
-  virtual JavaClass* getPersistedInstance(JNIEnv *env, jobject javaThis) const;
-
-  /**
-   * @brief Free an object set with persist()
-   *
-   * If your class has been configured to persist objects (see the documentation in
-   * persist() for more details), then this method will free the persisted object,
-   * and set the `nPtr` field on the corresponding Java object to 0.
-   *
-   * This method is safe to call even if no object has been persisted in the Java
-   * instance. In such cases, it does nothing.
-   *
-   * @param env JNIEnv
-   * @param javaThis Java object to free the field on (may not be NULL)
-   */
-  virtual void destroy(JNIEnv *env, jobject javaThis);
 
   /**
    * @brief Set data from a Java instance to this class
@@ -404,7 +316,7 @@ protected:
   const FieldMap *_fields;
   FieldMappingMap _field_mappings;
 
-private:
+protected:
   // This reference to the class information should *only* be held by the global
   // instance of the class held in the ClassRegistry. For this reason it is private,
   // and a pointer to the internal jclass is copied over to any locally created
