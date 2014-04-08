@@ -4,26 +4,26 @@
 #include "JniHelpersTest.h"
 #include "JniHelpers.h"
 
-class ClassWithName : public ClassWrapper {
+class ClassWithName : public JavaClass {
 public:
-  ClassWithName(const char *name) : ClassWrapper(), _name(name) {}
-  ClassWithName(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
+  ClassWithName(const char *name) : JavaClass(), _name(name) {}
+  ClassWithName(JNIEnv *env) : JavaClass(env) { initialize(env); }
   ~ClassWithName() {}
 
   void initialize(JNIEnv *env) {}
   void mapFields() {}
   const char* getCanonicalName() const { return _name; }
   void setJavaObject(JNIEnv *env, jobject javaObject) {}
-  jobject toJavaObject(ClassWrapper *nativeObject) { return NULL; }
+  jobject toJavaObject(JavaClass *nativeObject) { return NULL; }
 
 private:
   const char* _name;
 };
 
-class EXPORT ClassRegistryTest : public ClassWrapper {
+class EXPORT ClassRegistryTest : public JavaClass {
 public:
-  ClassRegistryTest() : ClassWrapper() {}
-  ClassRegistryTest(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
+  ClassRegistryTest() : JavaClass() {}
+  ClassRegistryTest(JNIEnv *env) : JavaClass(env) { initialize(env); }
   ~ClassRegistryTest() {}
 
   void initialize(JNIEnv *env);

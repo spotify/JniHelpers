@@ -3,7 +3,7 @@
 #include "TestObject.h"
 
 /*
- * NOTE: In this test class, ClassWrapper objects are created on the fly with the
+ * NOTE: In this test class, JavaClass objects are created on the fly with the
  * constructor which takes JNIEnv*. Normally you should *not* do this; that ctor
  * is only meant to be called during initialization. However, the initialization
  * step isn't really present in these tests, so objects are created in this manner

@@ -17,7 +17,7 @@ using namespace spotify::jni;
  * In order for JniHelpers to correctly recognize a class as being persisted,
  * you must call enablePersistence() in initialize().
  */
-class PersistedObject : public ClassWrapper {
+class PersistedObject : public JavaClass {
 public:
   PersistedObject();
   PersistedObject(JNIEnv *env);

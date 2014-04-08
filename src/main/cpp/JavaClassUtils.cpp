@@ -1,5 +1,5 @@
 #include "JavaClassUtils.h"
-#include "ClassWrapper.h"
+#include "JavaClass.h"
 #include "JavaExceptionUtils.h"
 #include <sstream>
 #include <string.h>
@@ -7,9 +7,9 @@
 namespace spotify {
 namespace jni {
 
-class JavaClassLoader : public ClassWrapper {
+class JavaClassLoader : public JavaClass {
 public:
-  JavaClassLoader(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
+  JavaClassLoader(JNIEnv *env) : JavaClass(env) { initialize(env); }
   ~JavaClassLoader() {}
 
   const char* getCanonicalName() const { return kTypeJavaClass(ClassLoader); }
@@ -123,7 +123,7 @@ void JavaClassUtils::makeNameForSignature(std::string &receiver, const char *nam
     }
   } else {
     // Class names must be proceeded with an "L" and have a semicolon at the end,
-    // however the canonical signatures provided in classes like ClassWrapper are
+    // however the canonical signatures provided in classes like JavaClass are
     // not expected to provide these. So check to see if this is a proper class
     // signature, and make one if not.
     if (name[0] == 'L' && name[strlen(name) - 1] == ';') {

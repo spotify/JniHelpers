@@ -12,7 +12,7 @@ using namespace spotify::jni;
  * This class is a very simple object which holds a few pieces of data. It
  * demonstrates conversion between Java <--> C++ objects.
  */
-class EXPORT TestObject : public ClassWrapper {
+class EXPORT TestObject : public JavaClass {
 public:
   /**
    * @brief Basic no-arg constructor

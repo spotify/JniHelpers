@@ -3,10 +3,10 @@
 
 #include "JniHelpersTest.h"
 
-class JavaClassUtilsTest : public ClassWrapper {
+class JavaClassUtilsTest : public JavaClass {
 public:
-  JavaClassUtilsTest() : ClassWrapper() {}
-  JavaClassUtilsTest(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
+  JavaClassUtilsTest() : JavaClass() {}
+  JavaClassUtilsTest(JNIEnv *env) : JavaClass(env) { initialize(env); }
   ~JavaClassUtilsTest() {}
 
   const char* getCanonicalName() const {

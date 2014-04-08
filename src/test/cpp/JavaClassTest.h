@@ -1,25 +1,25 @@
-#ifndef __ClassWrapperTest_h__
-#define __ClassWrapperTest_h__
+#ifndef __JavaClassTest_h__
+#define __JavaClassTest_h__
 
 #include "JniHelpers.h"
 #include "JniHelpersTest.h"
 
 using namespace spotify::jni;
 
-class ClassWrapperTest : public ClassWrapper {
+class JavaClassTest : public JavaClass {
 public:
-  ClassWrapperTest() : ClassWrapper() {}
-  ClassWrapperTest(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
-  ~ClassWrapperTest() {}
+  JavaClassTest() : JavaClass() {}
+  JavaClassTest(JNIEnv *env) : JavaClass(env) { initialize(env); }
+  ~JavaClassTest() {}
 
   const char* getCanonicalName() const {
-    return MAKE_CANONICAL_NAME(PACKAGE, ClassWrapperTest);
+    return MAKE_CANONICAL_NAME(PACKAGE, JavaClassTest);
   }
   void initialize(JNIEnv *env);
   void mapFields() {}
 
 private:
-  static void createClassWrapper(JNIEnv *env, jobject javaThis);
+  static void createJavaClass(JNIEnv *env, jobject javaThis);
   static void nativeIsInitialized(JNIEnv *env, jobject javaThis);
   static void testGetCanonicalName(JNIEnv *env, jobject javaThis);
   static void testGetSimpleName(JNIEnv *env, jobject javaThis);
@@ -45,4 +45,4 @@ private:
   static void cacheInvalidMethod(JNIEnv *env, jobject javaThis);
 };
 
-#endif // __ClassWrapperTest_h__
+#endif // __JavaClassTest_h__

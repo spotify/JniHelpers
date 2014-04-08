@@ -36,9 +36,9 @@ public:
    * @param env JNIEnv
    *
    * If you intend to use findClass() with a Java ClassLoader, then this method will be
-   * invoked automatically to initialize a static ClassWrapper instance of this class,
+   * invoked automatically to initialize a static JavaClass instance of this class,
    * which is needed by findClass() to do the actual lookup. Since initialization of
-   * ClassWrapper instances may take a bit of time, this method is exposed in case you
+   * JavaClass instances may take a bit of time, this method is exposed in case you
    * wish to manually call it during JNI initialization.
    *
    * In most cases, it should not be necessary to explicitly call this method from your

@@ -2,7 +2,7 @@
 #define __ClassRegistry_h__
 
 #include "JniHelpersCommon.h"
-#include "ClassWrapper.h"
+#include "JavaClass.h"
 #include "JavaExceptionUtils.h"
 #include "ScopedPtr.h"
 #include <map>
@@ -14,28 +14,28 @@ namespace jni {
 
 #if WIN32
 // TODO: This is a MSVC thing, should refactor to use PIMPL instead (ugh)
-template class EXPORT std::map<std::string, ScopedPtr<const ClassWrapper> >;
+template class EXPORT std::map<std::string, ScopedPtr<const JavaClass> >;
 #endif
 
-typedef std::map<std::string, ScopedPtr<const ClassWrapper> > ClassRegistryMap;
+typedef std::map<std::string, ScopedPtr<const JavaClass> > ClassRegistryMap;
 
 /**
- * @brief Keeps a map of cached ClassWrapper instances
+ * @brief Keeps a map of cached JavaClass instances
  *
- * The ClassRegistry class holds a map of bare (but initialized) ClassWrapper objects.
+ * The ClassRegistry class holds a map of bare (but initialized) JavaClass objects.
  * Since looking up class, field, and method definitions is somewhat expensive, it
  * makes sense to cache this data (and in fact, the JNI documentation also advises
  * doing this).
  *
  * Your program should keep an instance of the ClassRegistry either globally (with a
  * static object), or in some other long-lived object. During the JNI initialization
- * called via System.loadLibrary() in Java, you should add each ClassWrapper object
+ * called via System.loadLibrary() in Java, you should add each JavaClass object
  * that you want to use in the map. Assuming that you have correctly subclassed the
- * ClassWrapper interface in your objects, they should be initialized and cache their
+ * JavaClass interface in your objects, they should be initialized and cache their
  * field and method data for quick access later.
  *
  * After the map has been configured, you can call newInstance<>() to create a new
- * ClassWrapper object of the desired type. The method/field IDs from the global map
+ * JavaClass object of the desired type. The method/field IDs from the global map
  * will be merged into this object, thus making it relatively cheap to copy to/from
  * Java objects.
  */
@@ -47,28 +47,28 @@ public:
   /**
    * @brief Add a new class to the map
    * @param env JNIEnv
-   * @param item ClassWrapper instance to add. This instance should be properly
-   *             initialized (see the ClassWrapper documentation for more details).
+   * @param item JavaClass instance to add. This instance should be properly
+   *             initialized (see the JavaClass documentation for more details).
    */
-  virtual void add(JNIEnv *env, const ClassWrapper *item);
+  virtual void add(JNIEnv *env, const JavaClass *item);
 
   /**
-   * @brief Get an instance of a ClassWrapper definition in the map.
+   * @brief Get an instance of a JavaClass definition in the map.
    * @param name Canonincal class name. If NULL, this method will throw an
    *             IllegalArgumentException to Java.
    * @return Pointer to instance, or NULL if no such instance exists.
    */
-  virtual const ClassWrapper* get(const char *name) const;
-  virtual const ClassWrapper* operator[](const char *name) const { return get(name); }
+  virtual const JavaClass* get(const char *name) const;
+  virtual const JavaClass* operator[](const char *name) const { return get(name); }
 
   /**
-   * @brief Create a new instance of a given ClassWrapper subclass
+   * @brief Create a new instance of a given JavaClass subclass
    *
    * This method will create a new instance of the given type, which must subclass
-   * the ClassWrapper abstract class. The instance will be populated with the cached
+   * the JavaClass abstract class. The instance will be populated with the cached
    * field and method IDs that were (presumably) set during initialization.
    *
-   * If local field mappings have been configured with ClassWrapper::mapField, then
+   * If local field mappings have been configured with JavaClass::mapField, then
    * the new instance will be populated with data from the Java object.
    *
    * @param env JNIEnv
@@ -100,7 +100,7 @@ public:
       // Merge must be called so that cached fields information (namely for
       // the persisted long field pointer) can be found.
       result->merge(classInfo);
-      ClassWrapper *instance = result->getPersistedInstance(env, fromObject);
+      JavaClass *instance = result->getPersistedInstance(env, fromObject);
       if (instance != NULL) {
         // Don't leak the result; we will instead return the object pointed to
         // by the persisted field pointer.

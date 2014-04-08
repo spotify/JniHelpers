@@ -6,10 +6,10 @@
 
 using namespace spotify::jni;
 
-class ByteArrayTest : public ClassWrapper {
+class ByteArrayTest : public JavaClass {
 public:
-  ByteArrayTest() : ClassWrapper() {}
-  ByteArrayTest(JNIEnv *env) : ClassWrapper(env) { initialize(env); }
+  ByteArrayTest() : JavaClass() {}
+  ByteArrayTest(JNIEnv *env) : JavaClass(env) { initialize(env); }
   ~ByteArrayTest() {}
 
   const char* getCanonicalName() const {

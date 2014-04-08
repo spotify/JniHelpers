@@ -1,9 +1,9 @@
 #include "PersistedObject.h"
 
-PersistedObject::PersistedObject() : ClassWrapper(), i(0) {
+PersistedObject::PersistedObject() : JavaClass(), i(0) {
 }
 
-PersistedObject::PersistedObject(JNIEnv *env) : ClassWrapper(env), i(0) {
+PersistedObject::PersistedObject(JNIEnv *env) : JavaClass(env), i(0) {
   initialize(env);
 }
 

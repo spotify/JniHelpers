@@ -4,7 +4,7 @@
 #include "JniHelpersCommon.h"
 
 #include "ByteArray.h"
-#include "ClassWrapper.h"
+#include "JavaClass.h"
 #include "ClassRegistry.h"
 #include "JavaClassUtils.h"
 #include "JavaExceptionUtils.h"

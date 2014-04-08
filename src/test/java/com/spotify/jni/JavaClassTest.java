@@ -8,13 +8,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
-public class ClassWrapperTest {
+public class JavaClassTest {
     static {
         System.loadLibrary("JniHelpersTest");
     }
 
     @Test
-    native public void createClassWrapper() throws Exception;
+    native public void createJavaClass() throws Exception;
 
     @Test
     native public void isInitialized() throws Exception;

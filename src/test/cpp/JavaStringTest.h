@@ -6,10 +6,10 @@
 
 using namespace spotify::jni;
 
-class EXPORT JavaStringTest : public ClassWrapper {
+class EXPORT JavaStringTest : public JavaClass {
 public:
-  JavaStringTest() : ClassWrapper() {}
-  JavaStringTest(JNIEnv *env) : ClassWrapper(env) {
+  JavaStringTest() : JavaClass() {}
+  JavaStringTest(JNIEnv *env) : JavaClass(env) {
     initialize(env);
   }
   ~JavaStringTest() {}

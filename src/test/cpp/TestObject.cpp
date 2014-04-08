@@ -1,10 +1,10 @@
 #include "TestObject.h"
 
-TestObject::TestObject() : ClassWrapper(),
+TestObject::TestObject() : JavaClass(),
 string(), i(0), s(0), f(0.0f), d(0.0), z(false), b(0), c(0) {
 }
 
-TestObject::TestObject(JNIEnv *env) : ClassWrapper(env),
+TestObject::TestObject(JNIEnv *env) : JavaClass(env),
 string(), i(0), s(0), f(0.0f), d(0.0), z(false), b(0), c(0) {
   initialize(env);
   // Set up field mappings for the instance. Normally this isn't necessary,

@@ -1,5 +1,5 @@
-#ifndef __ClassWrapper_h__
-#define __ClassWrapper_h__
+#ifndef __JavaClass_h__
+#define __JavaClass_h__
 
 #include "JniHelpersCommon.h"
 #include "JavaString.h"
@@ -46,7 +46,7 @@ typedef std::map<std::string, jmethodID> MethodMap;
  * simply to register native method callbacks. For example usage, see the test cases
  * distributed with JniHelpers.
  */
-class EXPORT ClassWrapper {
+class EXPORT JavaClass {
 // Constructors /////////////////////////////////////////////////////////////////////
 public:
   /**
@@ -55,28 +55,28 @@ public:
    * This method is invoked by ClassRegistry::newInstance, so it should have a minimal
    * implementation.
    */
-  ClassWrapper();
+  JavaClass();
 
   /**
-   * @brief Create a new ClassWrapper with class information
+   * @brief Create a new JavaClass with class information
    *
    * This method will be called by the top-level JNI initialization when the library
    * is loaded into memory. This constructor is expected to contain a call to the
    * initialize() method, which in turn will cache all necessary class, method, and
    * field data for quick access later on.
    *
-   * Generally speaking, you should not create ClassWrapper objects with this ctor,
+   * Generally speaking, you should not create JavaClass objects with this ctor,
    * as it will be rather expensive to lookup all of the class information. Instead
    * use the empty ctor, or the ClassRegistry::newInstance method.
    *
-   * NOTE: When you subclass ClassWrapper, you *must* call initialize() from within
+   * NOTE: When you subclass JavaClass, you *must* call initialize() from within
    * this constructor.
    *
    * @param env JNIEnv
    */
-  ClassWrapper(JNIEnv *env);
+  JavaClass(JNIEnv *env);
 
-  virtual ~ClassWrapper();
+  virtual ~JavaClass();
 
 // Pure virtual methods /////////////////////////////////////////////////////////////
 public:
@@ -97,7 +97,7 @@ public:
   /**
    * @brief Check to see if global class info is registered for this object
    *
-   * Instances of ClassWrapper are still usable without having been initialized,
+   * Instances of JavaClass are still usable without having been initialized,
    * however most JNI-related operations such as toJavaObject() and setJavaObject()
    * will not work properly.
    *
@@ -143,8 +143,8 @@ public:
    * @brief Copy cached class info data from the global instance
    *
    * If correctly configured, the ClassRegistry map should contains bare instances
-   * of your ClassWrapper subclasses, each of which has been called with the
-   * ClassWrapper(JNIEnv *env) ctor and therefore done some actual work in the
+   * of your JavaClass subclasses, each of which has been called with the
+   * JavaClass(JNIEnv *env) ctor and therefore done some actual work in the
    * initialize(JNIEnv *env) method.
    *
    * When ClassRegistry::newInstance is called, it will create an empty instance of
@@ -155,7 +155,7 @@ public:
    *
    * @param globalInstance Global instance from ClassRegistry (should not be NULL)
    */
-  virtual void merge(const ClassWrapper *globalInstance);
+  virtual void merge(const JavaClass *globalInstance);
 
   /**
    * @brief Persist this object as a reference in a Java object
@@ -200,7 +200,7 @@ public:
   /**
    * @brief Check to see if this class is persisted natively
    *
-   * See the persist() method for more information on ClassWrapper persistence.
+   * See the persist() method for more information on JavaClass persistence.
    *
    * @return True if the class is persisted, false otherwise
    */
@@ -221,7 +221,7 @@ public:
    * @param javaThis Java object to set the field from
    * @return Object instance, or NULL if no persisted instance exists.
    */
-  virtual ClassWrapper* getPersistedInstance(JNIEnv *env, jobject javaThis) const;
+  virtual JavaClass* getPersistedInstance(JNIEnv *env, jobject javaThis) const;
 
   /**
    * @brief Free an object set with persist()
@@ -254,7 +254,7 @@ public:
   /**
    * @brief Set data from this instance to a Java object
    *
-   * This method creates a new Java representation of this ClassWrapper instance,
+   * This method creates a new Java representation of this JavaClass instance,
    * which is then populated with data from this object. The resulting object can
    * then be passed up to Java and used there. For this method to work properly,
    * you need to set up field mappings by overriding merge() and calling mapField().
@@ -274,7 +274,7 @@ public:
   /**
   * @brief Set data from this instance to a Java object
   *
-  * This method copies data to a Java representation of this ClassWrapper instance,
+  * This method copies data to a Java representation of this JavaClass instance,
   * which is then populated with data from this object. The resulting object can
   * then be passed up to Java and used there. For this method to work properly,
   * you need to set up field mappings by overriding merge() and calling mapField().
@@ -422,4 +422,4 @@ private:
 } // namespace jni
 } // namespace spotify
 
-#endif // __ClassWrapper_h__
+#endif // __JavaClass_h__

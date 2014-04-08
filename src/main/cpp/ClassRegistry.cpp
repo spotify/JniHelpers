@@ -11,7 +11,7 @@ ClassRegistry::~ClassRegistry() {
   LOG_DEBUG("Destroying class registry");
 }
 
-void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
+void ClassRegistry::add(JNIEnv *env, const JavaClass *item) {
   if (item == NULL) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
       "Can't add null item to registry");
@@ -21,14 +21,14 @@ void ClassRegistry::add(JNIEnv *env, const ClassWrapper *item) {
       "Can't add item with empty canonical name to registry");
   } else if (!item->isInitialized()) {
     JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
-      "Can't add uninitialized ClassWrapper to registry");
+      "Can't add uninitialized JavaClass to registry");
   } else {
     LOG_INFO("Adding class instance '%s' to registry", item->getCanonicalName());
     _classes[item->getCanonicalName()].set(item);
   }
 }
 
-const ClassWrapper* ClassRegistry::get(const char* name) const {
+const JavaClass* ClassRegistry::get(const char* name) const {
   LOG_DEBUG("Looking up class named '%s'", name);
   if (name == NULL) {
     JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
