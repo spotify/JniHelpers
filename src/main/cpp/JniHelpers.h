@@ -12,6 +12,7 @@
 #include "JavaThreadUtils.h"
 #include "JniGlobalRef.h"
 #include "JniLocalRef.h"
+#include "ShortArray.h"
 
 EXPORT JNIEnv *jniHelpersInitialize(JavaVM *jvm);
 EXPORT JNIEnv *JniCurrentEnv(JavaVM *jvm);
