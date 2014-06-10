@@ -95,7 +95,7 @@ void ByteArrayTest::setDataWithCopy(JNIEnv *env, jobject javaThis) {
   byteArray.set(data, getTestDataSize(), true);
   // Write 0's over the original data to make sure that a false positive
   // doesn't cause the test to pass.
-  memcpy(data, 0, getTestDataSize());
+  memset(data, 0, getTestDataSize());
   void *expectedData = getTestData();
   JUNIT_ASSERT_EQUALS_INT(getTestDataSize(), byteArray.size());
   JUNIT_ASSERT_EQUALS_ARRAY(expectedData, byteArray.get(), byteArray.size());
