@@ -61,3 +61,9 @@ JniHelpers is also not a complete wrapper around JNI. It does not attempt to
 completely shield the programmer from all JNI calls. Rather, it just makes the
 trickiest parts of JNI a bit friendlier to work with.
 
+
+License
+-------
+
+JniHelpers is made available under the Apache 2.0 license. For more information,
+please see the LICENSE.txt file distributed with JniHelpers.
