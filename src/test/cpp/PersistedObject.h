@@ -48,6 +48,8 @@ public:
   void initialize(JNIEnv *env);
   void mapFields();
 
+  static void nativeDestroy(JNIEnv *env, jobject java_this);
+
 public:
   int i;
 };

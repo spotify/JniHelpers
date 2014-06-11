@@ -26,6 +26,7 @@
 #include "JavaStringTest.h"
 #include "JavaThreadUtilsTest.h"
 #include "NativeObjectTest.h"
+#include "PersistedObject.h"
 
 ClassRegistry gClasses;
 
@@ -43,6 +44,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void*) {
   gClasses.add(env, new JavaExceptionUtilsTest(env));
   gClasses.add(env, new JavaStringTest(env));
   gClasses.add(env, new NativeObjectTest(env));
+  gClasses.add(env, new PersistedObject(env));
 
   LOG_INFO("Initialization complete");
   return JAVA_VERSION;
