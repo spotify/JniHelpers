@@ -328,7 +328,9 @@ bool JavaClass::registerNativeMethods(JNIEnv *env) {
     return false;
   }
 
-  return (env->RegisterNatives(_clazz_global.get(), &_jni_methods[0], (jint)_jni_methods.size()) < 0);
+  bool result = (env->RegisterNatives(_clazz_global.get(), &_jni_methods[0], (jint)_jni_methods.size()) < 0);
+  _jni_methods.clear();
+  return result;
 }
 
 } // namespace jni
