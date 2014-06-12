@@ -1,6 +1,7 @@
 apply plugin: 'java'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 version = '1.0'
 
 repositories {
@@ -13,4 +14,25 @@ dependencies {
 
 tasks.withType(Test) {
     systemProperty "java.library.path", "./src/test/cpp/Debug"
+}
+
+task sourcesJar(type: Jar) {
+    baseName = "jnihelpers"
+    classifier = "sources"
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    baseName = "jnihelpers"
+    classifier = "javadoc"
+    from javadoc.destinationDir
+}
+
+jar {
+    baseName "jnihelpers"
+
+    manifest {
+        attributes 'Implementation-Title': 'JniHelpers',
+                   'Implementation-Version': project.version
+    }
 }
