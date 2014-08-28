@@ -13,7 +13,7 @@ dependencies {
 }
 
 tasks.withType(Test) {
-    systemProperty 'java.library.path', './src/test/cpp/Debug'
+    systemProperty 'java.library.path', 'build/src/test/cpp'
 }
 
 task sourcesJar(type: Jar) {
