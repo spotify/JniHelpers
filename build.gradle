@@ -13,23 +13,23 @@ dependencies {
 }
 
 tasks.withType(Test) {
-    systemProperty "java.library.path", "./src/test/cpp/Debug"
+    systemProperty 'java.library.path', './src/test/cpp/Debug'
 }
 
 task sourcesJar(type: Jar) {
-    baseName = "jnihelpers"
-    classifier = "sources"
+    baseName = 'jnihelpers'
+    classifier = 'sources'
     from sourceSets.main.allJava
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    baseName = "jnihelpers"
-    classifier = "javadoc"
+    baseName = 'jnihelpers'
+    classifier = 'javadoc'
     from javadoc.destinationDir
 }
 
 jar {
-    baseName "jnihelpers"
+    baseName 'jnihelpers'
 
     manifest {
         attributes 'Implementation-Title': 'JniHelpers',
