@@ -1,4 +1,5 @@
 #!/bin/sh
+# Copyright (c) 2014 Spotify AB
 
 if [ $# -ne 3 ]
 then

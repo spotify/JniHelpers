@@ -1,3 +1,5 @@
+# Copyright (c) 2014 Spotify AB
+#
 # Common values for tests which pass objects through JNI
 # This file is used to generate test constant definitions for both Java and C++
 
