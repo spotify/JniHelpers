@@ -62,6 +62,52 @@ completely shield the programmer from all JNI calls. Rather, it just makes the
 trickiest parts of JNI a bit friendlier to work with.
 
 
+Building
+--------
+
+JniHelpers contains both Java and C++ code, and is built with Gradle and CMake,
+respectively. To build JniHelpers as a static library, just run the following
+commands:
+
+    $ mkdir build
+    $ cd build
+    $ cmake ..
+    $ make
+
+The Java part of JniHelpers can now be built as a JAR file:
+
+    $ ./gradlew assemble
+
+To use JniHelpers in your project, it is not necessary to build standalone
+artifacts. Rather, you can use this project as a submodule in your code and
+include the CMake/Gradle script from your project. This is the preferred
+method for using the library.
+
+Building JniHelpers on Windows has not been tested and may not work. The project
+is known to build for desktop Linux, Mac OS X, and Android.
+
+
+Testing
+-------
+
+JniHelpers has test cases, which are implemented in JUnit. If you wish to submit
+a pull request to this project, please add tests for any new code or bugfixes,
+and make sure that the existing tests continue to pass before sending the
+request. Pull requests with failing tests will not be merged!
+
+Unfortunately, there is not yet integration between the two Gradle and CMake
+build system, so one must run them independently to execute the tests (we aim to
+fix this in a future release so that Gradle can execute the CMake build on its
+own). First, one must build the C++ parts with CMake as detailed above in the
+"Building" section. After the JniHelpers libraries have been built, one can run
+the JUnit tests from the top-level project directory like so:
+
+    $ ./gradlew test
+
+If all goes well, Gradle should report "BUILD SUCCESSFUL" and no other output.
+Any test failures will be reported to the command line.
+
+
 License
 -------
 
