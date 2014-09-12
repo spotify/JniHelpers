@@ -35,6 +35,7 @@
 #include "JniLocalRef.h"
 #include "NativeObject.h"
 #include "ShortArray.h"
+#include "JavaStringArray.h"
 
 EXPORT JNIEnv *jniHelpersInitialize(JavaVM *jvm);
 EXPORT JNIEnv *JniCurrentEnv(JavaVM *jvm);

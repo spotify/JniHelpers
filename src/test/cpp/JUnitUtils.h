@@ -113,4 +113,14 @@ using namespace spotify::jni;
 }
 #define JUNIT_ASSERT_EQUALS_ARRAY(_E, _R, _S) _JUNIT_ASSERT_EQUALS_ARRAY(_E, _R, _S, __FILE__, __LINE__)
 
+#define _JUNIT_ASSERT_EQUALS_JAVA_STRING_ARRAY(_EXPECTED, _RESULT, _SIZE, _FILE, _LINE) { \
+  for (size_t i = 0; i < _SIZE; i++) { \
+    if (_EXPECTED[i]->get() != _RESULT[i]->get()) { \
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeJavaAssertion, \
+        "expected <%s> but was: <%s> (at %s:%d)", _EXPECTED[i]->get().c_str(), _RESULT[i]->get().c_str(), _FILE, _LINE); \
+    } \
+  } \
+}
+#define JUNIT_ASSERT_EQUALS_JAVA_STRING_ARRAY(_E, _R, _S) _JUNIT_ASSERT_EQUALS_JAVA_STRING_ARRAY(_E, _R, _S, __FILE__, __LINE__)
+
 #endif // __JUnitUtils_h__
