@@ -59,7 +59,7 @@ JNIEnv* JavaThreadUtils::attachCurrentThreadToJVM(const char* thread_name) {
   JavaVMAttachArgs args;
   int result = -1;
 
-  args.version = JNI_VERSION_1_4;
+  args.version = JAVA_VERSION;
   args.name = const_cast<char*>(thread_name);
   args.group = NULL;
 
