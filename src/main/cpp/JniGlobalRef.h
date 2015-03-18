@@ -42,16 +42,17 @@ class EXPORT JniGlobalRef {
   JniType get() const { return _obj; }
 
   void set(JniType obj) {
-    JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
-    if (!env) {
-      _obj = NULL;
-      return;
+    JNIEnv *env = NULL;
+    if (_obj || obj) {
+      env = JavaThreadUtils::getEnvForCurrentThread();
     }
     if (_obj) {
-      env->DeleteGlobalRef(_obj);
+      if (env) {
+        env->DeleteGlobalRef(_obj);
+      }
       _obj = NULL;
     }
-    if (obj) {
+    if (obj && env) {
       _obj = (JniType)env->NewGlobalRef(obj);
     }
   }
