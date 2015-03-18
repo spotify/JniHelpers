@@ -73,18 +73,32 @@
 #define ENABLE_LOGGING 0
 #endif
 
+// Determines whether debug/info logging messages will be printed by JniHelpers
+#ifndef ENABLE_LOGGING_DEBUG
+#define ENABLE_LOGGING_DEBUG 0
+#endif
+
 #if ENABLE_LOGGING
 #if ANDROID
 #include <android/log.h>
 #define LOGGING_TAG "JniHelpers"
-
+#if ENABLE_LOGGING_DEBUG
 #define LOG_DEBUG(...) __android_log_print(ANDROID_LOG_INFO, LOGGING_TAG, __VA_ARGS__)
 #define LOG_INFO(...) __android_log_print(ANDROID_LOG_INFO, LOGGING_TAG, __VA_ARGS__)
+#else
+#define LOG_DEBUG(...)
+#define LOG_INFO(...)
+#endif
 #define LOG_WARN(...) __android_log_print(ANDROID_LOG_WARN, LOGGING_TAG, __VA_ARGS__)
 #define LOG_ERROR(...) __android_log_print(ANDROID_LOG_ERROR, LOGGING_TAG, __VA_ARGS__)
 #else
+#if ENABLE_LOGGING_DEBUG
 #define LOG_DEBUG(...) fprintf(stderr, "DEBUG: "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n")
 #define LOG_INFO(...) fprintf(stderr, "INFO: "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n")
+#else
+#define LOG_DEBUG(...)
+#define LOG_INFO(...)
+#endif
 #define LOG_WARN(...) fprintf(stderr, "WARN: "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n")
 #define LOG_ERROR(...) fprintf(stderr, "ERROR: "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n")
 #endif
