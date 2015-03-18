@@ -63,6 +63,11 @@
 #define DEBUG _DEBUG
 #endif
 
+// Determines whether exceptions will be raised by JniHelpers
+#ifndef ENABLE_EXCEPTIONS
+#define ENABLE_EXCEPTIONS 1
+#endif
+
 // Determines whether logging messages will be printed by JniHelpers
 #ifndef ENABLE_LOGGING
 #define ENABLE_LOGGING 0
