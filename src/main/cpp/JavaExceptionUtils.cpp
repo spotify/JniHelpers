@@ -30,12 +30,15 @@ namespace jni {
 
 static const size_t kExceptionMaxLength = 512;
 
-void JavaExceptionUtils::checkException(JNIEnv *env) {
+void JavaExceptionUtils::checkException(JNIEnv *env, bool clear) {
   if (env->ExceptionCheck()) {
     env->ExceptionDescribe();
 #if TERMINATE_ON_EXCEPTION
     std::terminate();
 #endif
+  }
+  if (clear) {
+    env->ExceptionClear();
   }
 }
 
