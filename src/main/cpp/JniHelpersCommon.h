@@ -75,7 +75,11 @@
 
 // Determines whether debug/info logging messages will be printed by JniHelpers
 #ifndef ENABLE_LOGGING_DEBUG
+#ifdef DEBUG
+#define ENABLE_LOGGING_DEBUG 1
+#else
 #define ENABLE_LOGGING_DEBUG 0
+#endif
 #endif
 
 #if ENABLE_LOGGING
