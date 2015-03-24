@@ -35,16 +35,20 @@ public:
   JniLocalRef() : _obj(NULL) {}
   JniLocalRef(JniType obj) : _obj(NULL) { set(obj); }
   JniLocalRef(const JniLocalRef<JniType> &ref) : _obj(NULL) {
-    JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
-    set((JniType)env->NewLocalRef(ref.get()));
+    if (ref.get()) {
+      JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
+      set(env ? (JniType)env->NewLocalRef(ref.get()): NULL);
+    }
   }
 
   ~JniLocalRef() { set(NULL); }
 
   JniType get() const { return _obj; }
   void set(JniType obj) {
-    JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
-    if (_obj) env->DeleteLocalRef(_obj);
+    if (_obj) {
+      JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
+      if (env) env->DeleteLocalRef(_obj);
+    }
     _obj = obj;
   }
 
@@ -58,8 +62,13 @@ public:
 
   void operator=(JniType obj) { set(obj); }
   void operator=(const JniLocalRef<JniType> &ref) {
-    JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
-    set((JniType)env->NewLocalRef(ref.get()));
+    if (ref.get()) {
+      JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
+      set(env ? (JniType)env->NewLocalRef(ref.get()) : NULL);
+    }
+    else {
+      set(NULL);
+    }
   }
 
 private:

@@ -39,6 +39,7 @@ public:
   static EXPORT JniLocalRef<jobject> newThrowable(JNIEnv *env, const char *message, ...);
 
   static EXPORT void checkException(JNIEnv *env);
+  static EXPORT void checkExceptionAndClear(JNIEnv *env);
   static EXPORT void throwException(JNIEnv *env, const char *message, ...);
   static EXPORT void throwRuntimeException(JNIEnv *env, const char *message, ...);
   static EXPORT void throwExceptionOfType(JNIEnv *env, const char *exception_class_name, const char *message, ...);

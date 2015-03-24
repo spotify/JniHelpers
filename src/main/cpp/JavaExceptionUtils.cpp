@@ -39,6 +39,11 @@ void JavaExceptionUtils::checkException(JNIEnv *env) {
   }
 }
 
+void JavaExceptionUtils::checkExceptionAndClear(JNIEnv *env) {
+  checkException(env);
+  env->ExceptionClear();
+}
+
 JniLocalRef<jobject> JavaExceptionUtils::newThrowable(JNIEnv *env, const char *message, ...) {
   // Find the Throwable class and its associated String constructor
   jclass throwableClazz = JavaClassUtils::findClass(env, kTypeJavaClass(Throwable), false);
@@ -76,16 +81,19 @@ void JavaExceptionUtils::throwExceptionOfType(JNIEnv *env, const char *exception
   jclass clazz = JavaClassUtils::findClass(env, exception_class_name, false);
   checkException(env);
   if (clazz == NULL) {
+#if ENABLE_EXCEPTIONS
     std::stringstream fatalErrorMessage;
     fatalErrorMessage << "Could not throw exception of type '" << exception_class_name << "'";
     env->FatalError(fatalErrorMessage.str().c_str());
+#endif
     return;
   }
-
   char exceptionMessage[kExceptionMaxLength];
   vsnprintf(exceptionMessage, kExceptionMaxLength, message, arguments);
   LOG_ERROR("Throwing exception %s: %s", exception_class_name, exceptionMessage);
+#if ENABLE_EXCEPTIONS
   env->ThrowNew(clazz, exceptionMessage);
+#endif
 }
 
 void JavaExceptionUtils::throwExceptionOfType(JNIEnv *env, const char *exception_class_name, const char *message, ...) {
