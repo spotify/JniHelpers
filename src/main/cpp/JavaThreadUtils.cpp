@@ -64,12 +64,34 @@ JNIEnv* JavaThreadUtils::attachCurrentThreadToJVM(const char* thread_name) {
   args.group = NULL;
 
 #ifdef ANDROID
-  result = sJavaVm->AttachCurrentThread((JNIEnv**)(&env), &args);
+  result = sJavaVm->AttachCurrentThread(&env, &args);
 #else
   result = sJavaVm->AttachCurrentThread((void**)(&env), &args);
 #endif
   if (result != JNI_OK) {
     JavaExceptionUtils::throwRuntimeException(env, "Could not attach thread %s to JVM", thread_name);
+    return NULL;
+  }
+
+  return env;
+}
+
+JNIEnv* JavaThreadUtils::attachCurrentThreadAsDaemonToJVM(const char* thread_name) {
+  JNIEnv *env;
+  JavaVMAttachArgs args;
+  int result = -1;
+
+  args.version = JAVA_VERSION;
+  args.name = const_cast<char*>(thread_name);
+  args.group = NULL;
+
+#ifdef ANDROID
+  result = sJavaVm->AttachCurrentThreadAsDaemon(&env, &args);
+#else
+  result = sJavaVm->AttachCurrentThreadAsDaemon((void**)(&env), &args);
+#endif
+  if (result != JNI_OK) {
+    JavaExceptionUtils::throwRuntimeException(env, "Could not attach daemon thread %s to JVM", thread_name);
     return NULL;
   }
 
