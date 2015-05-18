@@ -19,27 +19,28 @@
  * under the License.
  */
 
-#ifndef __ByteArrayTest_h__
-#define __ByteArrayTest_h__
+#ifndef __JavaArrayTest_h__
+#define __JavaArrayTest_h__
 
 #include "JniHelpers.h"
 #include "JniHelpersTest.h"
 
 using namespace spotify::jni;
 
-class ByteArrayTest : public JavaClass {
+class JavaArrayTest : public JavaClass {
 public:
-  ByteArrayTest() : JavaClass() {}
-  ByteArrayTest(JNIEnv *env) : JavaClass(env) { initialize(env); }
-  ~ByteArrayTest() {}
+  JavaArrayTest() : JavaClass() {}
+  JavaArrayTest(JNIEnv *env) : JavaClass(env) { initialize(env); }
+  ~JavaArrayTest() {}
 
   const char* getCanonicalName() const {
-    return MAKE_CANONICAL_NAME(PACKAGE, ByteArrayTest);
+    return MAKE_CANONICAL_NAME(PACKAGE, JavaArrayTest);
   }
   void initialize(JNIEnv *env);
   void mapFields() {}
 
 private:
+#if 0
   static void* getTestData();
   static size_t getTestDataSize();
 
@@ -53,6 +54,7 @@ private:
   static void setData(JNIEnv *env, jobject javaThis);
   static void setDataWithCopy(JNIEnv *env, jobject javaThis);
   static void nativeSetJavaByteArray(JNIEnv *env, jobject javaThis, jbyteArray javaData, jint expectedSize);
+#endif
 };
 
-#endif // __ByteArrayTest_h__
+#endif // __JavaArrayTest_h__

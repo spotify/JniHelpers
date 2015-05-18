@@ -19,25 +19,12 @@
  * under the License.
  */
 
-#ifndef __JniHelpers_h__
-#define __JniHelpers_h__
-
-#include "JniHelpersCommon.h"
-
-#include "ClassRegistry.h"
 #include "JavaArray.h"
-#include "JavaClass.h"
-#include "JavaClassUtils.h"
 #include "JavaExceptionUtils.h"
-#include "JavaString.h"
-#include "JavaThreadUtils.h"
-#include "JniGlobalRef.h"
-#include "JniLocalRef.h"
-#include "NativeObject.h"
-#include "ShortArray.h"
-#include "JavaStringArray.h"
+#include <stdlib.h>
 
-EXPORT JNIEnv *jniHelpersInitialize(JavaVM *jvm);
-EXPORT JNIEnv *JniCurrentEnv(JavaVM *jvm);
+namespace spotify {
+namespace jni {
 
-#endif // __JniHelpers_h__
+} // namespace jni
+} // namespace spotify

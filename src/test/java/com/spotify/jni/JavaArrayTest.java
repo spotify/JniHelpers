@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ByteArrayTest {
+public class JavaArrayTest {
     static {
         System.loadLibrary("JniHelpersTest");
     }

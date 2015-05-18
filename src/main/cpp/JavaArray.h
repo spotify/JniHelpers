@@ -19,8 +19,8 @@
  * under the License.
  */
 
-#ifndef __ByteArray_h__
-#define __ByteArray_h__
+#ifndef __JavaArray_h__
+#define __JavaArray_h__
 
 #include "JniHelpersCommon.h"
 #include "JniLocalRef.h"
@@ -34,12 +34,13 @@ namespace jni {
  * This class is used for passing raw data arrays through JNI. Internally
  * the data is stored as a void*.
  */
-class EXPORT ByteArray {
+template<class JavaType, class NativeType>
+class EXPORT JavaArray {
 public:
   /**
    * @brief Create a new empty byte array
    */
-  ByteArray();
+  JavaArray() : _data(NULL), _num_elements(0) {}
 
   /**
    * @brief Create a new byte array with data.
@@ -48,37 +49,50 @@ public:
    * @param copyData True if the data should be copied to this instance
    *
    * See the documentation for set() regarding the ownership of data stored
-   * in ByteArray instances.
+   * in JavaArray instances.
    */
-  ByteArray(void *data, const size_t numBytes, bool copyData);
+  JavaArray(NativeType data, const size_t numElements, bool copyData) :
+    _data(NULL), _num_elements(0) {
+    // In the rare (but possible) event that this constructor is called with
+    // NULL but non-zero length data, correct the byte count so as to avoid
+    // segfaults later on.
+    if (data == NULL && numElements > 0) {
+      _num_bytes = 0;
+    } else if (data != NULL && numElements > 0) {
+      set(data, numElements, copyData);
+    }
+  }
 
-  /**
-   * @brief Create a new byte array with data from a Java byte[] object
-   * @param env JNIEnv
-   * @param data Java byte[] data
-   */
-  ByteArray(JNIEnv *env, jbyteArray data);
-
-  virtual ~ByteArray();
+  virtual ~JavaArray() {
+    if (_data != NULL) {
+      free(_data);
+      _data = NULL;
+    }
+  }
 
   /**
    * @brief Get a pointer to the natively stored data
    */
-  const void* get() const { return _data; }
+  virtual const NativeType get() const { return _data; }
 
   /**
    * @brief Convert data to a Java byte[] array
    */
-  JniLocalRef<jbyteArray> toJavaByteArray(JNIEnv *env) const;
+  virtual JniLocalRef<JavaType> toJavaArray(JNIEnv *env) const = 0;
 
   /**
    * @brief Return a pointer to the data stored by this instance
    *
-   * When an instance of ByteArray is destroyed, it will attempt to free
+   * When an instance of JavaArray is destroyed, it will attempt to free
    * the data stored internally. If this data is still needed elsewhere,
    * then you should call leak() or else it will be unavailable.
    */
-  void *leak();
+  virtual NativeType leak() {
+    NativeType result = _data;
+    _data = NULL;
+    _num_elements = 0;
+    return result;
+  }
 
   /**
    * @brief Store data in this instance
@@ -86,44 +100,66 @@ public:
    * @param numBytes Size of data pointed to
    * @param copyData True if the data should be copied to this instance
    *
-   * If copyData is true, then this ByteArray instance owns that data and
+   * If copyData is true, then this JavaArray instance owns that data and
    * the original data passed to this method can be freed without worry.
-   * However, if copyData is false, then this ByteArray effectively just
+   * However, if copyData is false, then this JavaArray effectively just
    * points to that instance instead. In either case, after setting data
-   * in a ByteArray, it effectively owns that data.
+   * in a JavaArray, it effectively owns that data.
    *
-   * When this ByteArray is destroyed, it will free the data stored in it,
+   * When this JavaArray is destroyed, it will free the data stored in it,
    * regardless of how it has been set. This means that if copyData was
    * false and that data is still needed elsewhere, then a segfault will
    * probably occur when attempting to access that data after this object
    * has been destroyed. Thus, the leak() method can be used to remedy the
-   * situation by removing the pointer to the data so the ByteArray will
+   * situation by removing the pointer to the data so the JavaArray will
    * not free it upon destruction.
    *
    * It is obviously more efficient to not copy the data, however this can
    * cause problems if your code does not respect the ownership behaviors
    * described above.
    */
-  void set(void *data, const size_t numBytes, bool copyData);
+  virtual void set(NativeType data, const size_t numElements, bool copyData) {
+    if (data == NULL && numElements > 0) {
+      JNIEnv *env = JavaThreadUtils::getEnvForCurrentThread();
+      JavaExceptionUtils::throwExceptionOfType(env, kTypeIllegalArgumentException,
+        "Cannot set data with non-zero size and NULL object");
+      return;
+    }
+
+    // Make sure not to leak the old data if it exists
+    if (_data != NULL) {
+      free(_data);
+    }
+
+    if (copyData) {
+      size_t numBytes = numElements * sizeof(NativeType);
+      _data = malloc(numBytes);
+      memcpy(_data, data, numBytes);
+    } else {
+      _data = data;
+    }
+
+    _num_elements = numElements;
+  }
 
   /**
    * @brief Store data in this instance from a Java byte[] array
    * @param env JNIenv
    * @param data Java byte[] array
    */
-  void set(JNIEnv *env, jbyteArray data);
+  virtual void set(JNIEnv *env, JavaType data) = 0;
 
   /**
    * @brief Get the size of the data stored by this instance
    */
-  const size_t size() const { return _num_bytes; }
+  virtual const size_t size() const { return _num_elements; }
 
-private:
-  void *_data;
-  size_t _num_bytes;
+protected:
+  NativeType _data;
+  size_t _num_elements;
 };
 
 } // namespace jni
 } // namespace spotify
 
-#endif // __ByteArray_h__
+#endif // __JavaArray_h__
