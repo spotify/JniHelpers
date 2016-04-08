@@ -76,7 +76,12 @@ void JavaClass::setJavaObject(JNIEnv *env, jobject javaThis) {
     mapFields();
   }
 
-   for (FieldMap::const_iterator iter = _fields->begin(); iter != _fields->end(); ++iter) {
+  // If there are no fields to be mapped, then bail out
+  if (_fields == NULL) {
+    return;
+  }
+
+  for (FieldMap::const_iterator iter = _fields->begin(); iter != _fields->end(); ++iter) {
     std::string key = iter->first;
     LOG_DEBUG("Copying field '%s'", key.c_str());
 
