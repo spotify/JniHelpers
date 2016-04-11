@@ -101,7 +101,7 @@ void ShortArray::set(JNIEnv *env, jshortArray data) {
     if (_num_elements == 0) {
       _data = NULL;
     } else {
-      _data = (short *)malloc(_num_elements);
+      _data = (short *)malloc(_num_elements * sizeof(jshort));
       env->GetShortArrayRegion(data, 0, (jsize)_num_elements, (jshort *)_data);
     }
   }
