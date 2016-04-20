@@ -168,7 +168,7 @@ public:
    * @brief Return number of items in the map
    * @return Number of items
    */
-  virtual const size_t size() const {
+  virtual size_t size() const {
     return _classes.size();
   }
 

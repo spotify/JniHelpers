@@ -53,7 +53,7 @@ public:
 
   jclass loadClass(JNIEnv *env, const char *class_name) {
     std::string binaryName = class_name;
-    for (int i = 0; i < binaryName.length(); ++i) {
+    for (unsigned i = 0; i < binaryName.length(); ++i) {
       if (binaryName[i] == '/') {
         binaryName[i] = '.';
       }
