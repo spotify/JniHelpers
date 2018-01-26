@@ -116,7 +116,7 @@ public:
   /**
    * @brief Get the size of the data stored by this instance
    */
-  const size_t size() const { return _num_bytes; }
+  size_t size() const { return _num_bytes; }
 
 private:
   void *_data;

@@ -116,7 +116,7 @@ public:
   /**
    * @brief Get the number of elements stored in this array
    */
-  const size_t size() const { return _num_elements; }
+  size_t size() const { return _num_elements; }
 
 private:
   short *_data;

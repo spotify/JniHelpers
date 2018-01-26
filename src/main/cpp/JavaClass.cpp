@@ -28,16 +28,20 @@ namespace spotify {
 namespace jni {
 
 JavaClass::JavaClass() :
-_clazz_global(NULL), _clazz(NULL),
-_methods(NULL), _fields(NULL),
-_default_constructor(NULL) {
+_clazz(NULL),
+_default_constructor(NULL),
+_methods(NULL),
+_fields(NULL),
+_clazz_global(NULL) {
   LOG_DEBUG("Creating new empty instance of class");
 }
 
 JavaClass::JavaClass(JNIEnv *env) :
-_clazz_global(NULL), _clazz(NULL),
-_methods(NULL), _fields(NULL),
-_default_constructor(NULL) {
+_clazz(NULL),
+_default_constructor(NULL),
+_methods(NULL),
+_fields(NULL),
+_clazz_global(NULL) {
   // Ideally, we would like to call initialize() from the JavaClass() ctor.
   // However this won't work because initialize() is pure virtual, and such methods
   // cannot be called here because the object is in an incomplete state. So instead,
