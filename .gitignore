@@ -7,11 +7,13 @@ build/*
 # Temporary files
 *.swp
 *~
+*.a
 *.o
 *.obj
 *.so
 
 # Stuff from various IDE's
+.vs/
 .idea/*
 *.xcodeproj
 nbproject/*
@@ -33,6 +35,7 @@ nbproject/*
 *.iml
 
 # CMake
+CMakeSettings.json
 CMakeCache.txt
 CMakeScripts/*
 **/CMakeScripts/*
