@@ -64,7 +64,7 @@ public:
   /**
    * @brief Get a pointer to the natively stored data
    */
-  const void* get() const { return _data; }
+  short* get() const { return _data; }
 
   /**
    * @brief Convert data to a Java byte[] array
