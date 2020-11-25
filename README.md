@@ -1,6 +1,8 @@
 JniHelpers
 ==========
 
+![Build](https://github.com/leozz37/JniHelpers/workflows/Build/badge.svg)
+
 JniHelpers is a library designed to facilitate writing JNI code with C++.
 It provides the following features:
 
